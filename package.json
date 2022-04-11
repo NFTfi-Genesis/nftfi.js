@@ -5,11 +5,14 @@
     "node": ">= 16.0.0"
   },
   "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
     "axios": "^0.26.1",
     "bn.js": "^5.2.0",
     "dotenv": "^16.0.0",
     "ethers": "^5.6.2",
     "hardhat": "^2.9.3",
+    "lodash.merge": "^4.6.2",
     "web3": "^1.7.3"
   }
 }
