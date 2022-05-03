@@ -48,7 +48,7 @@ exports.init = async function (options = {}) {
   const api = options?.api || new Api({ config, auth, http });
   const listings = new Listings({ api, config });
   const offersSignatures = new OffersSignatures({ account, ethers, config });
-  const offersHelper = new OffersHelper({ BN, utils, ethers, offersSignatures, config, account });
+  const offersHelper = new OffersHelper({ BN, Number, utils, ethers, offersSignatures, config, account });
   const offers = new Offers({ api, config, account, offersHelper });
   const loanFixedV1 = new LoansFixedV1({ account, ethers, config });
   const loanFixedV2 = new LoansFixedV2({ account, ethers, config });

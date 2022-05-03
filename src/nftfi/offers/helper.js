@@ -1,6 +1,7 @@
 class OffersHelper {
   constructor(options = {}) {
     this.BN = options?.BN;
+    this.Number = options?.Number;
     this.utils = options?.utils;
     this.ethers = options?.ethers;
     this.signatures = options?.offersSignatures;
@@ -8,8 +9,8 @@ class OffersHelper {
     this.account = options?.account;
   }
   async constructV1Offer(options) {
-    const repayment = options.terms.repayment.toLocaleString('fullwide', { useGrouping: false });
-    const principal = options.terms.principal.toLocaleString('fullwide', { useGrouping: false });
+    const repayment = this.Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
+    const principal = this.Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
     const loanInterestRateForDurationInBasisPoints = new this.BN(0).notn(32).toString();
     const lenderNonce = this.utils.getNonce();
     let offer = {
@@ -55,8 +56,8 @@ class OffersHelper {
     return offer;
   }
   async constructV2Offer(options) {
-    const repayment = options.terms.repayment.toLocaleString('fullwide', { useGrouping: false });
-    const principal = options.terms.principal.toLocaleString('fullwide', { useGrouping: false });
+    const repayment = this.Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
+    const principal = this.Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
     const loanInterestRateForDurationInBasisPoints = 0;
     const lenderNonce = this.utils.getNonce();
     const expiry = this.utils.getExpiry();

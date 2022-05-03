@@ -96,7 +96,7 @@ class Offers {
    *     nft: {
    *       id: listing.nft.id,
    *       address: listing.nft.address
-   *     }
+   *     },
    *     borrower: {
    *       address: listing.borrower.address
    *     },
