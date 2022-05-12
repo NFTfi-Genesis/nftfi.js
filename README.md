@@ -26,6 +26,7 @@ To begin experimenting on Rinkeby, please ensure that the following ENV vars are
 - `RINKEBY_PRIVATE_KEY`: a private key of an Ethereum wallet (funded with Rinkeby-ETH, e.g. from [here](https://rinkebyfaucet.com/))
 
 Example ENV vars:
+
 ```
 API_KEY=<nftfi-rinkeby-api-key>
 RINKEBY_URL=https://eth-rinkeby.alchemyapi.io/v2/<api-key>
@@ -39,6 +40,7 @@ Please note that these ENV vars can also be set in a `.env` file that is persist
 If Mainnet configuration is required, the relevant Mainnet ENV vars should be updated. Additionally, a `NETWORK` var should be set to `mainnet` (by default, if this var is not present, the default value is `rinkeby`)
 
 Example ENV vars:
+
 ```
 API_KEY=<nftfi-mainnet-api-key>
 NETWORK=mainnet
@@ -111,6 +113,7 @@ Approves your account's ERC20 spending amount, if not already approved, for v1 &
 | options.amount | <code>number</code> | The token amount to approve, in base units (eg. 1000000000000000000 wei) |
 
 **Example**  
+
 ```js
 const results = await nftfi.erc20.approve({
   amount: 1000000000000000000,
@@ -134,7 +137,8 @@ Returns your account's balance of a given ERC20 token.
 | options | <code>object</code> | Options |
 | options.token.address | <code>string</code> | The ERC20 token address |
 
-**Example**  
+**Example** 
+
 ```js
 const balance = await nftfi.erc20.balanceOf({
   token: { address: '0x00000000' }
@@ -168,11 +172,13 @@ Gets all current listings.
 | [options.pagination.limit] | <code>number</code> | Pagination limit (optional) |
 
 **Example**  
+
 ```js
 // get listings without specifying pagination or filters
 const listings = await nftfi.listings.get();
 ```
 **Example**  
+
 ```js
 // get the first `page` of listings, filtered by `nftAddresses`
 const listings = await nftfi.listings.get({
@@ -217,6 +223,7 @@ Gets loans in which your account is a participant.
 | options.filters.status | <code>string</code> | Loan status: `escrow`, `defaulted`, `repaid` or `liquidated` |
 
 **Example**  
+
 ```js
 // Get loans in `escrow` where your account is the `lender`
 const loans = await nftfi.loans.get({
@@ -244,6 +251,7 @@ Liquidate `defaulted` loans in which your account is a participant.
 | options.nftfi.contract.name | <code>string</code> | The contract used to facilitate the loan: `v1.loan.fixed`, `v2.loan.fixed` |
 
 **Example**  
+
 ```js
 // Liquidate a v1 fixed loan
 const loans = await nftfi.loans.get({
@@ -258,6 +266,7 @@ const loans = await nftfi.loans.get({
 });
 ```
 **Example**  
+
 ```js
 // Liquidate a v2 fixed loan
 const loans = await nftfi.loans.get({
@@ -305,11 +314,13 @@ When provided with filters, gets all offers by specified filters.
 | [options.filters.nft.id] | <code>string</code> | NFT id of the asset to filter by (optional) |
 
 **Example**  
+
 ```js
 // Get all offers made by your account
 const offers = await nftfi.offers.get();
 ```
 **Example**  
+
 ```js
 // Get all offers associated with a NFT
 const offers = await nftfi.offers.get({
@@ -339,6 +350,7 @@ Creates a new offer on a collateral listing.
 | options.listing | <code>object</code> | Listing to place an offer on |
 
 **Example**  
+
 ```js
 // Construct the loan terms
 const currency = nftfi.config.erc20.weth.address;
@@ -402,6 +414,7 @@ Deletes an active offer made by your account.
 | options.offer.id | <code>object</code> | The Id of the offer to be deleted |
 
 **Example**  
+
 ```js
 // Get first avilable offer made by your account
 const offers = await nftfi.offers.get();
@@ -441,6 +454,7 @@ Gets random nonce.
 **Kind**: instance method of [<code>Utils</code>](#Utils)  
 **Returns**: <code>string</code> - Nonce  
 **Example**  
+
 ```js
 // Get a random nonce
 const nonce = nftfi.utils.getNonce();
@@ -456,6 +470,7 @@ Gets an expiry timestamp.
 **Kind**: instance method of [<code>Utils</code>](#Utils)  
 **Returns**: <code>number</code> - Expiry  
 **Example**  
+
 ```js
 // Get an expiry timestamp very far into the future
 const expiry = nftfi.utils.getExpiry();
@@ -476,6 +491,7 @@ Formats an amount of wei into a decimal string representing the amount of ether.
 | wei | <code>number</code> | Wei denomination of the amount |
 
 **Example**  
+
 ```js
 // Format wei into the amount of ether
 const wei = 100;
@@ -499,6 +515,7 @@ Calculates the loan repayment amount given its other parameters.
 | duration | <code>number</code> | The duration of the loan denominated in days |
 
 **Example**  
+
 ```js
 // Calculate the loan repayment amount
 const principal = 1000000000000000000;
@@ -524,6 +541,7 @@ Calculates the loan APR (yearly percentage rate) given its other parameters
 | duration | <code>number</code> | The duration of the loan denominated in days |
 
 **Example**  
+
 ```js
 // Calculate the APR
 const principal = 1000000000000000000;
