@@ -15,73 +15,43 @@ Please note that this SDK is in **open beta**, and is constantly under developme
 yarn install
 ```
 
-## Configure
+## Introduction
 
-NFTfi.js comes preconfigured to use the Rinkeby testnet, with the option to use Mainnet.
+To begin experimenting on, please ensure that the following available:
 
-To begin experimenting on Rinkeby, please ensure that the following ENV vars are present:
+- a NFTfi API key (contact the team)
+- an Ethereum RPC Provider URL
+- a Private Key of an Ethereum wallet (funded with some ETH, wETH, and DAI (optional))
 
-- `API_KEY`: a NFTfi API key (contact the team)
-- `RINKEBY_URL`: a Rinkeby RPC Provider url
-- `RINKEBY_PRIVATE_KEY`: a private key of an Ethereum wallet (funded with Rinkeby-ETH, e.g. from [here](https://rinkebyfaucet.com/))
+You will need the values above when initialising the SDK. We recommend that you start by using the SDK on the Rinkeby network, to get a feeling for the various functionality. Then once you are ready, transitioning over to Mainnet.
 
-Example ENV vars:
+Please note that if the SDK is configured to use Rinkeby, it will use the dApp located at [https://integration.nftfi.com](https://integration.nftfi.com). If a Mainnet configuration is used, the SDK will use the dApp located at [https://app.nftfi.com](https://app.nftfi.com).
 
-```
-API_KEY=<nftfi-rinkeby-api-key>
-RINKEBY_URL=https://eth-rinkeby.alchemyapi.io/v2/<api-key>
-RINKEBY_PRIVATE_KEY=<private-key>
-```
-
-Please note that these ENV vars can also be set in a `.env` file that is persisted to the root of this project directory. If there is a variable in your `.env` file which collides with one that already exists in your environment, then this variable will retrieved from your environment instead of the `.env` file.
-
-### Mainnet
-
-If Mainnet configuration is required, the relevant Mainnet ENV vars should be updated. Additionally, a `NETWORK` var should be set to `mainnet` (by default, if this var is not present, the default value is `rinkeby`)
-
-Example ENV vars:
-
-```
-API_KEY=<nftfi-mainnet-api-key>
-NETWORK=mainnet
-MAINNET_URL=https://eth.alchemyapi.io/v2/<api-key>
-MAINNET_PRIVATE_KEY=<private-key>
-```
-
-Please note that if the scripts are configured to use Rinkeby, they will use the [https://integration.nftfi.com](https://integration.nftfi.com) website. If a Mainnet configuration is used, the scripts will use the [https://www.nftfi.com](https://www.nftfi.com) website.
-
-## Examples
-
-To test examples of common NFTfi use cases, run the following scripts from the root directory:
-
-```shell
-node examples/get-listings.js
-node examples/make-offer-on-collateral.js
-node examples/get-my-offers.js
-node examples/get-offers-on-collateral.js
-node examples/delete-my-offers.js
-node examples/get-my-active-loans.js
-node examples/liquidate-my-defaulted-loans.js
-```
-
-## SDK Reference
+## Getting Started
 
 After you've set up and configured the environment, you need to initialise NFTfi.
 
-### NFTfi (Required)
-
-Import and initialise NFTfi in your script.
-
 ```javascript
-// Import root directory 'nftfi.js'
-const NFTfi = require('../');
-// Initialise NFTfi
-const nftfi = await NFTfi.init();
+// Import SDK
+import NFTfi from '@nftfi/js';
+
+// Initialise
+const nftfi = await NFTfi.init({
+  api: { key: <nftfi-sdk-api-key> },
+  ethereum: {
+    account: { privateKey: <ethereum-account-private-key> },
+    provider: { url: <ethereum-provider-url> }
+  }
+});
 ```
 
-Upon initialisation the NFTfi SDK is bound to the account address that will be interacting with the NFTfi protocol. The  address is computed by using the private key specified in `.env`
+Upon initialisation the NFTfi SDK is bound to the account that will be interacting with the NFTfi protocol. The account address is computed by using the private key specified.
+
+We recommend that you **don't hardcode your credentials** into `NFTfi.init(...)`, instead you could use environment vars, or a more secure mechanism.
 
 Once the SDK is initialised, you can use all the methods documented below.
+
+## SDK Reference
 
 <a name="Erc20"></a>
 
@@ -113,7 +83,6 @@ Approves your account's ERC20 spending amount, if not already approved, for v1 &
 | options.amount | <code>number</code> | The token amount to approve, in base units (eg. 1000000000000000000 wei) |
 
 **Example**  
-
 ```js
 const results = await nftfi.erc20.approve({
   amount: 1000000000000000000,
@@ -137,8 +106,7 @@ Returns your account's balance of a given ERC20 token.
 | options | <code>object</code> | Options |
 | options.token.address | <code>string</code> | The ERC20 token address |
 
-**Example** 
-
+**Example**  
 ```js
 const balance = await nftfi.erc20.balanceOf({
   token: { address: '0x00000000' }
@@ -172,13 +140,11 @@ Gets all current listings.
 | [options.pagination.limit] | <code>number</code> | Pagination limit (optional) |
 
 **Example**  
-
 ```js
 // get listings without specifying pagination or filters
 const listings = await nftfi.listings.get();
 ```
 **Example**  
-
 ```js
 // get the first `page` of listings, filtered by `nftAddresses`
 const listings = await nftfi.listings.get({
@@ -223,7 +189,6 @@ Gets loans in which your account is a participant.
 | options.filters.status | <code>string</code> | Loan status: `escrow`, `defaulted`, `repaid` or `liquidated` |
 
 **Example**  
-
 ```js
 // Get loans in `escrow` where your account is the `lender`
 const loans = await nftfi.loans.get({
@@ -251,7 +216,6 @@ Liquidate `defaulted` loans in which your account is a participant.
 | options.nftfi.contract.name | <code>string</code> | The contract used to facilitate the loan: `v1.loan.fixed`, `v2.loan.fixed` |
 
 **Example**  
-
 ```js
 // Liquidate a v1 fixed loan
 const loans = await nftfi.loans.get({
@@ -266,7 +230,6 @@ const loans = await nftfi.loans.get({
 });
 ```
 **Example**  
-
 ```js
 // Liquidate a v2 fixed loan
 const loans = await nftfi.loans.get({
@@ -314,13 +277,11 @@ When provided with filters, gets all offers by specified filters.
 | [options.filters.nft.id] | <code>string</code> | NFT id of the asset to filter by (optional) |
 
 **Example**  
-
 ```js
 // Get all offers made by your account
 const offers = await nftfi.offers.get();
 ```
 **Example**  
-
 ```js
 // Get all offers associated with a NFT
 const offers = await nftfi.offers.get({
@@ -350,7 +311,6 @@ Creates a new offer on a collateral listing.
 | options.listing | <code>object</code> | Listing to place an offer on |
 
 **Example**  
-
 ```js
 // Construct the loan terms
 const currency = nftfi.config.erc20.weth.address;
@@ -414,7 +374,6 @@ Deletes an active offer made by your account.
 | options.offer.id | <code>object</code> | The Id of the offer to be deleted |
 
 **Example**  
-
 ```js
 // Get first avilable offer made by your account
 const offers = await nftfi.offers.get();
@@ -454,7 +413,6 @@ Gets random nonce.
 **Kind**: instance method of [<code>Utils</code>](#Utils)  
 **Returns**: <code>string</code> - Nonce  
 **Example**  
-
 ```js
 // Get a random nonce
 const nonce = nftfi.utils.getNonce();
@@ -470,9 +428,8 @@ Gets an expiry timestamp.
 **Kind**: instance method of [<code>Utils</code>](#Utils)  
 **Returns**: <code>number</code> - Expiry  
 **Example**  
-
 ```js
-// Get an expiry timestamp very far into the future
+// Get an expiry timestamp far into the future
 const expiry = nftfi.utils.getExpiry();
 ```
 
@@ -491,7 +448,6 @@ Formats an amount of wei into a decimal string representing the amount of ether.
 | wei | <code>number</code> | Wei denomination of the amount |
 
 **Example**  
-
 ```js
 // Format wei into the amount of ether
 const wei = 100;
@@ -515,7 +471,6 @@ Calculates the loan repayment amount given its other parameters.
 | duration | <code>number</code> | The duration of the loan denominated in days |
 
 **Example**  
-
 ```js
 // Calculate the loan repayment amount
 const principal = 1000000000000000000;
@@ -541,7 +496,6 @@ Calculates the loan APR (yearly percentage rate) given its other parameters
 | duration | <code>number</code> | The duration of the loan denominated in days |
 
 **Example**  
-
 ```js
 // Calculate the APR
 const principal = 1000000000000000000;
@@ -552,3 +506,16 @@ const apr = nftfi.utils.calcApr(principal, repayment, duration);
 
 * * *
 
+
+## Examples
+
+To test examples of common NFTfi SDK use cases, run the following scripts from the root directory:
+
+```shell
+node examples/get-listings.js
+node examples/make-offer-on-collateral.js
+node examples/get-my-offers.js
+node examples/get-offers-on-collateral.js
+node examples/delete-my-offers.js
+node examples/get-my-active-loans.js
+node examples/liquidate-my-defaulted-loans.js

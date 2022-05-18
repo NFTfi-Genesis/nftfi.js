@@ -1,7 +1,15 @@
-const NFTfi = require('../');
+import NFTfi from '../src/nftfi.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 async function run() {
-  const nftfi = await NFTfi.init();
+  const nftfi = await NFTfi.init({
+    api: { key: process.env.NFTFI_SDK_API_KEY },
+    ethereum: {
+      account: { privateKey: process.env.NFTFI_SDK_ETHEREUM_ACCOUNT_PRIVATE_KEY },
+      provider: { url: process.env.NFTFI_SDK_ETHEREUM_PROVIDER_URL }
+    }
+  });
   const listings = await nftfi.listings.get({
     filters: {
       nftAddresses: []
@@ -40,7 +48,7 @@ async function run() {
       nftfi: { contract: { name: contractName } },
       amount: principal
     });
-    console.log(`[INFO] balance of ${symbol} in account ${nftfi.account.address} is ${balance}`);
+    console.log(`[INFO] balance of ${symbol} in account ${nftfi.account.getAddress()} is ${balance}`);
     console.log('[INFO] setting allowance on NFTfi contract.');
     // Create the offer on the listing
     const result = await nftfi.offers.create({

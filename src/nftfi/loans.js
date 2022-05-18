@@ -3,10 +3,14 @@
  * Class for working with loans.
  */
 class Loans {
+  #api;
+  #account;
+  #fixed;
+
   constructor(options = {}) {
-    this.api = options?.api;
-    this.account = options?.account;
-    this.fixed = options?.fixed;
+    this.#api = options?.api;
+    this.#account = options?.account;
+    this.#fixed = options?.fixed;
   }
 
   /**
@@ -27,10 +31,10 @@ class Loans {
    * });
    */
   async get(options) {
-    let response = await this.api.get({
+    let response = await this.#api.get({
       uri: 'loans',
       params: {
-        accountAddress: this.account.address,
+        accountAddress: this.#account.getAddress(),
         counterparty: options.filters.counterparty,
         status: options.filters.status
       }
@@ -77,12 +81,12 @@ class Loans {
     let success = false;
     switch (options.nftfi.contract.name) {
       case 'v1.loan.fixed':
-        success = await this.fixed.v1.liquidate({
+        success = await this.#fixed.v1.liquidate({
           loan: { id: options.loan.id }
         });
         break;
       case 'v2.loan.fixed':
-        success = await this.fixed.v2.liquidate({
+        success = await this.#fixed.v2.liquidate({
           loan: { id: options.loan.id }
         });
         break;
@@ -93,4 +97,4 @@ class Loans {
   }
 }
 
-module.exports = Loans;
+export default Loans;

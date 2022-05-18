@@ -1,17 +1,20 @@
 {
-  "name": "NFTfi.js",
-  "main": "./src/nftfi",
+  "name": "@nftfi/js",
+  "version": "0.2.0",
+  "main": "./src/nftfi.js",
+  "exports": {
+    "import": "./src/nftfi.js",
+    "require": "./cjs/nftfi.cjs"
+  },
+  "type": "module",
   "engines": {
     "node": ">= 16.0.0"
   },
   "dependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.5",
-    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@babel/runtime": "^7.17.9",
     "axios": "^0.26.1",
     "bn.js": "^5.2.0",
-    "dotenv": "^16.0.0",
     "ethers": "^5.6.2",
-    "hardhat": "^2.9.3",
     "lodash.merge": "^4.6.2",
     "web3": "^1.7.3"
   }

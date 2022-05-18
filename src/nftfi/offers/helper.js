@@ -1,25 +1,32 @@
 class OffersHelper {
+  #BN;
+  #Number;
+  #utils;
+  #signatures;
+  #config;
+  #account;
+
   constructor(options = {}) {
-    this.BN = options?.BN;
-    this.Number = options?.Number;
-    this.utils = options?.utils;
-    this.ethers = options?.ethers;
-    this.signatures = options?.offersSignatures;
-    this.config = options?.config;
-    this.account = options?.account;
+    this.#BN = options?.BN;
+    this.#Number = options?.Number;
+    this.#utils = options?.utils;
+    this.#signatures = options?.offersSignatures;
+    this.#config = options?.config;
+    this.#account = options?.account;
   }
+
   async constructV1Offer(options) {
-    const repayment = this.Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
-    const principal = this.Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
-    const loanInterestRateForDurationInBasisPoints = new this.BN(0).notn(32).toString();
-    const lenderNonce = this.utils.getNonce();
+    const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
+    const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
+    const loanInterestRateForDurationInBasisPoints = new this.#BN(0).notn(32).toString();
+    const lenderNonce = this.#utils.getNonce();
     let offer = {
       nft: {
         id: options.listing.nft.id,
         address: options.listing.nft.address
       },
       lender: {
-        address: this.account.address,
+        address: this.#account.getAddress(),
         nonce: lenderNonce
       },
       borrower: {
@@ -45,29 +52,30 @@ class OffersHelper {
           name: options.listing.nftfi.contract.name
         },
         fee: {
-          bps: this.config.loan.adminFeeInBasisPoints
+          bps: this.#config.loan.adminFeeInBasisPoints
         }
       }
     };
-    offer['signature'] = await this.signatures.getV1OfferSignature({
+    offer['signature'] = await this.#signatures.getV1OfferSignature({
       ...options,
       offer
     });
     return offer;
   }
+
   async constructV2Offer(options) {
-    const repayment = this.Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
-    const principal = this.Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
+    const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
+    const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
     const loanInterestRateForDurationInBasisPoints = 0;
-    const lenderNonce = this.utils.getNonce();
-    const expiry = this.utils.getExpiry();
+    const lenderNonce = this.#utils.getNonce();
+    const expiry = this.#utils.getExpiry();
     let offer = {
       nft: {
         id: options.listing.nft.id,
         address: options.listing.nft.address
       },
       lender: {
-        address: this.account.address,
+        address: this.#account.getAddress(),
         nonce: lenderNonce
       },
       borrower: {
@@ -94,11 +102,11 @@ class OffersHelper {
           name: options.listing.nftfi.contract.name
         },
         fee: {
-          bps: this.config.loan.adminFeeInBasisPoints
+          bps: this.#config.loan.adminFeeInBasisPoints
         }
       }
     };
-    offer['signature'] = await this.signatures.getV2OfferSignature({
+    offer['signature'] = await this.#signatures.getV2OfferSignature({
       ...options,
       offer
     });
@@ -106,4 +114,4 @@ class OffersHelper {
   }
 }
 
-module.exports = OffersHelper;
+export default OffersHelper;

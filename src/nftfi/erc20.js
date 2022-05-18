@@ -3,11 +3,16 @@
  * Class for working with ERC20 tokens.
  */
 class Erc20 {
+  #config;
+  #ethers;
+  #account;
+  #erc20Abi;
+
   constructor(options) {
-    this.config = options?.config;
-    this.ethers = options?.ethers;
-    this.account = options?.account;
-    this.erc20Abi = [
+    this.#config = options?.config;
+    this.#ethers = options?.ethers;
+    this.#account = options?.account;
+    this.#erc20Abi = [
       'function balanceOf(address owner) view returns (uint256)',
       'function approve(address spender, uint256 value) returns (bool)',
       'function allowance(address owner, address spender) public view returns (uint256)'
@@ -33,19 +38,19 @@ class Erc20 {
   async approve(options) {
     const contractName = options.nftfi.contract.name;
     const amount = options.amount.toLocaleString('fullwide', { useGrouping: false });
-    const signer = await this.account.signer();
-    const contract = new this.ethers.Contract(options.token.address, this.erc20Abi, signer);
+    const signer = await this.#account.getSigner();
+    const contract = new this.#ethers.Contract(options.token.address, this.#erc20Abi, signer);
     let contractAddress;
     let success;
     switch (contractName) {
       case 'v1.loan.fixed':
-        contractAddress = this.config.loan.fixed.v1.address;
+        contractAddress = this.#config.loan.fixed.v1.address;
         break;
       case 'v2.loan.fixed':
-        contractAddress = this.config.loan.fixed.v2.address;
+        contractAddress = this.#config.loan.fixed.v2.address;
         break;
     }
-    const allowance = await contract.allowance(this.account.address, contractAddress);
+    const allowance = await contract.allowance(this.#account.getAddress(), contractAddress);
     if (allowance.lt(amount) || amount === '0') {
       success = await contract.approve(contractAddress, amount);
     } else {
@@ -67,11 +72,11 @@ class Erc20 {
    * });
    */
   async balanceOf(options) {
-    const signer = await this.account.signer();
-    const contract = new this.ethers.Contract(options.token.address, this.erc20Abi, signer);
-    const balance = await contract.balanceOf(this.account.address);
+    const signer = await this.#account.getSigner();
+    const contract = new this.#ethers.Contract(options.token.address, this.#erc20Abi, signer);
+    const balance = await contract.balanceOf(this.#account.getAddress());
     return balance;
   }
 }
 
-module.exports = Erc20;
+export default Erc20;

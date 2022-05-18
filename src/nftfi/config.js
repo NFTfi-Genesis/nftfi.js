@@ -31,6 +31,14 @@ const baseConfig = {
   pagination: {
     limit: 20,
     page: 1
+  },
+  rewards: {
+    retroactive: {
+      distributor: {
+        address: '',
+        abi: []
+      }
+    }
   }
 };
 
@@ -45,6 +53,16 @@ mainnetConfig.erc20.dai.symbol = 'DAI';
 mainnetConfig.loan.fixed.v1.address = '0x88341d1a8F672D2780C8dC725902AAe72F143B0c';
 mainnetConfig.loan.fixed.v2.address = '0xf896527c49b44aAb3Cf22aE356Fa3AF8E331F280';
 mainnetConfig.loan.adminFeeInBasisPoints = '500';
+mainnetConfig.rewards.retroactive.distributor.address = '';
+mainnetConfig.rewards.retroactive.distributor.abi = [
+  'function claim(uint256 index, address account, uint256 amount, bytes32[] merkleProof) public nonpayable returns()',
+  'function isClaimed(uint256 index) public view returns (bool)'
+];
+mainnetConfig.rewards.retroactive.distributor.errors = {
+  'execution reverted: MerkleDistributor: Transfer failed.': 'Transfer failed',
+  'execution reverted: MerkleDistributor: Drop already claimed.': 'Drop already claimed',
+  'execution reverted: MerkleDistributor: Invalid proof.': 'Invalid proof'
+};
 
 const rinkebyConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 rinkebyConfig.chainId = 4;
@@ -57,6 +75,16 @@ rinkebyConfig.erc20.dai.symbol = 'DAI';
 rinkebyConfig.loan.fixed.v1.address = '0xA2cDED5Ce935eB83d34DcaEA2e2B95e955F967EF';
 rinkebyConfig.loan.fixed.v2.address = '0x33e75763F3705252775C5AEEd92E5B4987622f44';
 rinkebyConfig.loan.adminFeeInBasisPoints = '500';
+rinkebyConfig.rewards.retroactive.distributor.address = '0xe0d5b1950838f976557B0b3f189B3891a36a6cf2';
+rinkebyConfig.rewards.retroactive.distributor.abi = [
+  'function claim(uint256 index, address account, uint256 amount, bytes32[] merkleProof) public nonpayable returns()',
+  'function isClaimed(uint256 index) public view returns (bool)'
+];
+rinkebyConfig.rewards.retroactive.distributor.errors = {
+  'execution reverted: MerkleDistributor: Transfer failed.': 'Transfer failed',
+  'execution reverted: MerkleDistributor: Drop already claimed.': 'Drop already claimed',
+  'execution reverted: MerkleDistributor: Invalid proof.': 'Invalid proof'
+};
 
 const baseConfigs = {
   [mainnetConfig.chainId]: mainnetConfig,
@@ -75,4 +103,4 @@ class Config {
   }
 }
 
-module.exports = Config;
+export default Config;

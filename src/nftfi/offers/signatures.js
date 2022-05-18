@@ -1,13 +1,18 @@
 class OffersSignatures {
+  #account;
+  #ethers;
+  #config;
+
   constructor(options = {}) {
-    this.account = options?.account;
-    this.ethers = options?.ethers;
-    this.config = options?.config;
+    this.#account = options?.account;
+    this.#ethers = options?.ethers;
+    this.#config = options?.config;
   }
+
   async getV1OfferSignature(options) {
-    const signature = this.account.sign(
-      this.ethers.utils.arrayify(
-        this.ethers.utils.solidityKeccak256(
+    const signature = this.#account.sign(
+      this.#ethers.utils.arrayify(
+        this.#ethers.utils.solidityKeccak256(
           [
             'uint256',
             'uint256',
@@ -34,17 +39,18 @@ class OffersSignatures {
             options.offer.terms.loan.currency,
             options.offer.lender.address,
             options.offer.terms.loan.interest.prorated,
-            this.config.chainId
+            this.#config.chainId
           ]
         )
       )
     );
     return signature;
   }
+
   async getV2OfferSignature(options) {
-    const signature = this.account.sign(
-      this.ethers.utils.arrayify(
-        this.ethers.utils.solidityKeccak256(
+    const signature = this.#account.sign(
+      this.#ethers.utils.arrayify(
+        this.#ethers.utils.solidityKeccak256(
           [
             'address',
             'uint256',
@@ -69,11 +75,11 @@ class OffersSignatures {
             options.offer.referrer.address,
             options.offer.terms.loan.duration,
             options.offer.nftfi.fee.bps,
-            this.account.address,
+            this.#account.getAddress(),
             options.offer.lender.nonce,
             options.offer.terms.loan.expiry,
-            this.config.loan.fixed.v2.address,
-            this.config.chainId
+            this.#config.loan.fixed.v2.address,
+            this.#config.chainId
           ]
         )
       )
@@ -82,4 +88,4 @@ class OffersSignatures {
   }
 }
 
-module.exports = OffersSignatures;
+export default OffersSignatures;

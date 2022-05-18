@@ -3,11 +3,20 @@
  * Class with utility methods.
  */
 class Utils {
+  #ethers;
+  #web3;
+  #BN;
+  #Date;
+  #Math;
+  #Number;
+
   constructor(options = {}) {
-    this.ethers = options?.ethers;
-    this.BN = options?.BN;
-    this.Date = options?.Date;
-    this.web3 = options?.web3;
+    this.#ethers = options?.ethers;
+    this.#web3 = options?.web3;
+    this.#BN = options?.BN;
+    this.#Date = options?.Date;
+    this.#Math = options?.Math;
+    this.#Number = options?.Number;
   }
 
   /**
@@ -20,8 +29,8 @@ class Utils {
    * const nonce = nftfi.utils.getNonce();
    */
   getNonce() {
-    const rand = this.web3.utils.randomHex(32).replace('0x', '');
-    const nonce = new this.BN(rand, 16).toString();
+    const rand = this.#web3.utils.randomHex(32).replace('0x', '');
+    const nonce = new this.#BN(rand, 16).toString();
     return nonce;
   }
 
@@ -31,11 +40,13 @@ class Utils {
    * @returns {number} Expiry
    *
    * @example
-   * // Get an expiry timestamp very far into the future
+   * // Get an expiry timestamp far into the future
    * const expiry = nftfi.utils.getExpiry();
    */
   getExpiry() {
-    const expiry = this.Date.now() + 10 * 24 * 60 * 60 * 1000;
+    const currentTimestampSecs = this.#Math.floor(this.#Date.now() / 1000);
+    const secondsIntoTheFuture = 365 * 24 * 60 * 60;
+    const expiry = currentTimestampSecs + secondsIntoTheFuture;
     return expiry;
   }
 
@@ -52,7 +63,7 @@ class Utils {
    */
   formatEther(wei) {
     const weiString = wei.toLocaleString('fullwide', { useGrouping: false });
-    return this.ethers.utils.formatEther(weiString);
+    return this.#ethers.utils.formatEther(weiString);
   }
 
   /**
@@ -71,7 +82,7 @@ class Utils {
    * const amount = nftfi.utils.calcRepaymentAmount(principal, apr, duration);
    */
   calcRepaymentAmount(principal, apr, duration) {
-    const p = parseInt(principal);
+    const p = this.#Number.parseInt(principal);
     return ((p * apr) / 100) * (duration / 365) + p;
   }
 
@@ -95,4 +106,4 @@ class Utils {
   }
 }
 
-module.exports = Utils;
+export default Utils;

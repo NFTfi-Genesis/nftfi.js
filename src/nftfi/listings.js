@@ -3,9 +3,12 @@
  * Class for working with listings.
  */
 class Listings {
+  #api;
+  #config;
+
   constructor(options = {}) {
-    this.api = options?.api;
-    this.config = options?.config;
+    this.#api = options?.api;
+    this.#config = options?.config;
   }
 
   /**
@@ -34,10 +37,10 @@ class Listings {
    * });
    */
   async get(options = {}) {
-    let limit = options?.pagination?.limit || this.config.pagination.limit;
-    let page = options?.pagination?.page || this.config.pagination.page;
+    let limit = options?.pagination?.limit || this.#config.pagination.limit;
+    let page = options?.pagination?.page || this.#config.pagination.page;
     let nftAddresses = options?.filters?.nftAddresses || [];
-    let response = await this.api.get({
+    let response = await this.#api.get({
       uri: 'listings',
       params: {
         nftAddresses: nftAddresses.join(),
@@ -50,4 +53,4 @@ class Listings {
   }
 }
 
-module.exports = Listings;
+export default Listings;

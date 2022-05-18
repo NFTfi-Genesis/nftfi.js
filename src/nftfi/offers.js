@@ -3,11 +3,14 @@
  * Class for working with offers.
  */
 class Offers {
+  #account;
+  #api;
+  #helper;
+
   constructor(options = {}) {
-    this.account = options?.account;
-    this.api = options?.api;
-    this.config = options?.config;
-    this.helper = options?.offersHelper;
+    this.#account = options?.account;
+    this.#api = options?.api;
+    this.#helper = options?.offersHelper;
   }
 
   /**
@@ -43,10 +46,10 @@ class Offers {
       };
     } else {
       params = {
-        lenderAddress: this.account.address
+        lenderAddress: this.#account.getAddress()
       };
     }
-    let response = await this.api.get({
+    let response = await this.#api.get({
       uri: 'offers',
       params
     });
@@ -113,13 +116,13 @@ class Offers {
     const contractName = options.listing.nftfi.contract.name;
     switch (contractName) {
       case 'v1.loan.fixed':
-        payload = await this.helper.constructV1Offer(options);
+        payload = await this.#helper.constructV1Offer(options);
         break;
       case 'v2.loan.fixed':
-        payload = await this.helper.constructV2Offer(options);
+        payload = await this.#helper.constructV2Offer(options);
         break;
     }
-    const response = await this.api.post({
+    const response = await this.#api.post({
       uri: 'offers',
       payload
     });
@@ -146,9 +149,9 @@ class Offers {
    */
   async delete(options) {
     const uri = `offers/${options.offer.id}`;
-    const result = await this.api.delete({ uri });
+    const result = await this.#api.delete({ uri });
     return result;
   }
 }
 
-module.exports = Offers;
+export default Offers;
