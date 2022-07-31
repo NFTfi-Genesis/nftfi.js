@@ -9,6 +9,8 @@ exports["default"] = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -18,6 +20,10 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 var _classPrivateFieldGet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldGet"));
 
 var _classPrivateFieldSet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldSet"));
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
 
@@ -138,55 +144,34 @@ var Offers = /*#__PURE__*/function () {
       return get;
     }()
     /**
-     * Creates a new offer on a collateral listing.
+     * Creates a new offer on a NFT.
      *
      * @param {object} options - Config options for this method
      * @param {object} options.terms - Terms of the offer
-     * @param {object} options.listing - Listing to place an offer on
+     * @param {object} options.nft - NFT to place an offer on
+     * @param {object} options.borrower - Owner of the NFT
+     * @param {object} options.nftfi - NFTfi options
      * @returns {object} Response object
      *
      * @example
-     * // Construct the loan terms
-     * const currency = nftfi.config.erc20.weth.address;
-     * const principal = 1000000000000000000; // 1 wETH
-     * const apr = 32;
-     * const days = 30;
-     * const repayment = nftfi.utils.calcRepaymentAmount(principal, apr, days);
-     * const duration = 86400 * days; // Number of days in seconds
-     * const terms = {
-     *   principal,
-     *   repayment,
-     *   duration,
-     *   currency
-     * };
-     * // Get first available listing (to make offer on)
-     * const listings = await nftfi.listings.get();
-     * const listing = listings[0];
-     * // Approve principal wETH with the NFTfi contract
-     * await nftfi.erc20.approve({
-     *   token: { address: currency },
-     *   amount: principal,
+     * // Create an offer on a NFT
+     * const offer = await nftfi.offers.create({
+     *   terms: {
+     *     principal: 1000000000000000000,
+     *     repayment: 1100000000000000000,
+     *     duration: 86400 * 7, // 7 days (in seconds)
+     *     currency: "0x00000000"
+     *   },
+     *   nft: {
+     *     address: "0x00000000",
+     *     id: "42"
+     *   },
+     *   borrower: {
+     *     address: "0x00000000"
+     *   },
      *   nftfi: {
      *     contract: {
-     *       name: listing.nftfi.contract.name
-     *     }
-     *   }
-     * });
-     * // Create an offer on the listing
-     * const offer = await nftfi.offers.create({
-     *   terms,
-     *   listing: {
-     *     nft: {
-     *       id: listing.nft.id,
-     *       address: listing.nft.address
-     *     },
-     *     borrower: {
-     *       address: listing.borrower.address
-     *     },
-     *     nftfi: {
-     *       contract: {
-     *         name: listing.nftfi.contract.name
-     *       }
+     *       name: "v2.loan.fixed"
      *     }
      *   }
      * });
@@ -195,14 +180,15 @@ var Offers = /*#__PURE__*/function () {
   }, {
     key: "create",
     value: function () {
-      var _create = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
-        var payload, contractName, response;
+      var _create = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options, payload) {
+        var contractName, response;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                payload = {};
-                contractName = options.listing.nftfi.contract.name;
+                options = _objectSpread(_objectSpread({}, options.listing), options); // copying options.listing fields onto the root, for backwards compatibility.
+
+                contractName = options.nftfi.contract.name;
                 _context2.t0 = contractName;
                 _context2.next = _context2.t0 === 'v1.loan.fixed' ? 5 : _context2.t0 === 'v2.loan.fixed' ? 9 : 13;
                 break;
@@ -242,7 +228,7 @@ var Offers = /*#__PURE__*/function () {
         }, _callee2, this);
       }));
 
-      function create(_x) {
+      function create(_x, _x2) {
         return _create.apply(this, arguments);
       }
 
@@ -294,7 +280,7 @@ var Offers = /*#__PURE__*/function () {
         }, _callee3, this);
       }));
 
-      function _delete(_x2) {
+      function _delete(_x3) {
         return _delete2.apply(this, arguments);
       }
 

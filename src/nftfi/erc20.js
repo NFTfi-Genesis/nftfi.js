@@ -4,19 +4,52 @@
  */
 class Erc20 {
   #config;
-  #ethers;
+  #contractFactory;
   #account;
-  #erc20Abi;
+  #BN;
 
   constructor(options) {
     this.#config = options?.config;
-    this.#ethers = options?.ethers;
+    this.#contractFactory = options?.contractFactory;
     this.#account = options?.account;
-    this.#erc20Abi = [
-      'function balanceOf(address owner) view returns (uint256)',
-      'function approve(address spender, uint256 value) returns (bool)',
-      'function allowance(address owner, address spender) public view returns (uint256)'
-    ];
+    this.#BN = options?.BN;
+  }
+
+  _getContractAddress(contractName) {
+    switch (contractName) {
+      case 'v1.loan.fixed':
+        return this.#config.loan.fixed.v1.address;
+      case 'v2.loan.fixed':
+        return this.#config.loan.fixed.v2.address;
+    }
+  }
+
+  /**
+   * Returns your account's ERC20 allowance for v1 & v2 NFTfi contracts.
+   *
+   * @param {object} options - Hashmap of config options for this method
+   * @param {string} options.token.address - The ERC20 token address
+   * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`)
+   * @returns {number} The user account's token allowance for that contract, in base units (eg. 1000000000000000000 wei)
+   *
+   * @example
+   * const balance = await nftfi.erc20.allowance({
+   *  token: { address: '0x00000000' },
+   *  nftfi: { contract: { name: 'v2.loan.fixed' } }
+   * });
+   */
+  async allowance(options) {
+    const contractName = options.nftfi.contract.name;
+    const contractAddress = this._getContractAddress(contractName);
+
+    const contract = this.#contractFactory.create({
+      address: options.token.address,
+      abi: this.#config.erc20.abi
+    });
+    return await contract.call({
+      function: 'allowance',
+      args: [this.#account.getAddress(), contractAddress]
+    });
   }
 
   /**
@@ -37,26 +70,46 @@ class Erc20 {
    */
   async approve(options) {
     const contractName = options.nftfi.contract.name;
-    const amount = options.amount.toLocaleString('fullwide', { useGrouping: false });
-    const signer = await this.#account.getSigner();
-    const contract = new this.#ethers.Contract(options.token.address, this.#erc20Abi, signer);
-    let contractAddress;
+    const contractAddress = this._getContractAddress(contractName);
     let success;
-    switch (contractName) {
-      case 'v1.loan.fixed':
-        contractAddress = this.#config.loan.fixed.v1.address;
-        break;
-      case 'v2.loan.fixed':
-        contractAddress = this.#config.loan.fixed.v2.address;
-        break;
-    }
-    const allowance = await contract.allowance(this.#account.getAddress(), contractAddress);
+
+    const contract = this.#contractFactory.create({
+      address: options.token.address,
+      abi: this.#config.erc20.abi
+    });
+
+    const allowance = await this.allowance(options);
+    const amount = options.amount.toLocaleString('fullwide', { useGrouping: false });
+
     if (allowance.lt(amount) || amount === '0') {
-      success = await contract.approve(contractAddress, amount);
+      const result = await contract.call({
+        function: 'approve',
+        args: [contractAddress, amount]
+      });
+      success = result?.status === 1;
     } else {
       success = true;
     }
     return success;
+  }
+
+  /**
+   * Approves your account's ERC20 maximum amount, if not already approved, for v1 & v2 NFTfi contracts.
+   *
+   * @param {object} options - Hashmap of config options for this method
+   * @param {string} options.token.address - The ERC20 token address
+   * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`)
+   * @returns {boolean} Boolean value indicating whether the operation succeeded
+   *
+   * @example
+   * const results = await nftfi.erc20.approveMax({
+   *   token: { address: '0x00000000' },
+   *   nftfi: { contract: { name: 'v2.loan.fixed' } }
+   * });
+   */
+  async approveMax(options) {
+    const maxAllowance = new this.#BN(0).notn(256).toString();
+    return this.approve({ ...options, amount: maxAllowance });
   }
 
   /**
@@ -72,9 +125,14 @@ class Erc20 {
    * });
    */
   async balanceOf(options) {
-    const signer = await this.#account.getSigner();
-    const contract = new this.#ethers.Contract(options.token.address, this.#erc20Abi, signer);
-    const balance = await contract.balanceOf(this.#account.getAddress());
+    const contract = this.#contractFactory.create({
+      address: options.token.address,
+      abi: this.#config.erc20.abi
+    });
+    const balance = await contract.call({
+      function: 'balanceOf',
+      args: [this.#account.getAddress()]
+    });
     return balance;
   }
 }

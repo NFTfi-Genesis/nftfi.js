@@ -142,23 +142,22 @@ var Http = /*#__PURE__*/function () {
 
               case 4:
                 result = _context3.sent;
-                _context3.next = 10;
-                break;
+                return _context3.abrupt("return", result);
 
-              case 7:
-                _context3.prev = 7;
+              case 8:
+                _context3.prev = 8;
                 _context3.t0 = _context3["catch"](1);
                 result = _context3.t0.response;
 
-              case 10:
+              case 11:
                 return _context3.abrupt("return", result);
 
-              case 11:
+              case 12:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, this, [[1, 7]]);
+        }, _callee3, this, [[1, 8]]);
       }));
 
       function post(_x3, _x4) {

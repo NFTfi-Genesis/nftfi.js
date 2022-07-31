@@ -16,15 +16,17 @@ class Auth {
   async getToken() {
     if (!this.#token) {
       const nonce = this.#utils.getNonce();
-      const accountAddress = this.#account.getAddress();
-      const message = `This message proves you own this wallet address : ${this.#account.getAddress()}`;
+      const accountAddress = this.#account.getAuthAddress();
+      const message = `This message proves you own this wallet address : ${this.#account.getAuthAddress()}`;
       const messageToSign = `${message}\r\n\r\nChainId : ${this.#config.chainId}\r\nNonce : ${nonce})`;
-      const signedMessage = await this.#account.sign(messageToSign);
+      const signedMessage = await this.#account.authSign(messageToSign);
+      const multisig = this.#account.isMultisig();
       const body = {
         message,
         nonce,
         accountAddress,
-        signedMessage
+        signedMessage,
+        multisig
       };
       const uri = `${this.#config.api.baseURI}/authorization/token`;
       const headers = {

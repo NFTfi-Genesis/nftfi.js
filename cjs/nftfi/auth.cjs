@@ -74,61 +74,63 @@ var Auth = /*#__PURE__*/function () {
     key: "getToken",
     value: function () {
       var _getToken = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-        var _result$data, _result$data$result, nonce, accountAddress, message, messageToSign, signedMessage, body, uri, headers, result, token, _result$data2;
+        var _result$data, _result$data$result, nonce, accountAddress, message, messageToSign, signedMessage, multisig, body, uri, headers, result, token, _result$data2;
 
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 if ((0, _classPrivateFieldGet2["default"])(this, _token)) {
-                  _context.next = 20;
+                  _context.next = 21;
                   break;
                 }
 
                 nonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
-                accountAddress = (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
-                message = "This message proves you own this wallet address : ".concat((0, _classPrivateFieldGet2["default"])(this, _account).getAddress());
+                accountAddress = (0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress();
+                message = "This message proves you own this wallet address : ".concat((0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress());
                 messageToSign = "".concat(message, "\r\n\r\nChainId : ").concat((0, _classPrivateFieldGet2["default"])(this, _config).chainId, "\r\nNonce : ").concat(nonce, ")");
                 _context.next = 7;
-                return (0, _classPrivateFieldGet2["default"])(this, _account).sign(messageToSign);
+                return (0, _classPrivateFieldGet2["default"])(this, _account).authSign(messageToSign);
 
               case 7:
                 signedMessage = _context.sent;
+                multisig = (0, _classPrivateFieldGet2["default"])(this, _account).isMultisig();
                 body = {
                   message: message,
                   nonce: nonce,
                   accountAddress: accountAddress,
-                  signedMessage: signedMessage
+                  signedMessage: signedMessage,
+                  multisig: multisig
                 };
                 uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/authorization/token");
                 headers = {
                   'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
                 };
-                _context.next = 13;
+                _context.next = 14;
                 return (0, _classPrivateFieldGet2["default"])(this, _http).post(uri, body, {
                   headers: headers
                 });
 
-              case 13:
+              case 14:
                 result = _context.sent;
                 token = result === null || result === void 0 ? void 0 : (_result$data = result.data) === null || _result$data === void 0 ? void 0 : (_result$data$result = _result$data.result) === null || _result$data$result === void 0 ? void 0 : _result$data$result.token;
 
                 if (!token) {
-                  _context.next = 19;
+                  _context.next = 20;
                   break;
                 }
 
                 (0, _classPrivateFieldSet2["default"])(this, _token, token);
-                _context.next = 20;
+                _context.next = 21;
                 break;
 
-              case 19:
+              case 20:
                 throw result === null || result === void 0 ? void 0 : (_result$data2 = result.data) === null || _result$data2 === void 0 ? void 0 : _result$data2.message;
 
-              case 20:
+              case 21:
                 return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
 
-              case 21:
+              case 22:
               case "end":
                 return _context.stop();
             }

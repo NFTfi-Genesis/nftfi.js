@@ -1,27 +1,44 @@
-class LoanFixedV1 {
-  #account;
-  #ethers;
+class LoansFixedV1 {
   #config;
-  #abi;
+  #contractFactory;
+  #contract;
 
   constructor(options) {
-    this.#account = options?.account;
-    this.#ethers = options?.ethers;
     this.#config = options?.config;
-    this.#abi = ['function liquidateOverdueLoan(uint256 _loanId) nonpayable returns()'];
+    this.#contractFactory = options?.contractFactory;
+    this.#contract = this.#contractFactory.create({
+      address: this.#config.loan.fixed.v1.address,
+      abi: this.#config.loan.fixed.v1.abi
+    });
   }
 
-  async liquidate(options) {
-    let result = true;
+  async liquidateOverdueLoan(options) {
+    let success;
     try {
-      const signer = await this.#account.getSigner();
-      const contract = new this.#ethers.Contract(this.#config.loan.fixed.v1.address, this.#abi, signer);
-      await contract.liquidateOverdueLoan(options.loan.id);
+      const result = await this.#contract.call({
+        function: 'liquidateOverdueLoan',
+        args: [options.loan.id]
+      });
+      success = result?.status === 1 ? true : false;
     } catch (e) {
-      result = false;
+      success = false;
     }
-    return result;
+    return success;
+  }
+
+  async payBackLoan(options) {
+    let success;
+    try {
+      const result = await this.#contract.call({
+        function: 'payBackLoan',
+        args: [options.loan.id]
+      });
+      success = result?.status === 1 ? true : false;
+    } catch (e) {
+      success = false;
+    }
+    return success;
   }
 }
 
-export default LoanFixedV1;
+export default LoansFixedV1;

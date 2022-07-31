@@ -23,93 +23,194 @@ function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedec
 
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 
-var _account = /*#__PURE__*/new WeakMap();
-
-var _ethers = /*#__PURE__*/new WeakMap();
-
 var _config = /*#__PURE__*/new WeakMap();
 
-var _abi = /*#__PURE__*/new WeakMap();
+var _contractFactory = /*#__PURE__*/new WeakMap();
 
-var LoanFixedV2 = /*#__PURE__*/function () {
-  function LoanFixedV2(options) {
-    (0, _classCallCheck2["default"])(this, LoanFixedV2);
+var _contract = /*#__PURE__*/new WeakMap();
 
-    _classPrivateFieldInitSpec(this, _account, {
-      writable: true,
-      value: void 0
-    });
-
-    _classPrivateFieldInitSpec(this, _ethers, {
-      writable: true,
-      value: void 0
-    });
+var LoansFixedV2 = /*#__PURE__*/function () {
+  function LoansFixedV2(options) {
+    (0, _classCallCheck2["default"])(this, LoansFixedV2);
 
     _classPrivateFieldInitSpec(this, _config, {
       writable: true,
       value: void 0
     });
 
-    _classPrivateFieldInitSpec(this, _abi, {
+    _classPrivateFieldInitSpec(this, _contractFactory, {
       writable: true,
       value: void 0
     });
 
-    (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
-    (0, _classPrivateFieldSet2["default"])(this, _ethers, options === null || options === void 0 ? void 0 : options.ethers);
+    _classPrivateFieldInitSpec(this, _contract, {
+      writable: true,
+      value: void 0
+    });
+
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
-    (0, _classPrivateFieldSet2["default"])(this, _abi, ['function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()']);
+    (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
+    (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+      address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2.address,
+      abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2.abi
+    }));
   }
 
-  (0, _createClass2["default"])(LoanFixedV2, [{
-    key: "liquidate",
+  (0, _createClass2["default"])(LoansFixedV2, [{
+    key: "acceptOffer",
     value: function () {
-      var _liquidate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var result, signer, contract;
+      var _acceptOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
+        var success, offer, signature, borrowerSettings, result;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                result = true;
-                _context.prev = 1;
-                _context.next = 4;
-                return (0, _classPrivateFieldGet2["default"])(this, _account).getSigner();
+                _context.prev = 0;
+                offer = {
+                  loanERC20Denomination: options.offer.terms.loan.currency,
+                  loanPrincipalAmount: String(options.offer.terms.loan.principal),
+                  maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
+                  nftCollateralContract: options.offer.nft.address,
+                  nftCollateralId: options.offer.nft.id,
+                  referrer: '0x0000000000000000000000000000000000000000',
+                  loanDuration: options.offer.terms.loan.duration,
+                  loanAdminFeeInBasisPoints: options.offer.nftfi.fee.bps
+                };
+                signature = {
+                  signer: options.offer.lender.address,
+                  nonce: options.offer.lender.nonce,
+                  expiry: options.offer.terms.loan.expiry,
+                  signature: options.offer.signature
+                };
+                borrowerSettings = {
+                  revenueSharePartner: '0x0000000000000000000000000000000000000000',
+                  referralFeeInBasisPoints: 0
+                };
+                _context.next = 6;
+                return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+                  "function": 'acceptOffer',
+                  args: [offer, signature, borrowerSettings]
+                });
 
-              case 4:
-                signer = _context.sent;
-                contract = new ((0, _classPrivateFieldGet2["default"])(this, _ethers).Contract)((0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2.address, (0, _classPrivateFieldGet2["default"])(this, _abi), signer);
-                _context.next = 8;
-                return contract.liquidateOverdueLoan(options.loan.id);
-
-              case 8:
+              case 6:
+                result = _context.sent;
+                success = (result === null || result === void 0 ? void 0 : result.status) === 1 ? true : false;
                 _context.next = 13;
                 break;
 
               case 10:
                 _context.prev = 10;
-                _context.t0 = _context["catch"](1);
-                result = false;
+                _context.t0 = _context["catch"](0);
+                success = false;
 
               case 13:
-                return _context.abrupt("return", result);
+                return _context.abrupt("return", success);
 
               case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[1, 10]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
-      function liquidate(_x) {
-        return _liquidate.apply(this, arguments);
+      function acceptOffer(_x) {
+        return _acceptOffer.apply(this, arguments);
       }
 
-      return liquidate;
+      return acceptOffer;
+    }()
+  }, {
+    key: "liquidateOverdueLoan",
+    value: function () {
+      var _liquidateOverdueLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
+        var success, result;
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+                  "function": 'liquidateOverdueLoan',
+                  args: [options.loan.id]
+                });
+
+              case 3:
+                result = _context2.sent;
+                success = (result === null || result === void 0 ? void 0 : result.status) === 1 ? true : false;
+                _context2.next = 10;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                success = false;
+
+              case 10:
+                return _context2.abrupt("return", success);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 7]]);
+      }));
+
+      function liquidateOverdueLoan(_x2) {
+        return _liquidateOverdueLoan.apply(this, arguments);
+      }
+
+      return liquidateOverdueLoan;
+    }()
+  }, {
+    key: "payBackLoan",
+    value: function () {
+      var _payBackLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
+        var success, result;
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+                  "function": 'payBackLoan',
+                  args: [options.loan.id]
+                });
+
+              case 3:
+                result = _context3.sent;
+                success = (result === null || result === void 0 ? void 0 : result.status) === 1 ? true : false;
+                _context3.next = 10;
+                break;
+
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](0);
+                success = false;
+
+              case 10:
+                return _context3.abrupt("return", success);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 7]]);
+      }));
+
+      function payBackLoan(_x3) {
+        return _payBackLoan.apply(this, arguments);
+      }
+
+      return payBackLoan;
     }()
   }]);
-  return LoanFixedV2;
+  return LoansFixedV2;
 }();
 
-var _default = LoanFixedV2;
+var _default = LoansFixedV2;
 exports["default"] = _default;

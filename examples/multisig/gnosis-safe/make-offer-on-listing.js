@@ -1,18 +1,29 @@
-import NFTfi from '../src/nftfi.js';
+import NFTfi from '@nftfi/js';
 import dotenv from 'dotenv';
 dotenv.config();
 
 async function run() {
   const nftfi = await NFTfi.init({
-    api: { key: process.env.NFTFI_SDK_API_KEY },
+    config: { api: { key: process.env.NFTFI_SDK_API_KEY } },
     ethereum: {
-      account: { privateKey: process.env.NFTFI_SDK_ETHEREUM_ACCOUNT_PRIVATE_KEY },
-      provider: { url: process.env.NFTFI_SDK_ETHEREUM_PROVIDER_URL }
+      provider: { url: process.env.NFTFI_SDK_ETHEREUM_PROVIDER_URL },
+      account: {
+        multisig: {
+          gnosis: {
+            safe: {
+              address: process.env.NFTFI_SDK_ETHEREUM_ACCOUNT_MULTISIG_GNOSIS_ADDRESS,
+              owners: {
+                privateKeys: process.env.NFTFI_SDK_ETHEREUM_ACCOUNT_MULTISIG_GNOSIS_OWNERS_PRIVATE_KEYS.split(',')
+              }
+            }
+          }
+        }
+      }
     }
   });
   const listings = await nftfi.listings.get({
     filters: {
-      nftAddresses: []
+      nftAddresses: [process.env.NFTFI_SDK_EXAMPLE_NFT_ADDRESS]
     },
     pagination: {
       limit: 20,
@@ -34,7 +45,7 @@ async function run() {
     const apr = 31.42;
     const days = listing?.terms?.loan?.duration == 90 ? 90 : 30; // Use 90 days if desired, else default to 30 days
     const repayment = nftfi.utils.calcRepaymentAmount(principal, apr, days);
-    const duration = 86400 * days; // Number of days (loan duration) in seconds
+    const duration = 86400 * 1; // Number of days (loan duration) in seconds
     const terms = {
       principal,
       repayment,
@@ -53,7 +64,9 @@ async function run() {
     // Create the offer on the listing
     const result = await nftfi.offers.create({
       terms,
-      listing
+      nft: listing.nft,
+      borrower: listing.borrower,
+      nftfi: listing.nftfi
     });
     if (result.errors) {
       console.log(`[ERROR] could not create offer with the following: ${JSON.stringify(terms)}.`);

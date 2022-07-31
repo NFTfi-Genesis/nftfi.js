@@ -22,15 +22,15 @@ class OffersHelper {
     const lenderNonce = this.#utils.getNonce();
     let offer = {
       nft: {
-        id: options.listing.nft.id,
-        address: options.listing.nft.address
+        id: options.nft.id,
+        address: options.nft.address
       },
       lender: {
         address: this.#account.getAddress(),
         nonce: lenderNonce
       },
       borrower: {
-        address: options.listing.borrower.address
+        address: options.borrower.address
       },
       referrer: {
         address: '0x0000000000000000000000000000000000000000'
@@ -49,7 +49,7 @@ class OffersHelper {
       },
       nftfi: {
         contract: {
-          name: options.listing.nftfi.contract.name
+          name: options.nftfi.contract.name
         },
         fee: {
           bps: this.#config.loan.adminFeeInBasisPoints
@@ -71,15 +71,15 @@ class OffersHelper {
     const expiry = this.#utils.getExpiry();
     let offer = {
       nft: {
-        id: options.listing.nft.id,
-        address: options.listing.nft.address
+        id: options.nft.id,
+        address: options.nft.address
       },
       lender: {
         address: this.#account.getAddress(),
         nonce: lenderNonce
       },
       borrower: {
-        address: options.listing.borrower.address
+        address: options.borrower.address
       },
       referrer: {
         address: '0x0000000000000000000000000000000000000000'
@@ -99,7 +99,7 @@ class OffersHelper {
       },
       nftfi: {
         contract: {
-          name: options.listing.nftfi.contract.name
+          name: options.nftfi.contract.name
         },
         fee: {
           bps: this.#config.loan.adminFeeInBasisPoints

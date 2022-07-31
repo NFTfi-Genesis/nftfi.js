@@ -37,7 +37,9 @@ import NFTfi from '@nftfi/js';
 
 // Initialise
 const nftfi = await NFTfi.init({
-  api: { key: <nftfi-sdk-api-key> },
+  config: { 
+    api: { key: <nftfi-sdk-api-key> }
+  },
   ethereum: {
     account: { privateKey: <ethereum-account-private-key> },
     provider: { url: <ethereum-provider-url> }
@@ -61,9 +63,35 @@ Class for working with ERC20 tokens.
 **Kind**: global class  
 
 * [Erc20](#Erc20)
+    * [`.allowance(options)`](#Erc20+allowance) ⇒ <code>number</code>
     * [`.approve(options)`](#Erc20+approve) ⇒ <code>boolean</code>
+    * [`.approveMax(options)`](#Erc20+approveMax) ⇒ <code>boolean</code>
     * [`.balanceOf(options)`](#Erc20+balanceOf) ⇒ <code>number</code>
 
+
+* * *
+
+<a name="Erc20+allowance"></a>
+
+#### `erc20.allowance(options)` ⇒ <code>number</code>
+Returns your account's ERC20 allowance for v1 & v2 NFTfi contracts.
+
+**Kind**: instance method of [<code>Erc20</code>](#Erc20)  
+**Returns**: <code>number</code> - The user account's token allowance for that contract, in base units (eg. 1000000000000000000 wei)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Hashmap of config options for this method |
+| options.token.address | <code>string</code> | The ERC20 token address |
+| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`) |
+
+**Example**  
+```js
+const balance = await nftfi.erc20.allowance({
+ token: { address: '0x00000000' },
+ nftfi: { contract: { name: 'v2.loan.fixed' } }
+});
+```
 
 * * *
 
@@ -93,6 +121,30 @@ const results = await nftfi.erc20.approve({
 
 * * *
 
+<a name="Erc20+approveMax"></a>
+
+#### `erc20.approveMax(options)` ⇒ <code>boolean</code>
+Approves your account's ERC20 maximum amount, if not already approved, for v1 & v2 NFTfi contracts.
+
+**Kind**: instance method of [<code>Erc20</code>](#Erc20)  
+**Returns**: <code>boolean</code> - Boolean value indicating whether the operation succeeded  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Hashmap of config options for this method |
+| options.token.address | <code>string</code> | The ERC20 token address |
+| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`) |
+
+**Example**  
+```js
+const results = await nftfi.erc20.approveMax({
+  token: { address: '0x00000000' },
+  nftfi: { contract: { name: 'v2.loan.fixed' } }
+});
+```
+
+* * *
+
 <a name="Erc20+balanceOf"></a>
 
 #### `erc20.balanceOf(options)` ⇒ <code>number</code>
@@ -110,6 +162,73 @@ Returns your account's balance of a given ERC20 token.
 ```js
 const balance = await nftfi.erc20.balanceOf({
   token: { address: '0x00000000' }
+});
+```
+
+* * *
+
+<a name="Erc721"></a>
+
+### Erc721
+Class for working with ERC721 non-fungible tokens.
+
+**Kind**: global class  
+
+* [Erc721](#Erc721)
+    * [`.ownerOf(options)`](#Erc721+ownerOf) ⇒ <code>string</code>
+    * [`.setApprovalForAll(options)`](#Erc721+setApprovalForAll) ⇒ <code>boolean</code>
+
+
+* * *
+
+<a name="Erc721+ownerOf"></a>
+
+#### `erc721.ownerOf(options)` ⇒ <code>string</code>
+Returns the owner of the specified NFT.
+
+**Kind**: instance method of [<code>Erc721</code>](#Erc721)  
+**Returns**: <code>string</code> - The NFT's owner address  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options |
+| options.token.address | <code>string</code> | The ERC721 token address |
+| options.token.id | <code>string</code> | The ERC721 token ID |
+
+**Example**  
+```js
+const address = await nftfi.erc721.ownerOf({
+  token: {
+   address: '0x00000000',
+   id: '0'
+  }
+});
+```
+
+* * *
+
+<a name="Erc721+setApprovalForAll"></a>
+
+#### `erc721.setApprovalForAll(options)` ⇒ <code>boolean</code>
+Sets or unsets the approval of a given NFTfi contract.
+The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
+
+**Kind**: instance method of [<code>Erc721</code>](#Erc721)  
+**Returns**: <code>boolean</code> - Boolean value indicating whether the operation succeeded  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options |
+| options.token.address | <code>string</code> | The ERC721 token address |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`) |
+
+**Example**  
+```js
+const address = await nftfi.erc721.setApprovalForAll({
+  token: {
+   address: '0x00000000'
+  },
+  nftfi: { contract: { name: 'v2.loan.fixed' } }
 });
 ```
 
@@ -169,7 +288,9 @@ Class for working with loans.
 
 * [Loans](#Loans)
     * [`.get(options)`](#Loans+get) ⇒ <code>Array.&lt;object&gt;</code>
+    * [`.begin(options)`](#Loans+begin) ⇒ <code>object</code>
     * [`.liquidate(options)`](#Loans+liquidate) ⇒ <code>object</code>
+    * [`.repay(options)`](#Loans+repay) ⇒ <code>object</code>
 
 
 * * *
@@ -201,10 +322,68 @@ const loans = await nftfi.loans.get({
 
 * * *
 
+<a name="Loans+begin"></a>
+
+#### `loans.begin(options)` ⇒ <code>object</code>
+Begin a loan. Called by the borrower when accepting a lender's offer.
+
+**Kind**: instance method of [<code>Loans</code>](#Loans)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Hashmap of config options for this method |
+| options.offer.nft.address | <code>string</code> | Address of the NFT being used as collateral |
+| options.offer.nft.id | <code>string</code> | ID of NFT being used as collateral |
+| options.offer.terms.loan.currency | <code>string</code> | Address of the ERC20 contract being used as principal/interest |
+| options.offer.terms.loan.principal | <code>number</code> | Sum of money transferred from lender to borrower at the beginning of the loan |
+| options.offer.terms.loan.repayment | <code>number</code> | Maximum amount of money that the borrower would be required to retrieve their collateral |
+| options.offer.terms.loan.duration | <code>number</code> | Amount of time (measured in seconds) that may elapse before the lender can liquidate the loan |
+| options.offer.terms.loan.expiry | <code>number</code> | Timestamp (in seconds) of when the signature expires |
+| options.offer.lender.address | <code>string</code> | Address of the lender that signed the offer |
+| options.offer.lender.nonce | <code>string</code> | Nonce used by the lender when they signed the offer |
+| options.offer.signature | <code>string</code> | ECDSA signature of the lender |
+| options.offer.nftfi.fee.bps | <code>number</code> | Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid |
+| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v1.loan.fixed`, `v2.loan.fixed` |
+
+**Example**  
+```js
+// Begin a loan on a lender's offer.
+const result = await nftfi.loans.begin({
+  offer: {
+    nft: {
+      id: '42',
+      address: '0x00000000',
+    },
+    lender: {
+      address: '0x00000000',
+      nonce: '314159265359'
+    },
+    terms: {
+      loan: {
+        principal: 1000000000000000000,
+        repayment: 1100000000000000000,
+        duration: 86400 * 7, // 7 days (in seconds)
+        currency: "0x00000000"
+        expiry: 1690548548 // Friday, 28 July 2023 14:49:08 GMT+02:00
+      }
+    },
+    signature: '0x000000000000000000000000000000000000000000000000000',
+    nftfi: {
+      fee: { bps: 500 },
+      contract: { name: 'v2.loan.fixed' }
+    }
+  }
+});
+```
+
+* * *
+
 <a name="Loans+liquidate"></a>
 
 #### `loans.liquidate(options)` ⇒ <code>object</code>
 Liquidate `defaulted` loans in which your account is a participant.
+Can be called once a loan has finished its duration and the borrower still has not repaid.
 
 **Kind**: instance method of [<code>Loans</code>](#Loans)  
 **Returns**: <code>object</code> - Response object  
@@ -213,15 +392,13 @@ Liquidate `defaulted` loans in which your account is a participant.
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.loan.id | <code>string</code> | The ID of the loan being liquidated |
-| options.nftfi.contract.name | <code>string</code> | The contract used to facilitate the loan: `v1.loan.fixed`, `v2.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the liquidation: `v1.loan.fixed`, `v2.loan.fixed` |
 
 **Example**  
 ```js
 // Liquidate a v1 fixed loan
-const loans = await nftfi.loans.get({
-  loan: {
-    id: 1
-  },
+const result = await nftfi.loans.liquidate({
+  loan: { id: 1 },
   nftfi: {
     contract: {
       name: 'v1.loan.fixed'
@@ -232,10 +409,49 @@ const loans = await nftfi.loans.get({
 **Example**  
 ```js
 // Liquidate a v2 fixed loan
-const loans = await nftfi.loans.get({
-  loan: {
-    id: 2
-  },
+const result = await nftfi.loans.liquidate({
+  loan: { id: 2 },
+  nftfi: {
+    contract: {
+      name: 'v2.loan.fixed'
+    }
+  }
+});
+```
+
+* * *
+
+<a name="Loans+repay"></a>
+
+#### `loans.repay(options)` ⇒ <code>object</code>
+Repay a loan. Can be called at any time after the loan has begun and before loan expiry.
+
+**Kind**: instance method of [<code>Loans</code>](#Loans)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Hashmap of config options for this method |
+| options.loan.id | <code>string</code> | The ID of the loan being repaid |
+| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed` |
+
+**Example**  
+```js
+// Repay a v1 fixed loan
+const result = await nftfi.loans.repay({
+  loan: { id: 1 },
+  nftfi: {
+    contract: {
+      name: 'v1.loan.fixed'
+    }
+  }
+});
+```
+**Example**  
+```js
+// Repay a v2 fixed loan
+const result = await nftfi.loans.repay({
+  loan: { id: 2 },
   nftfi: {
     contract: {
       name: 'v2.loan.fixed'
@@ -299,7 +515,7 @@ const offers = await nftfi.offers.get({
 <a name="Offers+create"></a>
 
 #### `offers.create(options)` ⇒ <code>object</code>
-Creates a new offer on a collateral listing.
+Creates a new offer on a NFT.
 
 **Kind**: instance method of [<code>Offers</code>](#Offers)  
 **Returns**: <code>object</code> - Response object  
@@ -308,51 +524,30 @@ Creates a new offer on a collateral listing.
 | --- | --- | --- |
 | options | <code>object</code> | Config options for this method |
 | options.terms | <code>object</code> | Terms of the offer |
-| options.listing | <code>object</code> | Listing to place an offer on |
+| options.nft | <code>object</code> | NFT to place an offer on |
+| options.borrower | <code>object</code> | Owner of the NFT |
+| options.nftfi | <code>object</code> | NFTfi options |
 
 **Example**  
 ```js
-// Construct the loan terms
-const currency = nftfi.config.erc20.weth.address;
-const principal = 1000000000000000000; // 1 wETH
-const apr = 32;
-const days = 30;
-const repayment = nftfi.utils.calcRepaymentAmount(principal, apr, days);
-const duration = 86400 * days; // Number of days in seconds
-const terms = {
-  principal,
-  repayment,
-  duration,
-  currency
-};
-// Get first available listing (to make offer on)
-const listings = await nftfi.listings.get();
-const listing = listings[0];
-// Approve principal wETH with the NFTfi contract
-await nftfi.erc20.approve({
-  token: { address: currency },
-  amount: principal,
+// Create an offer on a NFT
+const offer = await nftfi.offers.create({
+  terms: {
+    principal: 1000000000000000000,
+    repayment: 1100000000000000000,
+    duration: 86400 * 7, // 7 days (in seconds)
+    currency: "0x00000000"
+  },
+  nft: {
+    address: "0x00000000",
+    id: "42"
+  },
+  borrower: {
+    address: "0x00000000"
+  },
   nftfi: {
     contract: {
-      name: listing.nftfi.contract.name
-    }
-  }
-});
-// Create an offer on the listing
-const offer = await nftfi.offers.create({
-  terms,
-  listing: {
-    nft: {
-      id: listing.nft.id,
-      address: listing.nft.address
-    },
-    borrower: {
-      address: listing.borrower.address
-    },
-    nftfi: {
-      contract: {
-        name: listing.nftfi.contract.name
-      }
+      name: "v2.loan.fixed"
     }
   }
 });
@@ -511,11 +706,28 @@ const apr = nftfi.utils.calcApr(principal, repayment, duration);
 
 To test examples of common NFTfi SDK use cases, run the following scripts from the root directory:
 
+### Using an EOA (Externally Owned Account)
+
 ```shell
 node examples/get-listings.js
-node examples/make-offer-on-collateral.js
+node examples/make-offer-on-listing.js
+node examples/make-offer-on-nft.js
 node examples/get-my-offers.js
-node examples/get-offers-on-collateral.js
+node examples/get-offers-on-listing.js
 node examples/delete-my-offers.js
+node examples/begin-loan.js
 node examples/get-my-active-loans.js
+node examples/repay-loan.js
 node examples/liquidate-my-defaulted-loans.js
+```
+
+### Using a Multisig (Gnosis Safe)
+
+```shell
+node examples/multisig/gnosis-safe/make-offer-on-listing.js
+node examples/multisig/gnosis-safe/make-offer-on-nft.js
+node examples/multisig/gnosis-safe/get-offers.js
+node examples/multisig/gnosis-safe/delete-offers.js
+node examples/multisig/gnosis-safe/get-active-loans.js
+node examples/multisig/gnosis-safe/liquidate-defaulted-loans.js
+```

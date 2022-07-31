@@ -22,6 +22,7 @@ var NFTfi = /*#__PURE__*/(0, _createClass2["default"])(function NFTfi() {
   (0, _defineProperty2["default"])(this, "offers", void 0);
   (0, _defineProperty2["default"])(this, "loans", void 0);
   (0, _defineProperty2["default"])(this, "erc20", void 0);
+  (0, _defineProperty2["default"])(this, "erc721", void 0);
   (0, _defineProperty2["default"])(this, "utils", void 0);
   this.config = options.config;
   this.account = options.account;
@@ -29,6 +30,7 @@ var NFTfi = /*#__PURE__*/(0, _createClass2["default"])(function NFTfi() {
   this.offers = options.offers;
   this.loans = options.loans;
   this.erc20 = options.erc20;
+  this.erc721 = options.erc721;
   this.utils = options.utils;
 });
 var _default = NFTfi;

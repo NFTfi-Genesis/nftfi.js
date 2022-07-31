@@ -58,62 +58,41 @@ class Offers {
   }
 
   /**
-   * Creates a new offer on a collateral listing.
+   * Creates a new offer on a NFT.
    *
    * @param {object} options - Config options for this method
    * @param {object} options.terms - Terms of the offer
-   * @param {object} options.listing - Listing to place an offer on
+   * @param {object} options.nft - NFT to place an offer on
+   * @param {object} options.borrower - Owner of the NFT
+   * @param {object} options.nftfi - NFTfi options
    * @returns {object} Response object
    *
    * @example
-   * // Construct the loan terms
-   * const currency = nftfi.config.erc20.weth.address;
-   * const principal = 1000000000000000000; // 1 wETH
-   * const apr = 32;
-   * const days = 30;
-   * const repayment = nftfi.utils.calcRepaymentAmount(principal, apr, days);
-   * const duration = 86400 * days; // Number of days in seconds
-   * const terms = {
-   *   principal,
-   *   repayment,
-   *   duration,
-   *   currency
-   * };
-   * // Get first available listing (to make offer on)
-   * const listings = await nftfi.listings.get();
-   * const listing = listings[0];
-   * // Approve principal wETH with the NFTfi contract
-   * await nftfi.erc20.approve({
-   *   token: { address: currency },
-   *   amount: principal,
+   * // Create an offer on a NFT
+   * const offer = await nftfi.offers.create({
+   *   terms: {
+   *     principal: 1000000000000000000,
+   *     repayment: 1100000000000000000,
+   *     duration: 86400 * 7, // 7 days (in seconds)
+   *     currency: "0x00000000"
+   *   },
+   *   nft: {
+   *     address: "0x00000000",
+   *     id: "42"
+   *   },
+   *   borrower: {
+   *     address: "0x00000000"
+   *   },
    *   nftfi: {
    *     contract: {
-   *       name: listing.nftfi.contract.name
-   *     }
-   *   }
-   * });
-   * // Create an offer on the listing
-   * const offer = await nftfi.offers.create({
-   *   terms,
-   *   listing: {
-   *     nft: {
-   *       id: listing.nft.id,
-   *       address: listing.nft.address
-   *     },
-   *     borrower: {
-   *       address: listing.borrower.address
-   *     },
-   *     nftfi: {
-   *       contract: {
-   *         name: listing.nftfi.contract.name
-   *       }
+   *       name: "v2.loan.fixed"
    *     }
    *   }
    * });
    */
-  async create(options) {
-    let payload = {};
-    const contractName = options.listing.nftfi.contract.name;
+  async create(options, payload) {
+    options = { ...options.listing, ...options }; // copying options.listing fields onto the root, for backwards compatibility.
+    const contractName = options.nftfi.contract.name;
     switch (contractName) {
       case 'v1.loan.fixed':
         payload = await this.#helper.constructV1Offer(options);

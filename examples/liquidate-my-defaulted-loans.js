@@ -1,15 +1,17 @@
-import NFTfi from '../src/nftfi.js';
+import NFTfi from '@nftfi/js';
 import dotenv from 'dotenv';
 dotenv.config();
 
 async function run() {
+  // Init the NFTfi SDK
   const nftfi = await NFTfi.init({
-    api: { key: process.env.NFTFI_SDK_API_KEY },
+    config: { api: { key: process.env.NFTFI_SDK_API_KEY } },
     ethereum: {
-      account: { privateKey: process.env.NFTFI_SDK_ETHEREUM_ACCOUNT_PRIVATE_KEY },
+      account: { privateKey: process.env.NFTFI_SDK_ETHEREUM_LENDER_ACCOUNT_PRIVATE_KEY },
       provider: { url: process.env.NFTFI_SDK_ETHEREUM_PROVIDER_URL }
     }
   });
+  // Get defaulted loans
   const loans = await nftfi.loans.get({
     filters: {
       counterparty: 'lender',
@@ -17,9 +19,12 @@ async function run() {
     }
   });
   console.log(`[INFO] found ${loans.length} defaulted loan(s) for account ${nftfi.account.getAddress()}.`);
+  // Proceed if we find loans
   if (loans.length > 0) {
     for (var i = 0; i < loans.length; i++) {
+      // Choose a loan
       const loan = loans[i];
+      // Liquidate the loan
       const result = await nftfi.loans.liquidate({
         loan: { id: loan.id },
         nftfi: { contract: { name: loan.nftfi.contract.name } }

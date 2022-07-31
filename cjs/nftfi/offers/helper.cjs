@@ -103,15 +103,15 @@ var OffersHelper = /*#__PURE__*/function () {
                 lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
                 offer = {
                   nft: {
-                    id: options.listing.nft.id,
-                    address: options.listing.nft.address
+                    id: options.nft.id,
+                    address: options.nft.address
                   },
                   lender: {
                     address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
                     nonce: lenderNonce
                   },
                   borrower: {
-                    address: options.listing.borrower.address
+                    address: options.borrower.address
                   },
                   referrer: {
                     address: '0x0000000000000000000000000000000000000000'
@@ -130,7 +130,7 @@ var OffersHelper = /*#__PURE__*/function () {
                   },
                   nftfi: {
                     contract: {
-                      name: options.listing.nftfi.contract.name
+                      name: options.nftfi.contract.name
                     },
                     fee: {
                       bps: (0, _classPrivateFieldGet2["default"])(this, _config).loan.adminFeeInBasisPoints
@@ -180,15 +180,15 @@ var OffersHelper = /*#__PURE__*/function () {
                 expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry();
                 offer = {
                   nft: {
-                    id: options.listing.nft.id,
-                    address: options.listing.nft.address
+                    id: options.nft.id,
+                    address: options.nft.address
                   },
                   lender: {
                     address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
                     nonce: lenderNonce
                   },
                   borrower: {
-                    address: options.listing.borrower.address
+                    address: options.borrower.address
                   },
                   referrer: {
                     address: '0x0000000000000000000000000000000000000000'
@@ -208,7 +208,7 @@ var OffersHelper = /*#__PURE__*/function () {
                   },
                   nftfi: {
                     contract: {
-                      name: options.listing.nftfi.contract.name
+                      name: options.nftfi.contract.name
                     },
                     fee: {
                       bps: (0, _classPrivateFieldGet2["default"])(this, _config).loan.adminFeeInBasisPoints
