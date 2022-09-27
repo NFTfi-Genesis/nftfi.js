@@ -20,16 +20,17 @@ async function run() {
       // Choose an offer
       const offer = offers[i];
       // Delete the offer
-      const success = await nftfi.offers.delete({
+      const result = await nftfi.offers.delete({
         offer: {
           id: offer['id']
         }
       });
-      if (success === true) {
-        console.log(`[INFO] deleted on ${nftfi.config.website.baseURI}/assets/${offer.nft.address}/${offer.nft.id}`);
+      if (result.errors) {
+        console.log(`[ERROR] could not delete offer: ${JSON.stringify(offer)}.`);
+        console.log(`[ERROR] validation errors are: ${JSON.stringify(result.errors)}.`);
       } else {
         console.log(
-          `[ERROR] could not delete offer on ${nftfi.config.website.baseURI}/assets/${offer.nft.address}/${offer.nft.id}`
+          `[INFO] deleted offer on ${nftfi.config.website.baseURI}/assets/${offer.nft.address}/${offer.nft.id}`
         );
       }
     }

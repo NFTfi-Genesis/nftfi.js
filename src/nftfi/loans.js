@@ -78,7 +78,7 @@ class Loans {
    *         principal: 1000000000000000000,
    *         repayment: 1100000000000000000,
    *         duration: 86400 * 7, // 7 days (in seconds)
-   *         currency: "0x00000000"
+   *         currency: "0x00000000",
    *         expiry: 1690548548 // Friday, 28 July 2023 14:49:08 GMT+02:00
    *       }
    *     },

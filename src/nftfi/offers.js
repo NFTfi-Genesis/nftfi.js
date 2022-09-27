@@ -40,10 +40,16 @@ class Offers {
   async get(options = {}) {
     let params = {};
     if (options?.filters?.nft) {
-      params = {
-        nftAddress: options.filters.nft.address,
-        nftId: options.filters.nft.id
-      };
+      if (options.filters.nft.address && options?.filters?.nft?.id) {
+        params = {
+          nftAddress: options.filters.nft.address,
+          nftId: options.filters.nft.id
+        };
+      } else if (options.filters.nft.address) {
+        params = {
+          nftAddress: options.filters.nft.address
+        };
+      }
     } else {
       params = {
         lenderAddress: this.#account.getAddress()

@@ -2,7 +2,7 @@
 
 A JavaScript SDK for interacting with the NFTfi Protocol.
 
-NFTfi is a smart contract platform for P2P (Peer-2-Peer) loans using NFT as collateral. P2P loans
+NFTfi is a smart contract platform for P2P (Peer-2-Peer) loans using NFTs as collateral. P2P loans
 are directly between a Borrower and Lender — the Borrower uses an NFT as collateral to borrow ETH
 or DAI, and the Lender provides liquidity. The NFT is then held in an escrow contract until the loan is
 repaid. If the Borrower fails to repay in time, the Lender can claim the NFT.
@@ -17,15 +17,15 @@ yarn install
 
 ## Introduction
 
-To begin experimenting on, please ensure that the following available:
+To begin experimenting, please ensure that the following are available:
 
 - a NFTfi API key (contact the team)
 - an Ethereum RPC Provider URL
 - a Private Key of an Ethereum wallet (funded with some ETH, wETH, and DAI (optional))
 
-You will need the values above when initialising the SDK. We recommend that you start by using the SDK on the Rinkeby network, to get a feeling for the various functionality. Then once you are ready, transitioning over to Mainnet.
+You will need the values above when initialising the SDK. We recommend that you start by using the SDK on the Goerli network, to get a feeling for the various functionality. Then once you are ready, transitioning over to Mainnet.
 
-Please note that if the SDK is configured to use Rinkeby, it will use the dApp located at [https://integration.nftfi.com](https://integration.nftfi.com). If a Mainnet configuration is used, the SDK will use the dApp located at [https://app.nftfi.com](https://app.nftfi.com).
+Please note that if the SDK is configured to use Goerli, it will use the dApp located at [https://goerli-integration.nftfi.com](https://goerli-integration.nftfi.com). If a Mainnet configuration is used, the SDK will use the dApp located at [https://app.nftfi.com](https://app.nftfi.com).
 
 ## Getting Started
 
@@ -364,7 +364,7 @@ const result = await nftfi.loans.begin({
         principal: 1000000000000000000,
         repayment: 1100000000000000000,
         duration: 86400 * 7, // 7 days (in seconds)
-        currency: "0x00000000"
+        currency: "0x00000000",
         expiry: 1690548548 // Friday, 28 July 2023 14:49:08 GMT+02:00
       }
     },
@@ -704,9 +704,9 @@ const apr = nftfi.utils.calcApr(principal, repayment, duration);
 
 ## Examples
 
-To test examples of common NFTfi SDK use cases, run the following scripts from the root directory:
+To experiment with common NFTfi SDK use cases, run the following scripts from the root directory:
 
-### Using an EOA (Externally Owned Account)
+### SDK using an EOA (Externally Owned Account)
 
 ```shell
 node examples/get-listings.js
@@ -721,7 +721,7 @@ node examples/repay-loan.js
 node examples/liquidate-my-defaulted-loans.js
 ```
 
-### Using a Multisig (Gnosis Safe)
+### SDK using a Multisig (Gnosis Safe)
 
 ```shell
 node examples/multisig/gnosis-safe/make-offer-on-listing.js

@@ -97,9 +97,12 @@ var Offers = /*#__PURE__*/function () {
 
         var options,
             params,
+            _options$filters2,
+            _options$filters2$nft,
             response,
             offers,
             _args = arguments;
+
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -108,10 +111,16 @@ var Offers = /*#__PURE__*/function () {
                 params = {};
 
                 if (options !== null && options !== void 0 && (_options$filters = options.filters) !== null && _options$filters !== void 0 && _options$filters.nft) {
-                  params = {
-                    nftAddress: options.filters.nft.address,
-                    nftId: options.filters.nft.id
-                  };
+                  if (options.filters.nft.address && options !== null && options !== void 0 && (_options$filters2 = options.filters) !== null && _options$filters2 !== void 0 && (_options$filters2$nft = _options$filters2.nft) !== null && _options$filters2$nft !== void 0 && _options$filters2$nft.id) {
+                    params = {
+                      nftAddress: options.filters.nft.address,
+                      nftId: options.filters.nft.id
+                    };
+                  } else if (options.filters.nft.address) {
+                    params = {
+                      nftAddress: options.filters.nft.address
+                    };
+                  }
                 } else {
                   params = {
                     lenderAddress: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()

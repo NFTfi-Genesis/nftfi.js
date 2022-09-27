@@ -65,7 +65,7 @@ async function run() {
   });
   if (result.errors) {
     console.log(`[ERROR] could not create offer with the following: ${JSON.stringify(terms)}.`);
-    console.log(`[ERROR] validation errors are: ${JSON.stringify(result.error)}.`);
+    console.log(`[ERROR] validation errors are: ${JSON.stringify(result.errors)}.`);
   } else {
     console.log(`[INFO] made offer on ${nftfi.config.website.baseURI}/assets/${nft.address}/${nft.id}`);
     console.log(`[INFO] offer terms: ${JSON.stringify(terms)}.`);
