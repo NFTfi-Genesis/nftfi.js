@@ -5,13 +5,7 @@ dotenv.config();
 async function run() {
   // Init the NFTfi SDK
   const nftfi = await NFTfi.init({
-    config: {
-      api: {
-        key: process.env.NFTFI_SDK_DEMO_API_KEY,
-        baseURI: 'http://demo-sdk-api.nftfi.com'
-      },
-      website: { baseURI: 'https://demo.nftfi.com' }
-    },
+    config: { api: { key: process.env.NFTFI_SDK_API_KEY } },
     ethereum: {
       account: { privateKey: process.env.NFTFI_SDK_ETHEREUM_LENDER_ACCOUNT_PRIVATE_KEY },
       provider: { url: process.env.NFTFI_SDK_ETHEREUM_PROVIDER_URL }

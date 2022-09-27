@@ -27,12 +27,22 @@ class Offers {
    * const offers = await nftfi.offers.get();
    *
    * @example
-   * // Get all offers associated with a NFT
+   * // Get all offers made by your account, for a given NFT
    * const offers = await nftfi.offers.get({
    *   filters: {
    *     nft: {
    *       address: "0x00000000",
    *       id: "42"
+   *     }
+   *   }
+   * });
+   *
+   * @example
+   * // Get all offers made by your account, for multiple NFTs in a collection
+   * const offers = await nftfi.offers.get({
+   *   filters: {
+   *     nft: {
+   *       address: "0x00000000"
    *     }
    *   }
    * });
