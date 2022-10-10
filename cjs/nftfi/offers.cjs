@@ -35,6 +35,8 @@ var _api = /*#__PURE__*/new WeakMap();
 
 var _helper = /*#__PURE__*/new WeakMap();
 
+var _loans = /*#__PURE__*/new WeakMap();
+
 /**
  * @class
  * Class for working with offers.
@@ -59,9 +61,15 @@ var Offers = /*#__PURE__*/function () {
       value: void 0
     });
 
+    _classPrivateFieldInitSpec(this, _loans, {
+      writable: true,
+      value: void 0
+    });
+
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
     (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.offersHelper);
+    (0, _classPrivateFieldSet2["default"])(this, _loans, options === null || options === void 0 ? void 0 : options.loans);
   }
   /**
    * When called with no argument, gets all offers made by your account.
@@ -304,6 +312,56 @@ var Offers = /*#__PURE__*/function () {
       }
 
       return _delete;
+    }()
+    /**
+     * Revokes an active offer made by your account.
+     *
+     * @param {object} options - Hashmap of config options for this method
+     * @param {object} options.offer.nonce - The nonce of the offer to be deleted
+     * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`
+     * @returns {object} Response object
+     *
+     * @example
+     * // Get first avilable offer made by your account
+     * const offers = await nftfi.offers.get();
+     * const nonce = offers[0]['lender']['nonce'];
+     * const contractName = offers[0]['nftfi']['contract']['name']
+     * // Revoke offer
+     * const revoked = await nftfi.offers.revoke({
+     *   offer: { nonce },
+     *   nftfi: { contract: { name: contractName } }
+     * });
+     */
+
+  }, {
+    key: "revoke",
+    value: function () {
+      var _revoke = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
+        var result;
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return (0, _classPrivateFieldGet2["default"])(this, _loans).revokeOffer(options);
+
+              case 2:
+                result = _context4.sent;
+                return _context4.abrupt("return", result);
+
+              case 4:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function revoke(_x4) {
+        return _revoke.apply(this, arguments);
+      }
+
+      return revoke;
     }()
   }]);
   return Offers;

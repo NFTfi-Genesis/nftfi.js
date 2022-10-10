@@ -69,12 +69,14 @@ mainnetConfig.erc20.dai.symbol = 'DAI';
 mainnetConfig.loan.fixed.v1.name = 'v1.loan.fixed';
 mainnetConfig.loan.fixed.v1.address = '0x88341d1a8F672D2780C8dC725902AAe72F143B0c';
 mainnetConfig.loan.fixed.v1.abi = [
+  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
   'function liquidateOverdueLoan(uint256 _loanId) nonpayable returns()',
   'function payBackLoan(uint256 _loanId)'
 ];
 mainnetConfig.loan.fixed.v2.name = 'v2.loan.fixed';
 mainnetConfig.loan.fixed.v2.address = '0xf896527c49b44aAb3Cf22aE356Fa3AF8E331F280';
 mainnetConfig.loan.fixed.v2.abi = [
+  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function payBackLoan(uint32 _loanId)',
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
@@ -103,12 +105,14 @@ rinkebyConfig.erc20.dai.symbol = 'DAI';
 rinkebyConfig.loan.fixed.v1.name = 'v1.loan.fixed';
 rinkebyConfig.loan.fixed.v1.address = '0xA2cDED5Ce935eB83d34DcaEA2e2B95e955F967EF';
 rinkebyConfig.loan.fixed.v1.abi = [
+  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
   'function liquidateOverdueLoan(uint256 _loanId) nonpayable returns()',
   'function payBackLoan(uint256 _loanId)'
 ];
 rinkebyConfig.loan.fixed.v2.name = 'v2.loan.fixed';
 rinkebyConfig.loan.fixed.v2.address = '0x33e75763F3705252775C5AEEd92E5B4987622f44';
 rinkebyConfig.loan.fixed.v2.abi = [
+  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function payBackLoan(uint32 _loanId)',
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
@@ -137,12 +141,14 @@ goerliConfig.erc20.dai.symbol = 'DAI';
 goerliConfig.loan.fixed.v1.name = 'v1.loan.fixed';
 goerliConfig.loan.fixed.v1.address = '0x0000000000000000000000000000000000000000';
 goerliConfig.loan.fixed.v1.abi = [
+  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
   'function liquidateOverdueLoan(uint256 _loanId) nonpayable returns()',
   'function payBackLoan(uint256 _loanId)'
 ];
 goerliConfig.loan.fixed.v2.name = 'v2.loan.fixed';
 goerliConfig.loan.fixed.v2.address = '0x4554ac207156066092C1Fc6BAa48B0f8447496f1';
 goerliConfig.loan.fixed.v2.abi = [
+  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function payBackLoan(uint32 _loanId)',
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',

@@ -164,6 +164,8 @@ var OffersHelper = /*#__PURE__*/function () {
     key: "constructV2Offer",
     value: function () {
       var _constructV2Offer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
+        var _options$terms;
+
         var repayment, principal, loanInterestRateForDurationInBasisPoints, lenderNonce, expiry, offer;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
@@ -177,7 +179,7 @@ var OffersHelper = /*#__PURE__*/function () {
                 });
                 loanInterestRateForDurationInBasisPoints = 0;
                 lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
-                expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry();
+                expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms = options.terms) === null || _options$terms === void 0 ? void 0 : _options$terms.expiry);
                 offer = {
                   nft: {
                     id: options.nft.id,

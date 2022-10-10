@@ -132,15 +132,15 @@ export default {
     const auth = new Auth({ http, account, config, utils });
     const api = options?.dependencies?.api || new Api({ config, auth, http });
     const listings = new Listings({ api, config });
-    const offersSignatures = new OffersSignatures({ account, ethers, config });
-    const offersHelper = new OffersHelper({ BN, Number, utils, ethers, offersSignatures, config, account });
-    const offers = new Offers({ api, account, offersHelper });
     const contractFactory =
       options?.dependencies?.contractFactory || new ContractFactory({ signer, ethers, account, Contract });
     const loanFixedV1 = new LoansFixedV1({ config, contractFactory });
     const loanFixedV2 = new LoansFixedV2({ config, contractFactory });
     const loanFixed = new LoansFixed({ v1: loanFixedV1, v2: loanFixedV2 });
     const loans = new Loans({ api, account, fixed: loanFixed });
+    const offersSignatures = new OffersSignatures({ account, ethers, config });
+    const offersHelper = new OffersHelper({ BN, Number, utils, ethers, offersSignatures, config, account });
+    const offers = new Offers({ api, account, offersHelper, loans });
     const erc20 = new Erc20({ config, account, contractFactory, BN });
     const erc721 = new Erc721({ config, contractFactory });
     const nftfi = new NFTfi({ config, account, listings, offers, loans, erc20, erc721, utils });

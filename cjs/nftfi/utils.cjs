@@ -107,9 +107,10 @@ var Utils = /*#__PURE__*/function () {
 
   }, {
     key: "getExpiry",
-    value: function getExpiry() {
+    value: function getExpiry(seconds) {
       var currentTimestampSecs = (0, _classPrivateFieldGet2["default"])(this, _Math).floor((0, _classPrivateFieldGet2["default"])(this, _Date).now() / 1000);
-      var secondsIntoTheFuture = 365 * 24 * 60 * 60;
+      var secondsIntoTheFuture = seconds || 24 * 60 * 60; // 24 hours
+
       var expiry = currentTimestampSecs + secondsIntoTheFuture;
       return expiry;
     }

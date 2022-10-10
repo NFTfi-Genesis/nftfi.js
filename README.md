@@ -291,6 +291,7 @@ Class for working with loans.
     * [`.begin(options)`](#Loans+begin) ⇒ <code>object</code>
     * [`.liquidate(options)`](#Loans+liquidate) ⇒ <code>object</code>
     * [`.repay(options)`](#Loans+repay) ⇒ <code>object</code>
+    * [`.revokeOffer(options)`](#Loans+revokeOffer) ⇒ <code>object</code>
 
 
 * * *
@@ -462,6 +463,51 @@ const result = await nftfi.loans.repay({
 
 * * *
 
+<a name="Loans+revokeOffer"></a>
+
+#### `loans.revokeOffer(options)` ⇒ <code>object</code>
+Revokes an active offer made by your account.
+
+**Kind**: instance method of [<code>Loans</code>](#Loans)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Hashmap of config options for this method |
+| options.offer.nonce | <code>object</code> | The nonce of the offer to be deleted |
+| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed` |
+
+**Example**  
+```js
+// Revoke a v1 fixed loan offer
+const revoked = await nftfi.loans.revoke({
+  offer: {
+    nonce: '42'
+  },
+  nftfi: {
+    contract: {
+      name: 'v1.loan.fixed'
+    }
+  }
+});
+```
+**Example**  
+```js
+// Revoke a v2 fixed loan offer
+const revoked = await nftfi.loans.revoke({
+  offer: {
+    nonce: '42'
+  },
+  nftfi: {
+    contract: {
+      name: 'v2.loan.fixed'
+    }
+  }
+});
+```
+
+* * *
+
 <a name="Offers"></a>
 
 ### Offers
@@ -473,6 +519,7 @@ Class for working with offers.
     * [`.get([options])`](#Offers+get) ⇒ <code>Array.&lt;object&gt;</code>
     * [`.create(options)`](#Offers+create) ⇒ <code>object</code>
     * [`.delete(options)`](#Offers+delete) ⇒ <code>object</code>
+    * [`.revoke(options)`](#Offers+revoke) ⇒ <code>object</code>
 
 
 * * *
@@ -589,6 +636,35 @@ const deleted = await nftfi.offers.delete({
   offer: {
     id: offerId
   }
+});
+```
+
+* * *
+
+<a name="Offers+revoke"></a>
+
+#### `offers.revoke(options)` ⇒ <code>object</code>
+Revokes an active offer made by your account.
+
+**Kind**: instance method of [<code>Offers</code>](#Offers)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Hashmap of config options for this method |
+| options.offer.nonce | <code>object</code> | The nonce of the offer to be deleted |
+| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed` |
+
+**Example**  
+```js
+// Get first avilable offer made by your account
+const offers = await nftfi.offers.get();
+const nonce = offers[0]['lender']['nonce'];
+const contractName = offers[0]['nftfi']['contract']['name']
+// Revoke offer
+const revoked = await nftfi.offers.revoke({
+  offer: { nonce },
+  nftfi: { contract: { name: contractName } }
 });
 ```
 
@@ -726,6 +802,7 @@ node examples/make-offer-on-nft.js
 node examples/get-my-offers.js
 node examples/get-offers-on-listing.js
 node examples/delete-my-offers.js
+node examples/revoke-and-delete-my-offers.js
 node examples/begin-loan.js
 node examples/get-my-active-loans.js
 node examples/repay-loan.js

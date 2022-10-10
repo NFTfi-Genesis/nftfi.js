@@ -131,14 +131,14 @@ var _default = {
           auth,
           api,
           listings,
-          offersSignatures,
-          offersHelper,
-          offers,
           contractFactory,
           loanFixedV1,
           loanFixedV2,
           loanFixed,
           loans,
+          offersSignatures,
+          offersHelper,
+          offers,
           erc20,
           erc721,
           nftfi,
@@ -329,25 +329,6 @@ var _default = {
                 api: api,
                 config: config
               });
-              offersSignatures = new _signatures["default"]({
-                account: account,
-                ethers: ethers,
-                config: config
-              });
-              offersHelper = new _helper["default"]({
-                BN: _bn["default"],
-                Number: Number,
-                utils: utils,
-                ethers: ethers,
-                offersSignatures: offersSignatures,
-                config: config,
-                account: account
-              });
-              offers = new _offers["default"]({
-                api: api,
-                account: account,
-                offersHelper: offersHelper
-              });
               contractFactory = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.contractFactory) || new _factory["default"]({
                 signer: signer,
                 ethers: ethers,
@@ -370,6 +351,26 @@ var _default = {
                 api: api,
                 account: account,
                 fixed: loanFixed
+              });
+              offersSignatures = new _signatures["default"]({
+                account: account,
+                ethers: ethers,
+                config: config
+              });
+              offersHelper = new _helper["default"]({
+                BN: _bn["default"],
+                Number: Number,
+                utils: utils,
+                ethers: ethers,
+                offersSignatures: offersSignatures,
+                config: config,
+                account: account
+              });
+              offers = new _offers["default"]({
+                api: api,
+                account: account,
+                offersHelper: offersHelper,
+                loans: loans
               });
               erc20 = new _erc["default"]({
                 config: config,

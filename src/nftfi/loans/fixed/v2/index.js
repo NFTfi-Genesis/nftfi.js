@@ -73,6 +73,20 @@ class LoansFixedV2 {
     }
     return success;
   }
+
+  async cancelLoanCommitmentBeforeLoanHasBegun(options) {
+    let success;
+    try {
+      const result = await this.#contract.call({
+        function: 'cancelLoanCommitmentBeforeLoanHasBegun',
+        args: [options.offer.nonce]
+      });
+      success = result?.status === 1 ? true : false;
+    } catch (e) {
+      success = false;
+    }
+    return success;
+  }
 }
 
 export default LoansFixedV2;

@@ -68,7 +68,7 @@ class OffersHelper {
     const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
     const loanInterestRateForDurationInBasisPoints = 0;
     const lenderNonce = this.#utils.getNonce();
-    const expiry = this.#utils.getExpiry();
+    const expiry = this.#utils.getExpiry(options?.terms?.expiry);
     let offer = {
       nft: {
         id: options.nft.id,

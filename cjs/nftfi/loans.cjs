@@ -380,6 +380,98 @@ var Loans = /*#__PURE__*/function () {
 
       return repay;
     }()
+    /**
+     * Revokes an active offer made by your account.
+     *
+     * @param {object} options - Hashmap of config options for this method
+     * @param {object} options.offer.nonce - The nonce of the offer to be deleted
+     * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`
+     * @returns {object} Response object
+     *
+     * @example
+     * // Revoke a v1 fixed loan offer
+     * const revoked = await nftfi.loans.revoke({
+     *   offer: {
+     *     nonce: '42'
+     *   },
+     *   nftfi: {
+     *     contract: {
+     *       name: 'v1.loan.fixed'
+     *     }
+     *   }
+     * });
+     *
+     * @example
+     * // Revoke a v2 fixed loan offer
+     * const revoked = await nftfi.loans.revoke({
+     *   offer: {
+     *     nonce: '42'
+     *   },
+     *   nftfi: {
+     *     contract: {
+     *       name: 'v2.loan.fixed'
+     *     }
+     *   }
+     * });
+     */
+
+  }, {
+    key: "revokeOffer",
+    value: function () {
+      var _revokeOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
+        var success;
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                success = false;
+                _context5.t0 = options.nftfi.contract.name;
+                _context5.next = _context5.t0 === 'v1.loan.fixed' ? 4 : _context5.t0 === 'v2.loan.fixed' ? 8 : 12;
+                break;
+
+              case 4:
+                _context5.next = 6;
+                return (0, _classPrivateFieldGet2["default"])(this, _fixed).v1.cancelLoanCommitmentBeforeLoanHasBegun({
+                  offer: {
+                    nonce: options.offer.nonce
+                  }
+                });
+
+              case 6:
+                success = _context5.sent;
+                return _context5.abrupt("break", 12);
+
+              case 8:
+                _context5.next = 10;
+                return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2.cancelLoanCommitmentBeforeLoanHasBegun({
+                  offer: {
+                    nonce: options.offer.nonce
+                  }
+                });
+
+              case 10:
+                success = _context5.sent;
+                return _context5.abrupt("break", 12);
+
+              case 12:
+                return _context5.abrupt("return", {
+                  success: success
+                });
+
+              case 13:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this);
+      }));
+
+      function revokeOffer(_x5) {
+        return _revokeOffer.apply(this, arguments);
+      }
+
+      return revokeOffer;
+    }()
   }]);
   return Loans;
 }();

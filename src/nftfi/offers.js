@@ -6,11 +6,13 @@ class Offers {
   #account;
   #api;
   #helper;
+  #loans;
 
   constructor(options = {}) {
     this.#account = options?.account;
     this.#api = options?.api;
     this.#helper = options?.offersHelper;
+    this.#loans = options?.loans;
   }
 
   /**
@@ -145,6 +147,30 @@ class Offers {
   async delete(options) {
     const uri = `offers/${options.offer.id}`;
     const result = await this.#api.delete({ uri });
+    return result;
+  }
+
+  /**
+   * Revokes an active offer made by your account.
+   *
+   * @param {object} options - Hashmap of config options for this method
+   * @param {object} options.offer.nonce - The nonce of the offer to be deleted
+   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`
+   * @returns {object} Response object
+   *
+   * @example
+   * // Get first avilable offer made by your account
+   * const offers = await nftfi.offers.get();
+   * const nonce = offers[0]['lender']['nonce'];
+   * const contractName = offers[0]['nftfi']['contract']['name']
+   * // Revoke offer
+   * const revoked = await nftfi.offers.revoke({
+   *   offer: { nonce },
+   *   nftfi: { contract: { name: contractName } }
+   * });
+   */
+  async revoke(options) {
+    let result = await this.#loans.revokeOffer(options);
     return result;
   }
 }

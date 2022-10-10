@@ -200,6 +200,59 @@ class Loans {
       success
     };
   }
+
+  /**
+   * Revokes an active offer made by your account.
+   *
+   * @param {object} options - Hashmap of config options for this method
+   * @param {object} options.offer.nonce - The nonce of the offer to be deleted
+   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`
+   * @returns {object} Response object
+   *
+   * @example
+   * // Revoke a v1 fixed loan offer
+   * const revoked = await nftfi.loans.revoke({
+   *   offer: {
+   *     nonce: '42'
+   *   },
+   *   nftfi: {
+   *     contract: {
+   *       name: 'v1.loan.fixed'
+   *     }
+   *   }
+   * });
+   *
+   * @example
+   * // Revoke a v2 fixed loan offer
+   * const revoked = await nftfi.loans.revoke({
+   *   offer: {
+   *     nonce: '42'
+   *   },
+   *   nftfi: {
+   *     contract: {
+   *       name: 'v2.loan.fixed'
+   *     }
+   *   }
+   * });
+   */
+  async revokeOffer(options) {
+    let success = false;
+    switch (options.nftfi.contract.name) {
+      case 'v1.loan.fixed':
+        success = await this.#fixed.v1.cancelLoanCommitmentBeforeLoanHasBegun({
+          offer: { nonce: options.offer.nonce }
+        });
+        break;
+      case 'v2.loan.fixed':
+        success = await this.#fixed.v2.cancelLoanCommitmentBeforeLoanHasBegun({
+          offer: { nonce: options.offer.nonce }
+        });
+        break;
+    }
+    return {
+      success
+    };
+  }
 }
 
 export default Loans;

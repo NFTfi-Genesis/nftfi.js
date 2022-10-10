@@ -43,9 +43,9 @@ class Utils {
    * // Get an expiry timestamp far into the future
    * const expiry = nftfi.utils.getExpiry();
    */
-  getExpiry() {
+  getExpiry(seconds) {
     const currentTimestampSecs = this.#Math.floor(this.#Date.now() / 1000);
-    const secondsIntoTheFuture = 365 * 24 * 60 * 60;
+    const secondsIntoTheFuture = seconds || 24 * 60 * 60; // 24 hours
     const expiry = currentTimestampSecs + secondsIntoTheFuture;
     return expiry;
   }
