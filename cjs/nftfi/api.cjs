@@ -65,40 +65,26 @@ var API = /*#__PURE__*/function () {
               case 0:
                 uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/").concat(options.uri);
                 params = options === null || options === void 0 ? void 0 : options.params;
-
-                if (!((options === null || options === void 0 ? void 0 : options.authorization) === true)) {
-                  _context.next = 8;
-                  break;
-                }
-
-                _context.next = 5;
+                _context.next = 4;
                 return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
 
-              case 5:
-                _context.t0 = _context.sent;
-                _context.next = 9;
-                break;
-
-              case 8:
-                _context.t0 = undefined;
-
-              case 9:
-                authToken = _context.t0;
+              case 4:
+                authToken = _context.sent;
                 headers = {
                   'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key,
                   Authorization: "Bearer ".concat(authToken)
                 };
-                _context.next = 13;
+                _context.next = 8;
                 return (0, _classPrivateFieldGet2["default"])(this, _http).get(uri, {
                   headers: headers,
                   params: params
                 });
 
-              case 13:
+              case 8:
                 result = _context.sent;
                 return _context.abrupt("return", result.data);
 
-              case 15:
+              case 10:
               case "end":
                 return _context.stop();
             }

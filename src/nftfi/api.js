@@ -12,7 +12,7 @@ class API {
   async get(options) {
     const uri = `${this.#config.api.baseURI}/${options.uri}`;
     const params = options?.params;
-    const authToken = options?.authorization === true ? await this.#auth.getToken() : undefined;
+    const authToken = await this.#auth.getToken();
     const headers = {
       'X-API-Key': this.#config.api.key,
       Authorization: `Bearer ${authToken}`
