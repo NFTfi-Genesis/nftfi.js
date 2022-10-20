@@ -103,26 +103,31 @@ class Offers {
    *   },
    *   nftfi: {
    *     contract: {
-   *       name: "v2.loan.fixed"
+   *       name: "v2-1.loan.fixed"
    *     }
    *   }
    * });
    */
-  async create(options, payload) {
+  async create(options) {
     options = { ...options.listing, ...options }; // copying options.listing fields onto the root, for backwards compatibility.
+    let errors;
+    let response;
     const contractName = options.nftfi.contract.name;
     switch (contractName) {
-      case 'v1.loan.fixed':
-        payload = await this.#helper.constructV1Offer(options);
+      case 'v2-1.loan.fixed': {
+        let payload = await this.#helper.constructV2Offer(options);
+        response = await this.#api.post({
+          uri: 'offers',
+          payload
+        });
         break;
-      case 'v2.loan.fixed':
-        payload = await this.#helper.constructV2Offer(options);
+      }
+      default: {
+        errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
+        response = { errors };
         break;
+      }
     }
-    const response = await this.#api.post({
-      uri: 'offers',
-      payload
-    });
     return response;
   }
 
@@ -155,7 +160,7 @@ class Offers {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {object} options.offer.nonce - The nonce of the offer to be deleted
-   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`
+   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`
    * @returns {object} Response object
    *
    * @example

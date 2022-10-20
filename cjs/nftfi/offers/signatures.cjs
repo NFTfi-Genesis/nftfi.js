@@ -55,15 +55,15 @@ var OffersSignatures = /*#__PURE__*/function () {
   }
 
   (0, _createClass2["default"])(OffersSignatures, [{
-    key: "getV1OfferSignature",
+    key: "getV2OfferSignature",
     value: function () {
-      var _getV1OfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
+      var _getV2OfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
         var signature;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'address', 'address', 'address', 'bool', 'uint256'], [options.offer.terms.loan.principal, options.offer.terms.loan.repayment, options.offer.nft.id, options.offer.terms.loan.duration, options.offer.terms.loan.interest.bps, options.offer.nftfi.fee.bps, options.offer.lender.nonce, options.offer.nft.address, options.offer.terms.loan.currency, options.offer.lender.address, options.offer.terms.loan.interest.prorated, (0, _classPrivateFieldGet2["default"])(this, _config).chainId])));
+                signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['address', 'uint256', 'uint256', 'address', 'uint256', 'address', 'uint32', 'uint16', 'address', 'uint256', 'uint256', 'address', 'uint256'], [options.offer.terms.loan.currency, options.offer.terms.loan.principal, options.offer.terms.loan.repayment, options.offer.nft.address, options.offer.nft.id, options.offer.referrer.address, options.offer.terms.loan.duration, options.offer.nftfi.fee.bps, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), options.offer.lender.nonce, options.offer.terms.loan.expiry, (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.address, (0, _classPrivateFieldGet2["default"])(this, _config).chainId])));
                 return _context.abrupt("return", signature);
 
               case 2:
@@ -74,33 +74,7 @@ var OffersSignatures = /*#__PURE__*/function () {
         }, _callee, this);
       }));
 
-      function getV1OfferSignature(_x) {
-        return _getV1OfferSignature.apply(this, arguments);
-      }
-
-      return getV1OfferSignature;
-    }()
-  }, {
-    key: "getV2OfferSignature",
-    value: function () {
-      var _getV2OfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
-        var signature;
-        return _regenerator["default"].wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['address', 'uint256', 'uint256', 'address', 'uint256', 'address', 'uint32', 'uint16', 'address', 'uint256', 'uint256', 'address', 'uint256'], [options.offer.terms.loan.currency, options.offer.terms.loan.principal, options.offer.terms.loan.repayment, options.offer.nft.address, options.offer.nft.id, options.offer.referrer.address, options.offer.terms.loan.duration, options.offer.nftfi.fee.bps, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), options.offer.lender.nonce, options.offer.terms.loan.expiry, (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2.address, (0, _classPrivateFieldGet2["default"])(this, _config).chainId])));
-                return _context2.abrupt("return", signature);
-
-              case 2:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function getV2OfferSignature(_x2) {
+      function getV2OfferSignature(_x) {
         return _getV2OfferSignature.apply(this, arguments);
       }
 

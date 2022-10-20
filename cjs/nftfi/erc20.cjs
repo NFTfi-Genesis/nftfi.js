@@ -80,6 +80,9 @@ var Erc20 = /*#__PURE__*/function () {
 
         case 'v2.loan.fixed':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2.address;
+
+        case 'v2-1.loan.fixed':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.address;
       }
     }
     /**
@@ -87,13 +90,13 @@ var Erc20 = /*#__PURE__*/function () {
      *
      * @param {object} options - Hashmap of config options for this method
      * @param {string} options.token.address - The ERC20 token address
-     * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`)
+     * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
      * @returns {number} The user account's token allowance for that contract, in base units (eg. 1000000000000000000 wei)
      *
      * @example
      * const balance = await nftfi.erc20.allowance({
      *  token: { address: '0x00000000' },
-     *  nftfi: { contract: { name: 'v2.loan.fixed' } }
+     *  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
      * });
      */
 
@@ -140,7 +143,7 @@ var Erc20 = /*#__PURE__*/function () {
      *
      * @param {object} options - Hashmap of config options for this method
      * @param {string} options.token.address - The ERC20 token address
-     * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`)
+     * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
      * @param {number} options.amount - The token amount to approve, in base units (eg. 1000000000000000000 wei)
      * @returns {boolean} Boolean value indicating whether the operation succeeded
      *
@@ -148,7 +151,7 @@ var Erc20 = /*#__PURE__*/function () {
      * const results = await nftfi.erc20.approve({
      *   amount: 1000000000000000000,
      *   token: { address: '0x00000000' },
-     *   nftfi: { contract: { name: 'v2.loan.fixed' } }
+     *   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
      * });
      */
 
@@ -218,13 +221,13 @@ var Erc20 = /*#__PURE__*/function () {
      *
      * @param {object} options - Hashmap of config options for this method
      * @param {string} options.token.address - The ERC20 token address
-     * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`)
+     * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
      * @returns {boolean} Boolean value indicating whether the operation succeeded
      *
      * @example
      * const results = await nftfi.erc20.approveMax({
      *   token: { address: '0x00000000' },
-     *   nftfi: { contract: { name: 'v2.loan.fixed' } }
+     *   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
      * });
      */
 

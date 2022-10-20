@@ -198,7 +198,7 @@ var Offers = /*#__PURE__*/function () {
      *   },
      *   nftfi: {
      *     contract: {
-     *       name: "v2.loan.fixed"
+     *       name: "v2-1.loan.fixed"
      *     }
      *   }
      * });
@@ -207,8 +207,8 @@ var Offers = /*#__PURE__*/function () {
   }, {
     key: "create",
     value: function () {
-      var _create = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options, payload) {
-        var contractName, response;
+      var _create = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
+        var errors, response, contractName, payload;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -217,37 +217,38 @@ var Offers = /*#__PURE__*/function () {
 
                 contractName = options.nftfi.contract.name;
                 _context2.t0 = contractName;
-                _context2.next = _context2.t0 === 'v1.loan.fixed' ? 5 : _context2.t0 === 'v2.loan.fixed' ? 9 : 13;
+                _context2.next = _context2.t0 === 'v2-1.loan.fixed' ? 5 : 12;
                 break;
 
               case 5:
                 _context2.next = 7;
-                return (0, _classPrivateFieldGet2["default"])(this, _helper).constructV1Offer(options);
+                return (0, _classPrivateFieldGet2["default"])(this, _helper).constructV2Offer(options);
 
               case 7:
                 payload = _context2.sent;
-                return _context2.abrupt("break", 13);
-
-              case 9:
-                _context2.next = 11;
-                return (0, _classPrivateFieldGet2["default"])(this, _helper).constructV2Offer(options);
-
-              case 11:
-                payload = _context2.sent;
-                return _context2.abrupt("break", 13);
-
-              case 13:
-                _context2.next = 15;
+                _context2.next = 10;
                 return (0, _classPrivateFieldGet2["default"])(this, _api).post({
                   uri: 'offers',
                   payload: payload
                 });
 
-              case 15:
+              case 10:
                 response = _context2.sent;
+                return _context2.abrupt("break", 15);
+
+              case 12:
+                errors = {
+                  'nftfi.contract.name': ["".concat(contractName, " not supported")]
+                };
+                response = {
+                  errors: errors
+                };
+                return _context2.abrupt("break", 15);
+
+              case 15:
                 return _context2.abrupt("return", response);
 
-              case 17:
+              case 16:
               case "end":
                 return _context2.stop();
             }
@@ -255,7 +256,7 @@ var Offers = /*#__PURE__*/function () {
         }, _callee2, this);
       }));
 
-      function create(_x, _x2) {
+      function create(_x) {
         return _create.apply(this, arguments);
       }
 
@@ -307,7 +308,7 @@ var Offers = /*#__PURE__*/function () {
         }, _callee3, this);
       }));
 
-      function _delete(_x3) {
+      function _delete(_x2) {
         return _delete2.apply(this, arguments);
       }
 
@@ -318,7 +319,7 @@ var Offers = /*#__PURE__*/function () {
      *
      * @param {object} options - Hashmap of config options for this method
      * @param {object} options.offer.nonce - The nonce of the offer to be deleted
-     * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`
+     * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`
      * @returns {object} Response object
      *
      * @example
@@ -357,7 +358,7 @@ var Offers = /*#__PURE__*/function () {
         }, _callee4, this);
       }));
 
-      function revoke(_x4) {
+      function revoke(_x3) {
         return _revoke.apply(this, arguments);
       }
 

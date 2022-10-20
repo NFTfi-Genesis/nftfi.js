@@ -41,6 +41,8 @@ var _index2 = _interopRequireDefault(require("./nftfi/loans/fixed/v1/index.cjs")
 
 var _index3 = _interopRequireDefault(require("./nftfi/loans/fixed/v2/index.cjs"));
 
+var _index4 = _interopRequireDefault(require("./nftfi/loans/fixed/v2_1/index.cjs"));
+
 var _erc = _interopRequireDefault(require("./nftfi/erc20.cjs"));
 
 var _erc2 = _interopRequireDefault(require("./nftfi/erc721.cjs"));
@@ -57,7 +59,7 @@ var _factory = _interopRequireDefault(require("./nftfi/contract/factory.cjs"));
 
 var _contract = _interopRequireDefault(require("./nftfi/contract.cjs"));
 
-var _index4 = _interopRequireDefault(require("./nftfi/index.cjs"));
+var _index5 = _interopRequireDefault(require("./nftfi/index.cjs"));
 
 var _safeEthersAdapters = require("@gnosis.pm/safe-ethers-adapters");
 
@@ -134,6 +136,7 @@ var _default = {
           contractFactory,
           loanFixedV1,
           loanFixedV2,
+          loanFixedV2_1,
           loanFixed,
           loans,
           offersSignatures,
@@ -343,9 +346,14 @@ var _default = {
                 config: config,
                 contractFactory: contractFactory
               });
+              loanFixedV2_1 = new _index4["default"]({
+                config: config,
+                contractFactory: contractFactory
+              });
               loanFixed = new _index["default"]({
                 v1: loanFixedV1,
-                v2: loanFixedV2
+                v2: loanFixedV2,
+                v2_1: loanFixedV2_1
               });
               loans = new _loans["default"]({
                 api: api,
@@ -382,7 +390,7 @@ var _default = {
                 config: config,
                 contractFactory: contractFactory
               });
-              nftfi = new _index4["default"]({
+              nftfi = new _index5["default"]({
                 config: config,
                 account: account,
                 listings: listings,
@@ -399,7 +407,7 @@ var _default = {
 
               return _context.abrupt("return", nftfi);
 
-            case 72:
+            case 73:
             case "end":
               return _context.stop();
           }

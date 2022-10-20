@@ -12,6 +12,7 @@ import Loans from './nftfi/loans.js';
 import LoansFixed from './nftfi/loans/fixed/index.js';
 import LoansFixedV1 from './nftfi/loans/fixed/v1/index.js';
 import LoansFixedV2 from './nftfi/loans/fixed/v2/index.js';
+import LoansFixedV2_1 from './nftfi/loans/fixed/v2_1/index.js';
 import Erc20 from './nftfi/erc20.js';
 import Erc721 from './nftfi/erc721.js';
 import EOA from './nftfi/account/eoa.js';
@@ -136,7 +137,8 @@ export default {
       options?.dependencies?.contractFactory || new ContractFactory({ signer, ethers, account, Contract });
     const loanFixedV1 = new LoansFixedV1({ config, contractFactory });
     const loanFixedV2 = new LoansFixedV2({ config, contractFactory });
-    const loanFixed = new LoansFixed({ v1: loanFixedV1, v2: loanFixedV2 });
+    const loanFixedV2_1 = new LoansFixedV2_1({ config, contractFactory });
+    const loanFixed = new LoansFixed({ v1: loanFixedV1, v2: loanFixedV2, v2_1: loanFixedV2_1 });
     const loans = new Loans({ api, account, fixed: loanFixed });
     const offersSignatures = new OffersSignatures({ account, ethers, config });
     const offersHelper = new OffersHelper({ BN, Number, utils, ethers, offersSignatures, config, account });

@@ -30,7 +30,7 @@ async function run() {
     token: { address: currency }
   });
   // Construct the loan terms
-  const contractName = nftfi.config.loan.fixed.v2.name;
+  const contractName = nftfi.config.loan.fixed.v2_1.name;
   const principal = balance / 2;
   const apr = 31.42;
   const days = 30;

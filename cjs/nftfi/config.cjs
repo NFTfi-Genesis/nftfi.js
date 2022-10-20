@@ -34,10 +34,19 @@ var baseConfig = {
     adminFeeInBasisPoints: '',
     fixed: {
       v1: {
-        address: ''
+        name: '',
+        address: '',
+        abi: []
       },
       v2: {
-        address: ''
+        name: '',
+        address: '',
+        abi: []
+      },
+      v2_1: {
+        name: '',
+        address: '',
+        abi: []
       }
     }
   },
@@ -84,6 +93,9 @@ mainnetConfig.loan.fixed.v1.abi = ['function cancelLoanCommitmentBeforeLoanHasBe
 mainnetConfig.loan.fixed.v2.name = 'v2.loan.fixed';
 mainnetConfig.loan.fixed.v2.address = '0xf896527c49b44aAb3Cf22aE356Fa3AF8E331F280';
 mainnetConfig.loan.fixed.v2.abi = ['function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)', 'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()', 'function payBackLoan(uint32 _loanId)', 'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)', 'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'];
+mainnetConfig.loan.fixed.v2_1.name = 'v2-1.loan.fixed';
+mainnetConfig.loan.fixed.v2_1.address = '0x8252Df1d8b29057d1Afe3062bf5a64D503152BC8';
+mainnetConfig.loan.fixed.v2_1.abi = mainnetConfig.loan.fixed.v2.abi;
 mainnetConfig.loan.adminFeeInBasisPoints = '500';
 mainnetConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.gnosis.io/';
 var rinkebyConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
@@ -122,6 +134,9 @@ goerliConfig.loan.fixed.v1.abi = ['function cancelLoanCommitmentBeforeLoanHasBeg
 goerliConfig.loan.fixed.v2.name = 'v2.loan.fixed';
 goerliConfig.loan.fixed.v2.address = '0x4554ac207156066092C1Fc6BAa48B0f8447496f1';
 goerliConfig.loan.fixed.v2.abi = ['function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)', 'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()', 'function payBackLoan(uint32 _loanId)', 'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)', 'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'];
+goerliConfig.loan.fixed.v2_1.name = 'v2-1.loan.fixed';
+goerliConfig.loan.fixed.v2_1.address = '0x77097f421CEb2454eB5F77898d25159ff3C7381d';
+goerliConfig.loan.fixed.v2_1.abi = goerliConfig.loan.fixed.v2.abi;
 goerliConfig.loan.adminFeeInBasisPoints = '500';
 goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.goerli.gnosis.io';
 var baseConfigs = (_baseConfigs = {}, (0, _defineProperty2["default"])(_baseConfigs, mainnetConfig.chainId, mainnetConfig), (0, _defineProperty2["default"])(_baseConfigs, rinkebyConfig.chainId, rinkebyConfig), (0, _defineProperty2["default"])(_baseConfigs, goerliConfig.chainId, goerliConfig), _baseConfigs);

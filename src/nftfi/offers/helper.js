@@ -15,54 +15,6 @@ class OffersHelper {
     this.#account = options?.account;
   }
 
-  async constructV1Offer(options) {
-    const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
-    const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
-    const loanInterestRateForDurationInBasisPoints = new this.#BN(0).notn(32).toString();
-    const lenderNonce = this.#utils.getNonce();
-    let offer = {
-      nft: {
-        id: options.nft.id,
-        address: options.nft.address
-      },
-      lender: {
-        address: this.#account.getAddress(),
-        nonce: lenderNonce
-      },
-      borrower: {
-        address: options.borrower.address
-      },
-      referrer: {
-        address: '0x0000000000000000000000000000000000000000'
-      },
-      terms: {
-        loan: {
-          duration: options.terms.duration,
-          repayment: repayment,
-          principal: principal,
-          currency: options.terms.currency,
-          interest: {
-            prorated: false,
-            bps: loanInterestRateForDurationInBasisPoints
-          }
-        }
-      },
-      nftfi: {
-        contract: {
-          name: options.nftfi.contract.name
-        },
-        fee: {
-          bps: this.#config.loan.adminFeeInBasisPoints
-        }
-      }
-    };
-    offer['signature'] = await this.#signatures.getV1OfferSignature({
-      ...options,
-      offer
-    });
-    return offer;
-  }
-
   async constructV2Offer(options) {
     const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
     const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });

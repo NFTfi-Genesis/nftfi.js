@@ -83,13 +83,13 @@ Returns your account's ERC20 allowance for v1 & v2 NFTfi contracts.
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.token.address | <code>string</code> | The ERC20 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
 
 **Example**  
 ```js
 const balance = await nftfi.erc20.allowance({
  token: { address: '0x00000000' },
- nftfi: { contract: { name: 'v2.loan.fixed' } }
+ nftfi: { contract: { name: 'v2-1.loan.fixed' } }
 });
 ```
 
@@ -107,7 +107,7 @@ Approves your account's ERC20 spending amount, if not already approved, for v1 &
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.token.address | <code>string</code> | The ERC20 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
 | options.amount | <code>number</code> | The token amount to approve, in base units (eg. 1000000000000000000 wei) |
 
 **Example**  
@@ -115,7 +115,7 @@ Approves your account's ERC20 spending amount, if not already approved, for v1 &
 const results = await nftfi.erc20.approve({
   amount: 1000000000000000000,
   token: { address: '0x00000000' },
-  nftfi: { contract: { name: 'v2.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
 });
 ```
 
@@ -133,13 +133,13 @@ Approves your account's ERC20 maximum amount, if not already approved, for v1 & 
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.token.address | <code>string</code> | The ERC20 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
 
 **Example**  
 ```js
 const results = await nftfi.erc20.approveMax({
   token: { address: '0x00000000' },
-  nftfi: { contract: { name: 'v2.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
 });
 ```
 
@@ -220,7 +220,7 @@ The NFTfi contract is allowed to transfer all tokens of the sender on their beha
 | --- | --- | --- |
 | options | <code>object</code> | Options |
 | options.token.address | <code>string</code> | The ERC721 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
 
 **Example**  
 ```js
@@ -228,7 +228,7 @@ const address = await nftfi.erc721.setApprovalForAll({
   token: {
    address: '0x00000000'
   },
-  nftfi: { contract: { name: 'v2.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
 });
 ```
 
@@ -345,7 +345,7 @@ Begin a loan. Called by the borrower when accepting a lender's offer.
 | options.offer.lender.nonce | <code>string</code> | Nonce used by the lender when they signed the offer |
 | options.offer.signature | <code>string</code> | ECDSA signature of the lender |
 | options.offer.nftfi.fee.bps | <code>number</code> | Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid |
-| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v1.loan.fixed`, `v2.loan.fixed` |
+| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-1.loan.fixed` |
 
 **Example**  
 ```js
@@ -372,7 +372,7 @@ const result = await nftfi.loans.begin({
     signature: '0x000000000000000000000000000000000000000000000000000',
     nftfi: {
       fee: { bps: 500 },
-      contract: { name: 'v2.loan.fixed' }
+      contract: { name: 'v2-1.loan.fixed' }
     }
   }
 });
@@ -393,7 +393,7 @@ Can be called once a loan has finished its duration and the borrower still has n
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.loan.id | <code>string</code> | The ID of the loan being liquidated |
-| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the liquidation: `v1.loan.fixed`, `v2.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the liquidation: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed` |
 
 **Example**  
 ```js
@@ -419,6 +419,18 @@ const result = await nftfi.loans.liquidate({
   }
 });
 ```
+**Example**  
+```js
+// Liquidate a v2.1 fixed loan
+const result = await nftfi.loans.liquidate({
+  loan: { id: 2 },
+  nftfi: {
+    contract: {
+      name: 'v2-1.loan.fixed'
+    }
+  }
+});
+```
 
 * * *
 
@@ -434,7 +446,7 @@ Repay a loan. Can be called at any time after the loan has begun and before loan
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.loan.id | <code>string</code> | The ID of the loan being repaid |
-| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed` |
 
 **Example**  
 ```js
@@ -460,6 +472,18 @@ const result = await nftfi.loans.repay({
   }
 });
 ```
+**Example**  
+```js
+// Repay a v2.1 fixed loan
+const result = await nftfi.loans.repay({
+  loan: { id: 2 },
+  nftfi: {
+    contract: {
+      name: 'v2-1.loan.fixed'
+    }
+  }
+});
+```
 
 * * *
 
@@ -475,7 +499,7 @@ Revokes an active offer made by your account.
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.offer.nonce | <code>object</code> | The nonce of the offer to be deleted |
-| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed` |
 
 **Example**  
 ```js
@@ -501,6 +525,20 @@ const revoked = await nftfi.loans.revoke({
   nftfi: {
     contract: {
       name: 'v2.loan.fixed'
+    }
+  }
+});
+```
+**Example**  
+```js
+// Revoke a v2.1 fixed loan offer
+const revoked = await nftfi.loans.revoke({
+  offer: {
+    nonce: '42'
+  },
+  nftfi: {
+    contract: {
+      name: 'v2-1.loan.fixed'
     }
   }
 });
@@ -605,7 +643,7 @@ const offer = await nftfi.offers.create({
   },
   nftfi: {
     contract: {
-      name: "v2.loan.fixed"
+      name: "v2-1.loan.fixed"
     }
   }
 });
@@ -653,7 +691,7 @@ Revokes an active offer made by your account.
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.offer.nonce | <code>object</code> | The nonce of the offer to be deleted |
-| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed` |
 
 **Example**  
 ```js
