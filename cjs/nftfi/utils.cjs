@@ -101,7 +101,7 @@ var Utils = /*#__PURE__*/function () {
      * @returns {number} Expiry
      *
      * @example
-     * // Get an expiry timestamp far into the future
+     * // Get an expiry timestamp into the future
      * const expiry = nftfi.utils.getExpiry();
      */
 

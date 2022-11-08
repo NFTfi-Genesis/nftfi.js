@@ -8,11 +8,14 @@ import Listings from './nftfi/listings.js';
 import Offers from './nftfi/offers.js';
 import OffersSignatures from './nftfi/offers/signatures.js';
 import OffersHelper from './nftfi/offers/helper.js';
+import OffersValidator from './nftfi/offers/validation.js';
 import Loans from './nftfi/loans.js';
 import LoansFixed from './nftfi/loans/fixed/index.js';
 import LoansFixedV1 from './nftfi/loans/fixed/v1/index.js';
 import LoansFixedV2 from './nftfi/loans/fixed/v2/index.js';
 import LoansFixedV2_1 from './nftfi/loans/fixed/v2_1/index.js';
+import LoansFixedCollection from './nftfi/loans/fixed/collection/index.js';
+import LoansFixedCollectionV2 from './nftfi/loans/fixed/collection/v2/index.js';
 import Erc20 from './nftfi/erc20.js';
 import Erc721 from './nftfi/erc721.js';
 import EOA from './nftfi/account/eoa.js';
@@ -32,6 +35,8 @@ import web3 from 'web3';
 import axios from 'axios';
 import merge from 'lodash.merge';
 import set from 'lodash.set';
+import Result from './nftfi/result.js';
+import Error from './nftfi/error.js';
 
 export default {
   init: async function (options = {}) {
@@ -132,18 +137,29 @@ export default {
     const utils = options?.dependencies?.utils || new Utils({ ethers, BN, Date, Math, Number, web3 });
     const auth = new Auth({ http, account, config, utils });
     const api = options?.dependencies?.api || new Api({ config, auth, http });
+    const error = new Error();
+    const result = new Result();
     const listings = new Listings({ api, config });
     const contractFactory =
       options?.dependencies?.contractFactory || new ContractFactory({ signer, ethers, account, Contract });
+
     const loanFixedV1 = new LoansFixedV1({ config, contractFactory });
     const loanFixedV2 = new LoansFixedV2({ config, contractFactory });
     const loanFixedV2_1 = new LoansFixedV2_1({ config, contractFactory });
-    const loanFixed = new LoansFixed({ v1: loanFixedV1, v2: loanFixedV2, v2_1: loanFixedV2_1 });
+    const loanFixedCollectionV2 = new LoansFixedCollectionV2({ config, contractFactory });
+    const loanFixedCollection = new LoansFixedCollection({ v2: loanFixedCollectionV2 });
+    const loanFixed = new LoansFixed({
+      v1: loanFixedV1,
+      v2: loanFixedV2,
+      v2_1: loanFixedV2_1,
+      collection: loanFixedCollection
+    });
     const loans = new Loans({ api, account, fixed: loanFixed });
     const offersSignatures = new OffersSignatures({ account, ethers, config });
-    const offersHelper = new OffersHelper({ BN, Number, utils, ethers, offersSignatures, config, account });
-    const offers = new Offers({ api, account, offersHelper, loans });
     const erc20 = new Erc20({ config, account, contractFactory, BN });
+    const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account });
+    const offersValidator = new OffersValidator({ erc20, ethers, config, contractFactory });
+    const offers = new Offers({ api, account, offersHelper, offersValidator, loans, config, result, error });
     const erc721 = new Erc721({ config, contractFactory });
     const nftfi = new NFTfi({ config, account, listings, offers, loans, erc20, erc721, utils });
 

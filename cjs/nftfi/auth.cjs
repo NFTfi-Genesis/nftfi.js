@@ -71,28 +71,73 @@ var Auth = /*#__PURE__*/function () {
   }
 
   (0, _createClass2["default"])(Auth, [{
+    key: "_isTokenValid",
+    value: function _isTokenValid(token) {
+      if (token) {
+        var accountAddress = (0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress();
+        var decodedToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+        return Date.now() < decodedToken.exp * 1000 && decodedToken.account.toLowerCase() === accountAddress.toLowerCase();
+      }
+
+      return false;
+    }
+  }, {
     key: "getToken",
     value: function () {
       var _getToken = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-        var _result$data, _result$data$result, nonce, accountAddress, message, messageToSign, signedMessage, multisig, body, uri, headers, result, token, _result$data2;
+        var _global, _global$window, _result$data, _result$data$result;
+
+        var _global2, _global2$window, sdkToken, dappToken, nonce, accountAddress, message, messageToSign, signedMessage, multisig, body, uri, headers, result, token, _global3, _global3$window, _result$data2;
 
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if ((0, _classPrivateFieldGet2["default"])(this, _token)) {
-                  _context.next = 21;
+                if (!this._isTokenValid((0, _classPrivateFieldGet2["default"])(this, _token))) {
+                  _context.next = 2;
                   break;
                 }
 
+                return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
+
+              case 2:
+                if (!(typeof ((_global = global) === null || _global === void 0 ? void 0 : (_global$window = _global.window) === null || _global$window === void 0 ? void 0 : _global$window.localStorage) !== 'undefined')) {
+                  _context.next = 12;
+                  break;
+                }
+
+                sdkToken = global.window.localStorage.getItem('sdkToken');
+
+                if (!this._isTokenValid(sdkToken)) {
+                  _context.next = 7;
+                  break;
+                }
+
+                (0, _classPrivateFieldSet2["default"])(this, _token, sdkToken);
+                return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
+
+              case 7:
+                dappToken = (_global2 = global) === null || _global2 === void 0 ? void 0 : (_global2$window = _global2.window) === null || _global2$window === void 0 ? void 0 : _global2$window.localStorage.getItem('jwtToken');
+
+                if (!this._isTokenValid(dappToken)) {
+                  _context.next = 12;
+                  break;
+                }
+
+                global.window.localStorage.setItem('sdkToken', dappToken);
+                (0, _classPrivateFieldSet2["default"])(this, _token, dappToken);
+                return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
+
+              case 12:
+                // Request token
                 nonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
                 accountAddress = (0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress();
                 message = "This message proves you own this wallet address : ".concat((0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress());
                 messageToSign = "".concat(message, "\r\n\r\nChainId : ").concat((0, _classPrivateFieldGet2["default"])(this, _config).chainId, "\r\nNonce : ").concat(nonce, ")");
-                _context.next = 7;
+                _context.next = 18;
                 return (0, _classPrivateFieldGet2["default"])(this, _account).authSign(messageToSign);
 
-              case 7:
+              case 18:
                 signedMessage = _context.sent;
                 multisig = (0, _classPrivateFieldGet2["default"])(this, _account).isMultisig();
                 body = {
@@ -106,31 +151,35 @@ var Auth = /*#__PURE__*/function () {
                 headers = {
                   'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
                 };
-                _context.next = 14;
+                _context.next = 25;
                 return (0, _classPrivateFieldGet2["default"])(this, _http).post(uri, body, {
                   headers: headers
                 });
 
-              case 14:
+              case 25:
                 result = _context.sent;
                 token = result === null || result === void 0 ? void 0 : (_result$data = result.data) === null || _result$data === void 0 ? void 0 : (_result$data$result = _result$data.result) === null || _result$data$result === void 0 ? void 0 : _result$data$result.token;
 
                 if (!token) {
-                  _context.next = 20;
+                  _context.next = 32;
                   break;
                 }
 
+                if (typeof ((_global3 = global) === null || _global3 === void 0 ? void 0 : (_global3$window = _global3.window) === null || _global3$window === void 0 ? void 0 : _global3$window.localStorage) !== 'undefined') {
+                  global.window.localStorage.setItem('sdkToken', token);
+                }
+
                 (0, _classPrivateFieldSet2["default"])(this, _token, token);
-                _context.next = 21;
+                _context.next = 33;
                 break;
 
-              case 20:
+              case 32:
                 throw result === null || result === void 0 ? void 0 : (_result$data2 = result.data) === null || _result$data2 === void 0 ? void 0 : _result$data2.message;
 
-              case 21:
+              case 33:
                 return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
 
-              case 22:
+              case 34:
               case "end":
                 return _context.stop();
             }

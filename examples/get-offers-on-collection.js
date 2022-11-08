@@ -33,7 +33,7 @@ async function run() {
       );
     }
   } else {
-    console.log(`[INFO] can find any offers for nft.address ${process.env.NFTFI_SDK_EXAMPLE_NFT_ADDRESS}`);
+    console.log(`[INFO] cant find any offers for nft.address ${process.env.NFTFI_SDK_EXAMPLE_NFT_ADDRESS}`);
   }
 }
 

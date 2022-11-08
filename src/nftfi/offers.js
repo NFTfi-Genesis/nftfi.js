@@ -7,13 +7,23 @@ class Offers {
   #api;
   #helper;
   #loans;
+  #config;
+  #validator;
+  #result;
+  #error;
 
   constructor(options = {}) {
     this.#account = options?.account;
     this.#api = options?.api;
     this.#helper = options?.offersHelper;
     this.#loans = options?.loans;
+    this.#config = options?.config;
+    this.#validator = options?.offersValidator;
+    this.#error = options?.error;
+    this.#result = options?.result;
   }
+
+  // We will start using #result and #error to standardise responses from the sdk. Not all functions use this pattern yet, but this is the goal.
 
   /**
    * When called with no argument, gets all offers made by your account.
@@ -22,6 +32,13 @@ class Offers {
    * @param {object} [options] - Hashmap of config options for this method
    * @param {string} [options.filters.nft.address] - NFT contract address to filter by (optional)
    * @param {string} [options.filters.nft.id] - NFT id of the asset to filter by (optional)
+   * @param {string} [options.filters.lender.address.eq] - Lender wallet address to filter by (optional)
+   * @param {string} [options.filters.lender.address.ne] - Lender wallet address to exclude (optional)
+   * @param {string} [options.filters.nftfi.contract.name] - Contract name to filter by (optional)
+   * @param {number} [options.pagination.page] - Pagination page (optional)
+   * @param {number} [options.pagination.limit] - Pagination limit (optional)
+   * @param {string} [options.pagination.sort] - Field to sort by (optional)
+   * @param {'asc' | 'desc'} [options.pagination.direction] - Direction to sort by (optional)
    * @returns {Array<object>} Array of offers
    *
    * @example
@@ -29,13 +46,17 @@ class Offers {
    * const offers = await nftfi.offers.get();
    *
    * @example
-   * // Get all offers made by your account, for a given NFT
+   * // Get the first page of offers made by your account, for a given NFT
    * const offers = await nftfi.offers.get({
    *   filters: {
    *     nft: {
    *       address: "0x00000000",
    *       id: "42"
    *     }
+   *   },
+   *   pagination:{
+   *     page: 1,
+   *     limit: 10
    *   }
    * });
    *
@@ -48,35 +69,60 @@ class Offers {
    *     }
    *   }
    * });
+   *
+   * @example
+   * // Get the first page of collection offers made by a specific lender
+   * const offers = await nftfi.offers.get({
+   *   filters: {
+   *     nft: {
+   *       address: "0x00000000",
+   *     },
+   *     lender:{
+   *       address: {
+   *         eq: "0x12345567"
+   *       }
+   *     },
+   *     nftfi: {
+   *       contract: {
+   *         name: "v2.loan.fixed.collection"
+   *       }
+   *     }
+   *   },
+   *   pagination:{
+   *     page: 1,
+   *     limit: 10
+   *   }
+   * });
    */
   async get(options = {}) {
-    let params = {};
-    if (options?.filters?.nft) {
-      if (options.filters.nft.address && options?.filters?.nft?.id) {
-        params = {
-          nftAddress: options.filters.nft.address,
-          nftId: options.filters.nft.id
-        };
-      } else if (options.filters.nft.address) {
-        params = {
-          nftAddress: options.filters.nft.address
-        };
+    const params = this.#helper.getParams(options);
+
+    try {
+      const response = await this.#api.get({
+        uri: 'offers',
+        params
+      });
+
+      let offersWithStatus = response?.results;
+      if (response?.results?.length > 0) {
+        offersWithStatus = await Promise.all(
+          offersWithStatus.map(async offer => {
+            const errors = await this.#validator.validate(offer);
+            return { ...offer, errors: errors };
+          })
+        );
       }
-    } else {
-      params = {
-        lenderAddress: this.#account.getAddress()
-      };
+      if (options?.pagination) {
+        return this.#result.handle({ pagination: { total: response?.pagination?.total }, results: offersWithStatus });
+      }
+      return offersWithStatus;
+    } catch (e) {
+      return this.#error.handle(e);
     }
-    let response = await this.#api.get({
-      uri: 'offers',
-      params
-    });
-    const offers = response['results'];
-    return offers;
   }
 
   /**
-   * Creates a new offer on a NFT.
+   * Creates a new offer on a NFT or collection.
    *
    * @param {object} options - Config options for this method
    * @param {object} options.terms - Terms of the offer
@@ -92,7 +138,8 @@ class Offers {
    *     principal: 1000000000000000000,
    *     repayment: 1100000000000000000,
    *     duration: 86400 * 7, // 7 days (in seconds)
-   *     currency: "0x00000000"
+   *     currency: "0x00000000",
+   *     expiry: 21600 // 6 hours (in seconds)
    *   },
    *   nft: {
    *     address: "0x00000000",
@@ -116,6 +163,14 @@ class Offers {
     switch (contractName) {
       case 'v2-1.loan.fixed': {
         let payload = await this.#helper.constructV2Offer(options);
+        response = await this.#api.post({
+          uri: 'offers',
+          payload
+        });
+        break;
+      }
+      case 'v2.loan.fixed.collection': {
+        let payload = await this.#helper.constructV2FixedCollectionOffer(options);
         response = await this.#api.post({
           uri: 'offers',
           payload

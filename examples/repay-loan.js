@@ -5,7 +5,9 @@ dotenv.config();
 async function run() {
   // Init the NFTfi SDK
   const borrower = await NFTfi.init({
-    config: { api: { key: process.env.NFTFI_SDK_API_KEY } },
+    config: {
+      api: { key: process.env.NFTFI_SDK_DEMO_API_KEY }
+    },
     ethereum: {
       account: { privateKey: process.env.NFTFI_SDK_ETHEREUM_BORROWER_ACCOUNT_PRIVATE_KEY },
       provider: { url: process.env.NFTFI_SDK_ETHEREUM_PROVIDER_URL }
@@ -23,6 +25,11 @@ async function run() {
   if (loans.length > 0) {
     // Get the first loan
     const loan = loans[0];
+    // Approve repayment amount with NFTfi contracts
+    await borrower.erc20.approveMax({
+      token: { address: loan.terms.loan.currency },
+      nftfi: { contract: { name: loan.nftfi.contract.name } }
+    });
     // Repay the loan
     const result = await borrower.loans.repay({
       loan: { id: loan.id },

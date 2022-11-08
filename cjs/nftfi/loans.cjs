@@ -129,7 +129,7 @@ var Loans = /*#__PURE__*/function () {
      * @param {string} options.offer.lender.nonce - Nonce used by the lender when they signed the offer
      * @param {string} options.offer.signature - ECDSA signature of the lender
      * @param {number} options.offer.nftfi.fee.bps - Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid
-     * @param {string} options.offer.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-1.loan.fixed`
+     * @param {string} options.offer.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2.loan.fixed.collection`
      * @returns {object} Response object
      *
      * @example
@@ -166,14 +166,15 @@ var Loans = /*#__PURE__*/function () {
     key: "begin",
     value: function () {
       var _begin = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
-        var errors, response, contractName, success;
+        var errors, response, contractName, success, _success;
+
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 contractName = options.offer.nftfi.contract.name;
                 _context2.t0 = contractName;
-                _context2.next = _context2.t0 === 'v2-1.loan.fixed' ? 4 : 9;
+                _context2.next = _context2.t0 === 'v2-1.loan.fixed' ? 4 : _context2.t0 === 'v2.loan.fixed.collection' ? 9 : 14;
                 break;
 
               case 4:
@@ -185,21 +186,32 @@ var Loans = /*#__PURE__*/function () {
                 response = {
                   success: success
                 };
-                return _context2.abrupt("break", 12);
+                return _context2.abrupt("break", 17);
 
               case 9:
+                _context2.next = 11;
+                return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.acceptOffer(options);
+
+              case 11:
+                _success = _context2.sent;
+                response = {
+                  success: _success
+                };
+                return _context2.abrupt("break", 17);
+
+              case 14:
                 errors = {
                   'nftfi.contract.name': ["".concat(contractName, " not supported")]
                 };
                 response = {
                   errors: errors
                 };
-                return _context2.abrupt("break", 12);
+                return _context2.abrupt("break", 17);
 
-              case 12:
+              case 17:
                 return _context2.abrupt("return", response);
 
-              case 13:
+              case 18:
               case "end":
                 return _context2.stop();
             }
@@ -245,6 +257,17 @@ var Loans = /*#__PURE__*/function () {
      * });
      *
      * @example
+     * // Liquidate a v2 fixed collection loan
+     * const result = await nftfi.loans.liquidate({
+     *   loan: { id: 3 },
+     *   nftfi: {
+     *     contract: {
+     *       name: 'v2.loan.fixed.collection'
+     *     }
+     *   }
+     * });
+     *
+     * @example
      * // Liquidate a v2.1 fixed loan
      * const result = await nftfi.loans.liquidate({
      *   loan: { id: 2 },
@@ -267,7 +290,7 @@ var Loans = /*#__PURE__*/function () {
               case 0:
                 success = false;
                 _context3.t0 = options.nftfi.contract.name;
-                _context3.next = _context3.t0 === 'v1.loan.fixed' ? 4 : _context3.t0 === 'v2.loan.fixed' ? 8 : _context3.t0 === 'v2-1.loan.fixed' ? 12 : 16;
+                _context3.next = _context3.t0 === 'v1.loan.fixed' ? 4 : _context3.t0 === 'v2.loan.fixed' ? 8 : _context3.t0 === 'v2.loan.fixed.collection' ? 12 : _context3.t0 === 'v2-1.loan.fixed' ? 16 : 20;
                 break;
 
               case 4:
@@ -280,7 +303,7 @@ var Loans = /*#__PURE__*/function () {
 
               case 6:
                 success = _context3.sent;
-                return _context3.abrupt("break", 16);
+                return _context3.abrupt("break", 20);
 
               case 8:
                 _context3.next = 10;
@@ -292,11 +315,11 @@ var Loans = /*#__PURE__*/function () {
 
               case 10:
                 success = _context3.sent;
-                return _context3.abrupt("break", 16);
+                return _context3.abrupt("break", 20);
 
               case 12:
                 _context3.next = 14;
-                return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.liquidateOverdueLoan({
+                return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.liquidateOverdueLoan({
                   loan: {
                     id: options.loan.id
                   }
@@ -304,14 +327,26 @@ var Loans = /*#__PURE__*/function () {
 
               case 14:
                 success = _context3.sent;
-                return _context3.abrupt("break", 16);
+                return _context3.abrupt("break", 20);
 
               case 16:
+                _context3.next = 18;
+                return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.liquidateOverdueLoan({
+                  loan: {
+                    id: options.loan.id
+                  }
+                });
+
+              case 18:
+                success = _context3.sent;
+                return _context3.abrupt("break", 20);
+
+              case 20:
                 return _context3.abrupt("return", {
                   success: success
                 });
 
-              case 17:
+              case 21:
               case "end":
                 return _context3.stop();
             }
@@ -330,7 +365,7 @@ var Loans = /*#__PURE__*/function () {
      *
      * @param {object} options - Hashmap of config options for this method
      * @param {string} options.loan.id - The ID of the loan being repaid
-     * @param {string} options.nftfi.contract.name - Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`
+     * @param {string} options.nftfi.contract.name - Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`, `v2.loan.fixed.collection`
      * @returns {object} Response object
      *
      * @example
@@ -365,6 +400,17 @@ var Loans = /*#__PURE__*/function () {
      *     }
      *   }
      * });
+     *
+     * @example
+     * // Repay a v2 fixed collection loan
+     * const result = await nftfi.loans.repay({
+     *   loan: { id: 3 },
+     *   nftfi: {
+     *     contract: {
+     *       name: 'v2.loan.fixed.collection'
+     *     }
+     *   }
+     * });
      */
 
   }, {
@@ -378,7 +424,7 @@ var Loans = /*#__PURE__*/function () {
               case 0:
                 success = false;
                 _context4.t0 = options.nftfi.contract.name;
-                _context4.next = _context4.t0 === 'v1.loan.fixed' ? 4 : _context4.t0 === 'v2.loan.fixed' ? 8 : _context4.t0 === 'v2-1.loan.fixed' ? 12 : 16;
+                _context4.next = _context4.t0 === 'v1.loan.fixed' ? 4 : _context4.t0 === 'v2.loan.fixed' ? 8 : _context4.t0 === 'v2-1.loan.fixed' ? 12 : _context4.t0 === 'v2.loan.fixed.collection' ? 16 : 20;
                 break;
 
               case 4:
@@ -391,7 +437,7 @@ var Loans = /*#__PURE__*/function () {
 
               case 6:
                 success = _context4.sent;
-                return _context4.abrupt("break", 16);
+                return _context4.abrupt("break", 20);
 
               case 8:
                 _context4.next = 10;
@@ -403,7 +449,7 @@ var Loans = /*#__PURE__*/function () {
 
               case 10:
                 success = _context4.sent;
-                return _context4.abrupt("break", 16);
+                return _context4.abrupt("break", 20);
 
               case 12:
                 _context4.next = 14;
@@ -415,14 +461,26 @@ var Loans = /*#__PURE__*/function () {
 
               case 14:
                 success = _context4.sent;
-                return _context4.abrupt("break", 16);
+                return _context4.abrupt("break", 20);
 
               case 16:
+                _context4.next = 18;
+                return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.payBackLoan({
+                  loan: {
+                    id: options.loan.id
+                  }
+                });
+
+              case 18:
+                success = _context4.sent;
+                return _context4.abrupt("break", 20);
+
+              case 20:
                 return _context4.abrupt("return", {
                   success: success
                 });
 
-              case 17:
+              case 21:
               case "end":
                 return _context4.stop();
             }
@@ -495,7 +553,7 @@ var Loans = /*#__PURE__*/function () {
               case 0:
                 success = false;
                 _context5.t0 = options.nftfi.contract.name;
-                _context5.next = _context5.t0 === 'v1.loan.fixed' ? 4 : _context5.t0 === 'v2.loan.fixed' ? 8 : _context5.t0 === 'v2-1.loan.fixed' ? 12 : 16;
+                _context5.next = _context5.t0 === 'v1.loan.fixed' ? 4 : _context5.t0 === 'v2.loan.fixed' ? 8 : _context5.t0 === 'v2-1.loan.fixed' ? 12 : _context5.t0 === 'v2.loan.fixed.collection' ? 16 : 20;
                 break;
 
               case 4:
@@ -508,7 +566,7 @@ var Loans = /*#__PURE__*/function () {
 
               case 6:
                 success = _context5.sent;
-                return _context5.abrupt("break", 16);
+                return _context5.abrupt("break", 20);
 
               case 8:
                 _context5.next = 10;
@@ -520,7 +578,7 @@ var Loans = /*#__PURE__*/function () {
 
               case 10:
                 success = _context5.sent;
-                return _context5.abrupt("break", 16);
+                return _context5.abrupt("break", 20);
 
               case 12:
                 _context5.next = 14;
@@ -532,14 +590,26 @@ var Loans = /*#__PURE__*/function () {
 
               case 14:
                 success = _context5.sent;
-                return _context5.abrupt("break", 16);
+                return _context5.abrupt("break", 20);
 
               case 16:
+                _context5.next = 18;
+                return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.cancelLoanCommitmentBeforeLoanHasBegun({
+                  offer: {
+                    nonce: options.offer.nonce
+                  }
+                });
+
+              case 18:
+                success = _context5.sent;
+                return _context5.abrupt("break", 20);
+
+              case 20:
                 return _context5.abrupt("return", {
                   success: success
                 });
 
-              case 17:
+              case 21:
               case "end":
                 return _context5.stop();
             }

@@ -23,13 +23,16 @@ class Erc20 {
         return this.#config.loan.fixed.v2.address;
       case 'v2-1.loan.fixed':
         return this.#config.loan.fixed.v2_1.address;
+      case 'v2.loan.fixed.collection':
+        return this.#config.loan.fixed.collection.v2.address;
     }
   }
 
   /**
-   * Returns your account's ERC20 allowance for v1 & v2 NFTfi contracts.
+   * Returns the ERC20 allowance, for v1 & v2 NFTfi contracts, for your account (by default), or a specified account.
    *
    * @param {object} options - Hashmap of config options for this method
+   * @param {object} [options.account.address] - The account address to get the allowance of (optional)
    * @param {string} options.token.address - The ERC20 token address
    * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
    * @returns {number} The user account's token allowance for that contract, in base units (eg. 1000000000000000000 wei)
@@ -43,6 +46,7 @@ class Erc20 {
   async allowance(options) {
     const contractName = options.nftfi.contract.name;
     const contractAddress = this._getContractAddress(contractName);
+    const accountAddress = options?.account?.address || this.#account.getAddress();
 
     const contract = this.#contractFactory.create({
       address: options.token.address,
@@ -50,7 +54,7 @@ class Erc20 {
     });
     return await contract.call({
       function: 'allowance',
-      args: [this.#account.getAddress(), contractAddress]
+      args: [accountAddress, contractAddress]
     });
   }
 
@@ -115,9 +119,10 @@ class Erc20 {
   }
 
   /**
-   * Returns your account's balance of a given ERC20 token.
+   * Returns the balance of a given ERC20 token for your account (by default), or a specified account.
    *
    * @param {object} options - Options
+   * @param {object} [options.account.address] - The account address to get the balance of (optional)
    * @param {string} options.token.address - The ERC20 token address
    * @returns {number} The user account's token balance, in base units (eg. 1000000000000000000 wei)
    *
@@ -131,9 +136,10 @@ class Erc20 {
       address: options.token.address,
       abi: this.#config.erc20.abi
     });
+    const accountAddress = options?.account?.address || this.#account.getAddress();
     const balance = await contract.call({
       function: 'balanceOf',
-      args: [this.#account.getAddress()]
+      args: [accountAddress]
     });
     return balance;
   }

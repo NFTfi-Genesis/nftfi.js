@@ -83,12 +83,16 @@ var Erc20 = /*#__PURE__*/function () {
 
         case 'v2-1.loan.fixed':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.address;
+
+        case 'v2.loan.fixed.collection':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.address;
       }
     }
     /**
-     * Returns your account's ERC20 allowance for v1 & v2 NFTfi contracts.
+     * Returns the ERC20 allowance, for v1 & v2 NFTfi contracts, for your account (by default), or a specified account.
      *
      * @param {object} options - Hashmap of config options for this method
+     * @param {object} [options.account.address] - The account address to get the allowance of (optional)
      * @param {string} options.token.address - The ERC20 token address
      * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
      * @returns {number} The user account's token allowance for that contract, in base units (eg. 1000000000000000000 wei)
@@ -104,27 +108,30 @@ var Erc20 = /*#__PURE__*/function () {
     key: "allowance",
     value: function () {
       var _allowance = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var contractName, contractAddress, contract;
+        var _options$account;
+
+        var contractName, contractAddress, accountAddress, contract;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 contractName = options.nftfi.contract.name;
                 contractAddress = this._getContractAddress(contractName);
+                accountAddress = (options === null || options === void 0 ? void 0 : (_options$account = options.account) === null || _options$account === void 0 ? void 0 : _options$account.address) || (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
                 contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
                   address: options.token.address,
                   abi: (0, _classPrivateFieldGet2["default"])(this, _config).erc20.abi
                 });
-                _context.next = 5;
+                _context.next = 6;
                 return contract.call({
                   "function": 'allowance',
-                  args: [(0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), contractAddress]
+                  args: [accountAddress, contractAddress]
                 });
 
-              case 5:
+              case 6:
                 return _context.abrupt("return", _context.sent);
 
-              case 6:
+              case 7:
               case "end":
                 return _context.stop();
             }
@@ -260,9 +267,10 @@ var Erc20 = /*#__PURE__*/function () {
       return approveMax;
     }()
     /**
-     * Returns your account's balance of a given ERC20 token.
+     * Returns the balance of a given ERC20 token for your account (by default), or a specified account.
      *
      * @param {object} options - Options
+     * @param {object} [options.account.address] - The account address to get the balance of (optional)
      * @param {string} options.token.address - The ERC20 token address
      * @returns {number} The user account's token balance, in base units (eg. 1000000000000000000 wei)
      *
@@ -276,7 +284,9 @@ var Erc20 = /*#__PURE__*/function () {
     key: "balanceOf",
     value: function () {
       var _balanceOf = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
-        var contract, balance;
+        var _options$account2;
+
+        var contract, accountAddress, balance;
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
@@ -285,17 +295,18 @@ var Erc20 = /*#__PURE__*/function () {
                   address: options.token.address,
                   abi: (0, _classPrivateFieldGet2["default"])(this, _config).erc20.abi
                 });
-                _context4.next = 3;
+                accountAddress = (options === null || options === void 0 ? void 0 : (_options$account2 = options.account) === null || _options$account2 === void 0 ? void 0 : _options$account2.address) || (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
+                _context4.next = 4;
                 return contract.call({
                   "function": 'balanceOf',
-                  args: [(0, _classPrivateFieldGet2["default"])(this, _account).getAddress()]
+                  args: [accountAddress]
                 });
 
-              case 3:
+              case 4:
                 balance = _context4.sent;
                 return _context4.abrupt("return", balance);
 
-              case 5:
+              case 6:
               case "end":
                 return _context4.stop();
             }

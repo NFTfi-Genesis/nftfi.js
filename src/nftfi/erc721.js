@@ -19,6 +19,8 @@ class Erc721 {
         return this.#config.loan.fixed.v2.address;
       case 'v2-1.loan.fixed':
         return this.#config.loan.fixed.v2_1.address;
+      case 'v2.loan.fixed.collection':
+        return this.#config.loan.fixed.collection.v2.address;
     }
   }
 

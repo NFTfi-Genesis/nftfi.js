@@ -9,9 +9,9 @@ exports["default"] = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -85,6 +85,117 @@ var OffersHelper = /*#__PURE__*/function () {
   }
 
   (0, _createClass2["default"])(OffersHelper, [{
+    key: "_addCollectionAddress",
+    value: function _addCollectionAddress(options, params) {
+      var _options$filters, _options$filters$nft;
+
+      if (options !== null && options !== void 0 && (_options$filters = options.filters) !== null && _options$filters !== void 0 && (_options$filters$nft = _options$filters.nft) !== null && _options$filters$nft !== void 0 && _options$filters$nft.address) {
+        return _objectSpread(_objectSpread({}, params), {}, {
+          nftAddress: options.filters.nft.address
+        });
+      }
+
+      return params;
+    }
+  }, {
+    key: "_addNft",
+    value: function _addNft(options, params) {
+      var _options$filters2, _options$filters2$nft, _options$filters3, _options$filters3$nft;
+
+      if (options !== null && options !== void 0 && (_options$filters2 = options.filters) !== null && _options$filters2 !== void 0 && (_options$filters2$nft = _options$filters2.nft) !== null && _options$filters2$nft !== void 0 && _options$filters2$nft.address && options !== null && options !== void 0 && (_options$filters3 = options.filters) !== null && _options$filters3 !== void 0 && (_options$filters3$nft = _options$filters3.nft) !== null && _options$filters3$nft !== void 0 && _options$filters3$nft.id) {
+        return _objectSpread(_objectSpread({}, params), {}, {
+          nftAddress: options.filters.nft.address,
+          nftId: options.filters.nft.id
+        });
+      }
+
+      return params;
+    }
+  }, {
+    key: "_addLender",
+    value: function _addLender(options, params) {
+      var _options$filters4, _options$filters4$len, _options$filters4$len2, _options$filters6, _options$filters6$len, _options$filters6$len2;
+
+      // you can eq or ne but not both, should we allow both ? not needed now let's not overthink ?
+      if (!(options !== null && options !== void 0 && options.filters)) {
+        params = {
+          lenderAddress: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()
+        };
+      }
+
+      if (options !== null && options !== void 0 && (_options$filters4 = options.filters) !== null && _options$filters4 !== void 0 && (_options$filters4$len = _options$filters4.lender) !== null && _options$filters4$len !== void 0 && (_options$filters4$len2 = _options$filters4$len.address) !== null && _options$filters4$len2 !== void 0 && _options$filters4$len2.eq) {
+        var _options$filters5, _options$filters5$len, _options$filters5$len2;
+
+        return _objectSpread(_objectSpread({}, params), {}, {
+          lenderAddress: options === null || options === void 0 ? void 0 : (_options$filters5 = options.filters) === null || _options$filters5 === void 0 ? void 0 : (_options$filters5$len = _options$filters5.lender) === null || _options$filters5$len === void 0 ? void 0 : (_options$filters5$len2 = _options$filters5$len.address) === null || _options$filters5$len2 === void 0 ? void 0 : _options$filters5$len2.eq
+        });
+      }
+
+      if (options !== null && options !== void 0 && (_options$filters6 = options.filters) !== null && _options$filters6 !== void 0 && (_options$filters6$len = _options$filters6.lender) !== null && _options$filters6$len !== void 0 && (_options$filters6$len2 = _options$filters6$len.address) !== null && _options$filters6$len2 !== void 0 && _options$filters6$len2.ne) {
+        var _options$filters7, _options$filters7$len, _options$filters7$len2;
+
+        return _objectSpread(_objectSpread({}, params), {}, {
+          lenderAddressNe: options === null || options === void 0 ? void 0 : (_options$filters7 = options.filters) === null || _options$filters7 === void 0 ? void 0 : (_options$filters7$len = _options$filters7.lender) === null || _options$filters7$len === void 0 ? void 0 : (_options$filters7$len2 = _options$filters7$len.address) === null || _options$filters7$len2 === void 0 ? void 0 : _options$filters7$len2.ne
+        });
+      }
+
+      return params;
+    }
+  }, {
+    key: "_addContract",
+    value: function _addContract(options, params) {
+      var _options$filters8, _options$filters8$nft, _options$filters8$nft2;
+
+      if (options !== null && options !== void 0 && (_options$filters8 = options.filters) !== null && _options$filters8 !== void 0 && (_options$filters8$nft = _options$filters8.nftfi) !== null && _options$filters8$nft !== void 0 && (_options$filters8$nft2 = _options$filters8$nft.contract) !== null && _options$filters8$nft2 !== void 0 && _options$filters8$nft2.name) {
+        var _options$filters9, _options$filters9$nft, _options$filters9$nft2;
+
+        return _objectSpread(_objectSpread({}, params), {}, {
+          contractName: options === null || options === void 0 ? void 0 : (_options$filters9 = options.filters) === null || _options$filters9 === void 0 ? void 0 : (_options$filters9$nft = _options$filters9.nftfi) === null || _options$filters9$nft === void 0 ? void 0 : (_options$filters9$nft2 = _options$filters9$nft.contract) === null || _options$filters9$nft2 === void 0 ? void 0 : _options$filters9$nft2.name
+        });
+      }
+
+      return params;
+    }
+  }, {
+    key: "_addPagination",
+    value: function _addPagination(options, params) {
+      if (options !== null && options !== void 0 && options.pagination) {
+        var _options$pagination, _options$pagination2, _options$pagination3, _options$pagination4;
+
+        var limit = (options === null || options === void 0 ? void 0 : (_options$pagination = options.pagination) === null || _options$pagination === void 0 ? void 0 : _options$pagination.limit) || (0, _classPrivateFieldGet2["default"])(this, _config).pagination.limit;
+        var page = (options === null || options === void 0 ? void 0 : (_options$pagination2 = options.pagination) === null || _options$pagination2 === void 0 ? void 0 : _options$pagination2.page) || (0, _classPrivateFieldGet2["default"])(this, _config).pagination.page;
+        var sort = (options === null || options === void 0 ? void 0 : (_options$pagination3 = options.pagination) === null || _options$pagination3 === void 0 ? void 0 : _options$pagination3.sort) || null;
+        var direction = (options === null || options === void 0 ? void 0 : (_options$pagination4 = options.pagination) === null || _options$pagination4 === void 0 ? void 0 : _options$pagination4.direction) || null;
+
+        if (sort && direction) {
+          return _objectSpread(_objectSpread({}, params), {}, {
+            page: page,
+            limit: limit,
+            sort: sort,
+            direction: direction
+          });
+        }
+
+        return _objectSpread(_objectSpread({}, params), {}, {
+          page: page,
+          limit: limit
+        });
+      }
+
+      return params;
+    }
+  }, {
+    key: "getParams",
+    value: function getParams(options) {
+      var params = {};
+      params = this._addCollectionAddress(options, params);
+      params = this._addNft(options, params);
+      params = this._addLender(options, params);
+      params = this._addContract(options, params);
+      params = this._addPagination(options, params);
+      return params;
+    }
+  }, {
     key: "constructV2Offer",
     value: function () {
       var _constructV2Offer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
@@ -163,6 +274,84 @@ var OffersHelper = /*#__PURE__*/function () {
       }
 
       return constructV2Offer;
+    }()
+  }, {
+    key: "constructV2FixedCollectionOffer",
+    value: function () {
+      var _constructV2FixedCollectionOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
+        var _options$terms2, _options$terms2$expir;
+
+        var repayment, principal, loanInterestRateForDurationInBasisPoints, lenderNonce, expiry, nftId, offer;
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                repayment = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.repayment).toLocaleString('fullwide', {
+                  useGrouping: false
+                });
+                principal = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.principal).toLocaleString('fullwide', {
+                  useGrouping: false
+                });
+                loanInterestRateForDurationInBasisPoints = 0;
+                lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
+                expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms2 = options.terms) === null || _options$terms2 === void 0 ? void 0 : (_options$terms2$expir = _options$terms2.expiry) === null || _options$terms2$expir === void 0 ? void 0 : _options$terms2$expir.seconds);
+                nftId = 0;
+                offer = {
+                  nft: {
+                    id: nftId,
+                    address: options.nft.address
+                  },
+                  lender: {
+                    address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
+                    nonce: lenderNonce
+                  },
+                  referrer: {
+                    address: '0x0000000000000000000000000000000000000000'
+                  },
+                  terms: {
+                    loan: {
+                      duration: options.terms.duration,
+                      repayment: repayment,
+                      principal: principal,
+                      currency: options.terms.currency,
+                      expiry: expiry,
+                      interest: {
+                        prorated: false,
+                        bps: loanInterestRateForDurationInBasisPoints
+                      }
+                    }
+                  },
+                  nftfi: {
+                    contract: {
+                      name: options.nftfi.contract.name
+                    },
+                    fee: {
+                      bps: (0, _classPrivateFieldGet2["default"])(this, _config).loan.adminFeeInBasisPoints
+                    }
+                  }
+                };
+                _context2.next = 9;
+                return (0, _classPrivateFieldGet2["default"])(this, _signatures).getV2FixedCollectionOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
+                  offer: offer
+                }));
+
+              case 9:
+                offer.signature = _context2.sent;
+                return _context2.abrupt("return", offer);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function constructV2FixedCollectionOffer(_x2) {
+        return _constructV2FixedCollectionOffer.apply(this, arguments);
+      }
+
+      return constructV2FixedCollectionOffer;
     }()
   }]);
   return OffersHelper;

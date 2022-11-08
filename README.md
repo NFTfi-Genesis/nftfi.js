@@ -7,7 +7,7 @@ are directly between a Borrower and Lender — the Borrower uses an NFT as colla
 or DAI, and the Lender provides liquidity. The NFT is then held in an escrow contract until the loan is
 repaid. If the Borrower fails to repay in time, the Lender can claim the NFT.
 
-Please note that this SDK is in **open beta**, and is constantly under development. **USE AT YOUR OWN RISK**.
+Please note that this SDK is in **closed beta**, and is constantly under development. **USE AT YOUR OWN RISK**.
 
 ## Install
 
@@ -74,7 +74,7 @@ Class for working with ERC20 tokens.
 <a name="Erc20+allowance"></a>
 
 #### `erc20.allowance(options)` ⇒ <code>number</code>
-Returns your account's ERC20 allowance for v1 & v2 NFTfi contracts.
+Returns the ERC20 allowance, for v1 & v2 NFTfi contracts, for your account (by default), or a specified account.
 
 **Kind**: instance method of [<code>Erc20</code>](#Erc20)  
 **Returns**: <code>number</code> - The user account's token allowance for that contract, in base units (eg. 1000000000000000000 wei)  
@@ -82,6 +82,7 @@ Returns your account's ERC20 allowance for v1 & v2 NFTfi contracts.
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
+| [options.account.address] | <code>object</code> | The account address to get the allowance of (optional) |
 | options.token.address | <code>string</code> | The ERC20 token address |
 | options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
 
@@ -148,7 +149,7 @@ const results = await nftfi.erc20.approveMax({
 <a name="Erc20+balanceOf"></a>
 
 #### `erc20.balanceOf(options)` ⇒ <code>number</code>
-Returns your account's balance of a given ERC20 token.
+Returns the balance of a given ERC20 token for your account (by default), or a specified account.
 
 **Kind**: instance method of [<code>Erc20</code>](#Erc20)  
 **Returns**: <code>number</code> - The user account's token balance, in base units (eg. 1000000000000000000 wei)  
@@ -156,6 +157,7 @@ Returns your account's balance of a given ERC20 token.
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>object</code> | Options |
+| [options.account.address] | <code>object</code> | The account address to get the balance of (optional) |
 | options.token.address | <code>string</code> | The ERC20 token address |
 
 **Example**  
@@ -345,7 +347,7 @@ Begin a loan. Called by the borrower when accepting a lender's offer.
 | options.offer.lender.nonce | <code>string</code> | Nonce used by the lender when they signed the offer |
 | options.offer.signature | <code>string</code> | ECDSA signature of the lender |
 | options.offer.nftfi.fee.bps | <code>number</code> | Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid |
-| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-1.loan.fixed` |
+| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2.loan.fixed.collection` |
 
 **Example**  
 ```js
@@ -421,6 +423,18 @@ const result = await nftfi.loans.liquidate({
 ```
 **Example**  
 ```js
+// Liquidate a v2 fixed collection loan
+const result = await nftfi.loans.liquidate({
+  loan: { id: 3 },
+  nftfi: {
+    contract: {
+      name: 'v2.loan.fixed.collection'
+    }
+  }
+});
+```
+**Example**  
+```js
 // Liquidate a v2.1 fixed loan
 const result = await nftfi.loans.liquidate({
   loan: { id: 2 },
@@ -446,7 +460,7 @@ Repay a loan. Can be called at any time after the loan has begun and before loan
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.loan.id | <code>string</code> | The ID of the loan being repaid |
-| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`, `v2.loan.fixed.collection` |
 
 **Example**  
 ```js
@@ -480,6 +494,18 @@ const result = await nftfi.loans.repay({
   nftfi: {
     contract: {
       name: 'v2-1.loan.fixed'
+    }
+  }
+});
+```
+**Example**  
+```js
+// Repay a v2 fixed collection loan
+const result = await nftfi.loans.repay({
+  loan: { id: 3 },
+  nftfi: {
+    contract: {
+      name: 'v2.loan.fixed.collection'
     }
   }
 });
@@ -576,6 +602,13 @@ When provided with filters, gets all offers by specified filters.
 | [options] | <code>object</code> | Hashmap of config options for this method |
 | [options.filters.nft.address] | <code>string</code> | NFT contract address to filter by (optional) |
 | [options.filters.nft.id] | <code>string</code> | NFT id of the asset to filter by (optional) |
+| [options.filters.lender.address.eq] | <code>string</code> | Lender wallet address to filter by (optional) |
+| [options.filters.lender.address.ne] | <code>string</code> | Lender wallet address to exclude (optional) |
+| [options.filters.nftfi.contract.name] | <code>string</code> | Contract name to filter by (optional) |
+| [options.pagination.page] | <code>number</code> | Pagination page (optional) |
+| [options.pagination.limit] | <code>number</code> | Pagination limit (optional) |
+| [options.pagination.sort] | <code>string</code> | Field to sort by (optional) |
+| [options.pagination.direction] | <code>&#x27;asc&#x27;</code> \| <code>&#x27;desc&#x27;</code> | Direction to sort by (optional) |
 
 **Example**  
 ```js
@@ -584,13 +617,17 @@ const offers = await nftfi.offers.get();
 ```
 **Example**  
 ```js
-// Get all offers made by your account, for a given NFT
+// Get the first page of offers made by your account, for a given NFT
 const offers = await nftfi.offers.get({
   filters: {
     nft: {
       address: "0x00000000",
       id: "42"
     }
+  },
+  pagination:{
+    page: 1,
+    limit: 10
   }
 });
 ```
@@ -605,13 +642,38 @@ const offers = await nftfi.offers.get({
   }
 });
 ```
+**Example**  
+```js
+// Get the first page of collection offers made by a specific lender
+const offers = await nftfi.offers.get({
+  filters: {
+    nft: {
+      address: "0x00000000",
+    },
+    lender:{
+      address: {
+        eq: "0x12345567"
+      }
+    },
+    nftfi: {
+      contract: {
+        name: "v2.loan.fixed.collection"
+      }
+    }
+  },
+  pagination:{
+    page: 1,
+    limit: 10
+  }
+});
+```
 
 * * *
 
 <a name="Offers+create"></a>
 
 #### `offers.create(options)` ⇒ <code>object</code>
-Creates a new offer on a NFT.
+Creates a new offer on a NFT or collection.
 
 **Kind**: instance method of [<code>Offers</code>](#Offers)  
 **Returns**: <code>object</code> - Response object  
@@ -632,7 +694,8 @@ const offer = await nftfi.offers.create({
     principal: 1000000000000000000,
     repayment: 1100000000000000000,
     duration: 86400 * 7, // 7 days (in seconds)
-    currency: "0x00000000"
+    currency: "0x00000000",
+    expiry: 21600 // 6 hours (in seconds)
   },
   nft: {
     address: "0x00000000",
@@ -749,7 +812,7 @@ Gets an expiry timestamp.
 **Returns**: <code>number</code> - Expiry  
 **Example**  
 ```js
-// Get an expiry timestamp far into the future
+// Get an expiry timestamp into the future
 const expiry = nftfi.utils.getExpiry();
 ```
 
@@ -837,8 +900,10 @@ To experiment with common NFTfi SDK use cases, run the following scripts from th
 node examples/get-listings.js
 node examples/make-offer-on-listing.js
 node examples/make-offer-on-nft.js
+node examples/make-offer-on-collection.js
 node examples/get-my-offers.js
 node examples/get-offers-on-listing.js
+node examples/get-offers-on-collection.js
 node examples/delete-my-offers.js
 node examples/revoke-and-delete-my-offers.js
 node examples/begin-loan.js

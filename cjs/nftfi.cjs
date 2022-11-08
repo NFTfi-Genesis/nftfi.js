@@ -33,6 +33,8 @@ var _signatures = _interopRequireDefault(require("./nftfi/offers/signatures.cjs"
 
 var _helper = _interopRequireDefault(require("./nftfi/offers/helper.cjs"));
 
+var _validation = _interopRequireDefault(require("./nftfi/offers/validation.cjs"));
+
 var _loans = _interopRequireDefault(require("./nftfi/loans.cjs"));
 
 var _index = _interopRequireDefault(require("./nftfi/loans/fixed/index.cjs"));
@@ -42,6 +44,10 @@ var _index2 = _interopRequireDefault(require("./nftfi/loans/fixed/v1/index.cjs")
 var _index3 = _interopRequireDefault(require("./nftfi/loans/fixed/v2/index.cjs"));
 
 var _index4 = _interopRequireDefault(require("./nftfi/loans/fixed/v2_1/index.cjs"));
+
+var _index5 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/index.cjs"));
+
+var _index6 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/v2/index.cjs"));
 
 var _erc = _interopRequireDefault(require("./nftfi/erc20.cjs"));
 
@@ -59,7 +65,7 @@ var _factory = _interopRequireDefault(require("./nftfi/contract/factory.cjs"));
 
 var _contract = _interopRequireDefault(require("./nftfi/contract.cjs"));
 
-var _index5 = _interopRequireDefault(require("./nftfi/index.cjs"));
+var _index7 = _interopRequireDefault(require("./nftfi/index.cjs"));
 
 var _safeEthersAdapters = require("@gnosis.pm/safe-ethers-adapters");
 
@@ -78,6 +84,10 @@ var _axios = _interopRequireDefault(require("axios"));
 var _lodash = _interopRequireDefault(require("lodash.merge"));
 
 var _lodash2 = _interopRequireDefault(require("lodash.set"));
+
+var _result = _interopRequireDefault(require("./nftfi/result.cjs"));
+
+var _error = _interopRequireDefault(require("./nftfi/error.cjs"));
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -132,17 +142,22 @@ var _default = {
           utils,
           auth,
           api,
+          error,
+          result,
           listings,
           contractFactory,
           loanFixedV1,
           loanFixedV2,
           loanFixedV2_1,
+          loanFixedCollectionV2,
+          loanFixedCollection,
           loanFixed,
           loans,
           offersSignatures,
-          offersHelper,
-          offers,
           erc20,
+          offersHelper,
+          offersValidator,
+          offers,
           erc721,
           nftfi,
           _args = arguments;
@@ -328,6 +343,8 @@ var _default = {
                 auth: auth,
                 http: http
               });
+              error = new _error["default"]();
+              result = new _result["default"]();
               listings = new _listings["default"]({
                 api: api,
                 config: config
@@ -350,10 +367,18 @@ var _default = {
                 config: config,
                 contractFactory: contractFactory
               });
+              loanFixedCollectionV2 = new _index6["default"]({
+                config: config,
+                contractFactory: contractFactory
+              });
+              loanFixedCollection = new _index5["default"]({
+                v2: loanFixedCollectionV2
+              });
               loanFixed = new _index["default"]({
                 v1: loanFixedV1,
                 v2: loanFixedV2,
-                v2_1: loanFixedV2_1
+                v2_1: loanFixedV2_1,
+                collection: loanFixedCollection
               });
               loans = new _loans["default"]({
                 api: api,
@@ -365,32 +390,41 @@ var _default = {
                 ethers: ethers,
                 config: config
               });
-              offersHelper = new _helper["default"]({
-                BN: _bn["default"],
-                Number: Number,
-                utils: utils,
-                ethers: ethers,
-                offersSignatures: offersSignatures,
-                config: config,
-                account: account
-              });
-              offers = new _offers["default"]({
-                api: api,
-                account: account,
-                offersHelper: offersHelper,
-                loans: loans
-              });
               erc20 = new _erc["default"]({
                 config: config,
                 account: account,
                 contractFactory: contractFactory,
                 BN: _bn["default"]
               });
+              offersHelper = new _helper["default"]({
+                BN: _bn["default"],
+                Number: Number,
+                utils: utils,
+                offersSignatures: offersSignatures,
+                config: config,
+                account: account
+              });
+              offersValidator = new _validation["default"]({
+                erc20: erc20,
+                ethers: ethers,
+                config: config,
+                contractFactory: contractFactory
+              });
+              offers = new _offers["default"]({
+                api: api,
+                account: account,
+                offersHelper: offersHelper,
+                offersValidator: offersValidator,
+                loans: loans,
+                config: config,
+                result: result,
+                error: error
+              });
               erc721 = new _erc2["default"]({
                 config: config,
                 contractFactory: contractFactory
               });
-              nftfi = new _index5["default"]({
+              nftfi = new _index7["default"]({
                 config: config,
                 account: account,
                 listings: listings,
@@ -407,7 +441,7 @@ var _default = {
 
               return _context.abrupt("return", nftfi);
 
-            case 73:
+            case 78:
             case "end":
               return _context.stop();
           }
