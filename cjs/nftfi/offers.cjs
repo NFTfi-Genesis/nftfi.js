@@ -118,6 +118,7 @@ var Offers = /*#__PURE__*/function () {
    * @param {number} [options.pagination.limit] - Pagination limit (optional)
    * @param {string} [options.pagination.sort] - Field to sort by (optional)
    * @param {'asc' | 'desc'} [options.pagination.direction] - Direction to sort by (optional)
+   * @param {boolean} [options.validation.check=true] - Validate offers and append error info (optional)
    * @returns {Array<object>} Array of offers
    *
    * @example
@@ -172,6 +173,14 @@ var Offers = /*#__PURE__*/function () {
    *     limit: 10
    *   }
    * });
+   *
+   * @example
+   * // Get all offers made by your account, and dont perform validation checks.
+   * const offers = await nftfi.offers.get({
+   *   validation: {
+   *     check: false
+   *   }
+   * });
    */
 
 
@@ -183,9 +192,11 @@ var Offers = /*#__PURE__*/function () {
 
         var options,
             params,
-            _response$results,
+            _options$validation,
+            _results,
             response,
-            offersWithStatus,
+            results,
+            shouldNotValidate,
             _response$pagination,
             _args2 = arguments;
 
@@ -204,15 +215,16 @@ var Offers = /*#__PURE__*/function () {
 
               case 5:
                 response = _context2.sent;
-                offersWithStatus = response === null || response === void 0 ? void 0 : response.results;
+                results = (response === null || response === void 0 ? void 0 : response.results) || [];
+                shouldNotValidate = (options === null || options === void 0 ? void 0 : (_options$validation = options.validation) === null || _options$validation === void 0 ? void 0 : _options$validation.check) === false;
 
-                if (!((response === null || response === void 0 ? void 0 : (_response$results = response.results) === null || _response$results === void 0 ? void 0 : _response$results.length) > 0)) {
-                  _context2.next = 11;
+                if (!(!shouldNotValidate && ((_results = results) === null || _results === void 0 ? void 0 : _results.length) > 0)) {
+                  _context2.next = 12;
                   break;
                 }
 
-                _context2.next = 10;
-                return Promise.all(offersWithStatus.map( /*#__PURE__*/function () {
+                _context2.next = 11;
+                return Promise.all(results.map( /*#__PURE__*/function () {
                   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(offer) {
                     var errors;
                     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -241,12 +253,12 @@ var Offers = /*#__PURE__*/function () {
                   };
                 }()));
 
-              case 10:
-                offersWithStatus = _context2.sent;
-
               case 11:
+                results = _context2.sent;
+
+              case 12:
                 if (!(options !== null && options !== void 0 && options.pagination)) {
-                  _context2.next = 13;
+                  _context2.next = 14;
                   break;
                 }
 
@@ -254,23 +266,23 @@ var Offers = /*#__PURE__*/function () {
                   pagination: {
                     total: response === null || response === void 0 ? void 0 : (_response$pagination = response.pagination) === null || _response$pagination === void 0 ? void 0 : _response$pagination.total
                   },
-                  results: offersWithStatus
+                  results: results
                 }));
 
-              case 13:
-                return _context2.abrupt("return", offersWithStatus);
+              case 14:
+                return _context2.abrupt("return", results);
 
-              case 16:
-                _context2.prev = 16;
+              case 17:
+                _context2.prev = 17;
                 _context2.t0 = _context2["catch"](2);
                 return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context2.t0));
 
-              case 19:
+              case 20:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[2, 16]]);
+        }, _callee2, this, [[2, 17]]);
       }));
 
       function get() {

@@ -39,6 +39,7 @@ class Offers {
    * @param {number} [options.pagination.limit] - Pagination limit (optional)
    * @param {string} [options.pagination.sort] - Field to sort by (optional)
    * @param {'asc' | 'desc'} [options.pagination.direction] - Direction to sort by (optional)
+   * @param {boolean} [options.validation.check=true] - Validate offers and append error info (optional)
    * @returns {Array<object>} Array of offers
    *
    * @example
@@ -93,29 +94,36 @@ class Offers {
    *     limit: 10
    *   }
    * });
+   *
+   * @example
+   * // Get all offers made by your account, and dont perform validation checks.
+   * const offers = await nftfi.offers.get({
+   *   validation: {
+   *     check: false
+   *   }
+   * });
    */
   async get(options = {}) {
     const params = this.#helper.getParams(options);
-
     try {
       const response = await this.#api.get({
         uri: 'offers',
         params
       });
-
-      let offersWithStatus = response?.results;
-      if (response?.results?.length > 0) {
-        offersWithStatus = await Promise.all(
-          offersWithStatus.map(async offer => {
+      let results = response?.results || [];
+      const shouldNotValidate = options?.validation?.check === false;
+      if (!shouldNotValidate && results?.length > 0) {
+        results = await Promise.all(
+          results.map(async offer => {
             const errors = await this.#validator.validate(offer);
             return { ...offer, errors: errors };
           })
         );
       }
       if (options?.pagination) {
-        return this.#result.handle({ pagination: { total: response?.pagination?.total }, results: offersWithStatus });
+        return this.#result.handle({ pagination: { total: response?.pagination?.total }, results });
       }
-      return offersWithStatus;
+      return results;
     } catch (e) {
       return this.#error.handle(e);
     }

@@ -597,18 +597,19 @@ When provided with filters, gets all offers by specified filters.
 **Kind**: instance method of [<code>Offers</code>](#Offers)  
 **Returns**: <code>Array.&lt;object&gt;</code> - Array of offers  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| [options] | <code>object</code> | Hashmap of config options for this method |
-| [options.filters.nft.address] | <code>string</code> | NFT contract address to filter by (optional) |
-| [options.filters.nft.id] | <code>string</code> | NFT id of the asset to filter by (optional) |
-| [options.filters.lender.address.eq] | <code>string</code> | Lender wallet address to filter by (optional) |
-| [options.filters.lender.address.ne] | <code>string</code> | Lender wallet address to exclude (optional) |
-| [options.filters.nftfi.contract.name] | <code>string</code> | Contract name to filter by (optional) |
-| [options.pagination.page] | <code>number</code> | Pagination page (optional) |
-| [options.pagination.limit] | <code>number</code> | Pagination limit (optional) |
-| [options.pagination.sort] | <code>string</code> | Field to sort by (optional) |
-| [options.pagination.direction] | <code>&#x27;asc&#x27;</code> \| <code>&#x27;desc&#x27;</code> | Direction to sort by (optional) |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>object</code> |  | Hashmap of config options for this method |
+| [options.filters.nft.address] | <code>string</code> |  | NFT contract address to filter by (optional) |
+| [options.filters.nft.id] | <code>string</code> |  | NFT id of the asset to filter by (optional) |
+| [options.filters.lender.address.eq] | <code>string</code> |  | Lender wallet address to filter by (optional) |
+| [options.filters.lender.address.ne] | <code>string</code> |  | Lender wallet address to exclude (optional) |
+| [options.filters.nftfi.contract.name] | <code>string</code> |  | Contract name to filter by (optional) |
+| [options.pagination.page] | <code>number</code> |  | Pagination page (optional) |
+| [options.pagination.limit] | <code>number</code> |  | Pagination limit (optional) |
+| [options.pagination.sort] | <code>string</code> |  | Field to sort by (optional) |
+| [options.pagination.direction] | <code>&#x27;asc&#x27;</code> \| <code>&#x27;desc&#x27;</code> |  | Direction to sort by (optional) |
+| [options.validation.check] | <code>boolean</code> | <code>true</code> | Validate offers and append error info (optional) |
 
 **Example**  
 ```js
@@ -664,6 +665,15 @@ const offers = await nftfi.offers.get({
   pagination:{
     page: 1,
     limit: 10
+  }
+});
+```
+**Example**  
+```js
+// Get all offers made by your account, and dont perform validation checks.
+const offers = await nftfi.offers.get({
+  validation: {
+    check: false
   }
 });
 ```
