@@ -41,12 +41,15 @@ async function run() {
     if (offers.length > 0) {
       for (var i = 0; i < offers.length; i++) {
         const offer = offers[i];
+        const currency = offer.terms.loan.currency;
+        const [ticker] = Object.keys(nftfi.config.erc20).filter(key => nftfi.config.erc20[key].address === currency);
+        const unit = nftfi.config.erc20[ticker]?.unit;
         const duration = Math.floor(offer.terms.loan.duration / 86400);
-        const repayment = nftfi.utils.formatEther(offer.terms.loan.repayment);
-        const principal = nftfi.utils.formatEther(offer.terms.loan.principal);
+        const repayment = nftfi.utils.formatUnits(offer.terms.loan.repayment, unit);
+        const principal = nftfi.utils.formatUnits(offer.terms.loan.principal, unit);
         const apr = nftfi.utils.calcApr(principal, repayment, duration).toFixed(2);
         console.log(
-          `[INFO] duration: ${duration} days; principal: ${principal}; repayment: ${repayment}; erc20: ${offer.terms.loan.currency}; APR: ${apr}%`
+          `[INFO] duration: ${duration} days; principal: ${principal} ${ticker}; repayment: ${repayment} ${ticker}; erc20: ${offer.terms.loan.currency}; APR: ${apr}%`
         );
       }
     }

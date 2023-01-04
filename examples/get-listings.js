@@ -1,5 +1,6 @@
 import NFTfi from '@nftfi/js';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 async function run() {
@@ -26,7 +27,7 @@ async function run() {
   if (listings.length > 0) {
     for (var i = 0; i < listings.length; i++) {
       const listing = listings[i];
-      console.log(`[INFO] listing #${i + 1}: ${JSON.stringify(listing)}`);
+      console.log(`[INFO] listing #${i + 1}: ${JSON.stringify(listing)} \n`);
     }
   }
 }

@@ -29,6 +29,10 @@ var _account = /*#__PURE__*/new WeakMap();
 
 var _fixed = /*#__PURE__*/new WeakMap();
 
+var _config = /*#__PURE__*/new WeakMap();
+
+var _helper = /*#__PURE__*/new WeakMap();
+
 /**
  * @class
  * Class for working with loans.
@@ -53,9 +57,21 @@ var Loans = /*#__PURE__*/function () {
       value: void 0
     });
 
+    _classPrivateFieldInitSpec(this, _config, {
+      writable: true,
+      value: void 0
+    });
+
+    _classPrivateFieldInitSpec(this, _helper, {
+      writable: true,
+      value: void 0
+    });
+
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
+    (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _fixed, options === null || options === void 0 ? void 0 : options.fixed);
+    (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
   }
   /**
    * Gets loans in which your account is a participant.
@@ -98,9 +114,10 @@ var Loans = /*#__PURE__*/function () {
               case 2:
                 response = _context.sent;
                 loans = response['results'];
+                loans = loans.map((0, _classPrivateFieldGet2["default"])(this, _helper).addCurrencyUnit);
                 return _context.abrupt("return", loans);
 
-              case 5:
+              case 6:
               case "end":
                 return _context.stop();
             }

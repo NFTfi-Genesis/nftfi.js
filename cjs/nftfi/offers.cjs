@@ -33,7 +33,7 @@ var _account = /*#__PURE__*/new WeakMap();
 
 var _api = /*#__PURE__*/new WeakMap();
 
-var _helper = /*#__PURE__*/new WeakMap();
+var _offersHelper = /*#__PURE__*/new WeakMap();
 
 var _loans = /*#__PURE__*/new WeakMap();
 
@@ -44,6 +44,8 @@ var _validator = /*#__PURE__*/new WeakMap();
 var _result = /*#__PURE__*/new WeakMap();
 
 var _error = /*#__PURE__*/new WeakMap();
+
+var _helper = /*#__PURE__*/new WeakMap();
 
 /**
  * @class
@@ -64,7 +66,7 @@ var Offers = /*#__PURE__*/function () {
       value: void 0
     });
 
-    _classPrivateFieldInitSpec(this, _helper, {
+    _classPrivateFieldInitSpec(this, _offersHelper, {
       writable: true,
       value: void 0
     });
@@ -94,14 +96,20 @@ var Offers = /*#__PURE__*/function () {
       value: void 0
     });
 
+    _classPrivateFieldInitSpec(this, _helper, {
+      writable: true,
+      value: void 0
+    });
+
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
-    (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.offersHelper);
+    (0, _classPrivateFieldSet2["default"])(this, _offersHelper, options === null || options === void 0 ? void 0 : options.offersHelper);
     (0, _classPrivateFieldSet2["default"])(this, _loans, options === null || options === void 0 ? void 0 : options.loans);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _validator, options === null || options === void 0 ? void 0 : options.offersValidator);
     (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
     (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
+    (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
   } // We will start using #result and #error to standardise responses from the sdk. Not all functions use this pattern yet, but this is the goal.
 
   /**
@@ -205,7 +213,7 @@ var Offers = /*#__PURE__*/function () {
             switch (_context2.prev = _context2.next) {
               case 0:
                 options = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : {};
-                params = (0, _classPrivateFieldGet2["default"])(this, _helper).getParams(options);
+                params = (0, _classPrivateFieldGet2["default"])(this, _offersHelper).getParams(options);
                 _context2.prev = 2;
                 _context2.next = 5;
                 return (0, _classPrivateFieldGet2["default"])(this, _api).get({
@@ -215,7 +223,7 @@ var Offers = /*#__PURE__*/function () {
 
               case 5:
                 response = _context2.sent;
-                results = (response === null || response === void 0 ? void 0 : response.results) || [];
+                results = (response === null || response === void 0 ? void 0 : response.results.map((0, _classPrivateFieldGet2["default"])(this, _helper).addCurrencyUnit)) || [];
                 shouldNotValidate = (options === null || options === void 0 ? void 0 : (_options$validation = options.validation) === null || _options$validation === void 0 ? void 0 : _options$validation.check) === false;
 
                 if (!(!shouldNotValidate && ((_results = results) === null || _results === void 0 ? void 0 : _results.length) > 0)) {
@@ -345,7 +353,7 @@ var Offers = /*#__PURE__*/function () {
 
               case 5:
                 _context3.next = 7;
-                return (0, _classPrivateFieldGet2["default"])(this, _helper).constructV2Offer(options);
+                return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2Offer(options);
 
               case 7:
                 payload = _context3.sent;
@@ -361,7 +369,7 @@ var Offers = /*#__PURE__*/function () {
 
               case 12:
                 _context3.next = 14;
-                return (0, _classPrivateFieldGet2["default"])(this, _helper).constructV2FixedCollectionOffer(options);
+                return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2FixedCollectionOffer(options);
 
               case 14:
                 _payload = _context3.sent;

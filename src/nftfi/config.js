@@ -45,11 +45,18 @@ const baseConfig = {
     abi: [],
     weth: {
       address: '',
-      symbol: ''
+      symbol: '',
+      unit: ''
     },
     dai: {
       address: '',
-      symbol: ''
+      symbol: '',
+      unit: ''
+    },
+    usdc: {
+      address: '',
+      symbol: '',
+      unit: ''
     }
   },
   website: {
@@ -86,8 +93,13 @@ mainnetConfig.erc20.abi = [
 ];
 mainnetConfig.erc20.weth.address = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
 mainnetConfig.erc20.weth.symbol = 'wETH';
+mainnetConfig.erc20.weth.unit = 'ether';
 mainnetConfig.erc20.dai.address = '0x6b175474e89094c44da98b954eedeac495271d0f';
 mainnetConfig.erc20.dai.symbol = 'DAI';
+mainnetConfig.erc20.dai.unit = 'ether';
+mainnetConfig.erc20.usdc.address = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
+mainnetConfig.erc20.usdc.symbol = 'USDC';
+mainnetConfig.erc20.usdc.unit = 'mwei';
 mainnetConfig.loan.fixed.v1.name = 'v1.loan.fixed';
 mainnetConfig.loan.fixed.v1.address = '0x88341d1a8F672D2780C8dC725902AAe72F143B0c';
 mainnetConfig.loan.fixed.v1.abi = [
@@ -190,8 +202,13 @@ goerliConfig.erc20.abi = [
 ];
 goerliConfig.erc20.weth.address = '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6';
 goerliConfig.erc20.weth.symbol = 'wETH';
-goerliConfig.erc20.dai.address = '0x0000000000000000000000000000000000000000';
+goerliConfig.erc20.weth.unit = 'ether';
+goerliConfig.erc20.dai.address = '0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844';
 goerliConfig.erc20.dai.symbol = 'DAI';
+goerliConfig.erc20.dai.unit = 'ether';
+goerliConfig.erc20.usdc.address = '0x07865c6e87b9f70255377e024ace6630c1eaa37f';
+goerliConfig.erc20.usdc.symbol = 'USDC';
+goerliConfig.erc20.usdc.unit = 'mwei';
 goerliConfig.loan.fixed.v1.name = 'v1.loan.fixed';
 goerliConfig.loan.fixed.v1.address = '0x0000000000000000000000000000000000000000';
 goerliConfig.loan.fixed.v1.abi = [

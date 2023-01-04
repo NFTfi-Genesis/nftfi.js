@@ -5,22 +5,24 @@
 class Offers {
   #account;
   #api;
-  #helper;
+  #offersHelper;
   #loans;
   #config;
   #validator;
   #result;
   #error;
+  #helper;
 
   constructor(options = {}) {
     this.#account = options?.account;
     this.#api = options?.api;
-    this.#helper = options?.offersHelper;
+    this.#offersHelper = options?.offersHelper;
     this.#loans = options?.loans;
     this.#config = options?.config;
     this.#validator = options?.offersValidator;
     this.#error = options?.error;
     this.#result = options?.result;
+    this.#helper = options?.helper;
   }
 
   // We will start using #result and #error to standardise responses from the sdk. Not all functions use this pattern yet, but this is the goal.
@@ -104,13 +106,13 @@ class Offers {
    * });
    */
   async get(options = {}) {
-    const params = this.#helper.getParams(options);
+    const params = this.#offersHelper.getParams(options);
     try {
       const response = await this.#api.get({
         uri: 'offers',
         params
       });
-      let results = response?.results || [];
+      let results = response?.results.map(this.#helper.addCurrencyUnit) || [];
       const shouldNotValidate = options?.validation?.check === false;
       if (!shouldNotValidate && results?.length > 0) {
         results = await Promise.all(
@@ -170,7 +172,7 @@ class Offers {
     const contractName = options.nftfi.contract.name;
     switch (contractName) {
       case 'v2-1.loan.fixed': {
-        let payload = await this.#helper.constructV2Offer(options);
+        let payload = await this.#offersHelper.constructV2Offer(options);
         response = await this.#api.post({
           uri: 'offers',
           payload
@@ -178,7 +180,7 @@ class Offers {
         break;
       }
       case 'v2.loan.fixed.collection': {
-        let payload = await this.#helper.constructV2FixedCollectionOffer(options);
+        let payload = await this.#offersHelper.constructV2FixedCollectionOffer(options);
         response = await this.#api.post({
           uri: 'offers',
           payload

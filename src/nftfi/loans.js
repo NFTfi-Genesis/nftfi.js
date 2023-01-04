@@ -6,11 +6,15 @@ class Loans {
   #api;
   #account;
   #fixed;
+  #config;
+  #helper;
 
   constructor(options = {}) {
     this.#api = options?.api;
+    this.#config = options?.config;
     this.#account = options?.account;
     this.#fixed = options?.fixed;
+    this.#helper = options?.helper;
   }
 
   /**
@@ -39,7 +43,8 @@ class Loans {
         status: options.filters.status
       }
     });
-    const loans = response['results'];
+    let loans = response['results'];
+    loans = loans.map(this.#helper.addCurrencyUnit);
     return loans;
   }
 

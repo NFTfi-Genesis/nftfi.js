@@ -792,6 +792,8 @@ Class with utility methods.
     * [`.getNonce()`](#Utils+getNonce) ⇒ <code>string</code>
     * [`.getExpiry()`](#Utils+getExpiry) ⇒ <code>number</code>
     * [`.formatEther(wei)`](#Utils+formatEther) ⇒ <code>string</code>
+    * [`.formatUnits(wei, unit)`](#Utils+formatUnits) ⇒ <code>string</code>
+    * [`.formatWei(value, unit)`](#Utils+formatWei) ⇒ <code>BigNumber</code>
     * [`.calcRepaymentAmount(principal, apr, duration)`](#Utils+calcRepaymentAmount) ⇒ <code>number</code>
     * [`.calcApr(principal, repayment, duration)`](#Utils+calcApr) ⇒ <code>number</code>
 
@@ -845,6 +847,62 @@ Formats an amount of wei into a decimal string representing the amount of ether.
 // Format wei into the amount of ether
 const wei = 100;
 const ether = nftfi.utils.formatEther(wei);
+```
+
+* * *
+
+<a name="Utils+formatUnits"></a>
+
+#### `utils.formatUnits(wei, unit)` ⇒ <code>string</code>
+Formats an amount of wei into a decimal string representing the amount of unit.
+
+**Kind**: instance method of [<code>Utils</code>](#Utils)  
+**Returns**: <code>string</code> - String representation of value formatted with unit digits  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| wei | <code>BigNumber</code> | Wei denomination of the amount |
+| unit | <code>string</code> | Unit denomination to format value |
+
+**Example**  
+```js
+// Format usdc wei amount into the amount of unit
+const wei = '1000000';
+const usdc = nftfi.utils.formatUnits(wei, 'mwei'); // 1 usdc
+```
+**Example**  
+```js
+// Format wei into the amount of unit
+const wei = '1000000000000000000';
+const ether = nftfi.utils.formatUnits(wei, 'ether'); // 1 ether
+```
+
+* * *
+
+<a name="Utils+formatWei"></a>
+
+#### `utils.formatWei(value, unit)` ⇒ <code>BigNumber</code>
+Formats value into a BigNumber representing the value in wei from the unit specified.
+
+**Kind**: instance method of [<code>Utils</code>](#Utils)  
+**Returns**: <code>BigNumber</code> - BigNumber representation of value parsed with unit digits  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>number</code> | Value |
+| unit | <code>string</code> | Unit denomination to format from |
+
+**Example**  
+```js
+// Format usdc amount into the amount of wei
+const value = 1;
+const usdcWei = nftfi.utils.formatWei(value, 'mwei'); // 1000000
+```
+**Example**  
+```js
+// Format ether amount into the amount of wei
+const value = 100;
+const wei = nftfi.utils.formatWei(value, 'ether'); // 100000000000000000000
 ```
 
 * * *

@@ -135,6 +135,58 @@ var Utils = /*#__PURE__*/function () {
       return (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatEther(weiString);
     }
     /**
+     * Formats an amount of wei into a decimal string representing the amount of unit.
+     *
+     * @param {BigNumber} wei - Wei denomination of the amount
+     * @param {string} unit - Unit denomination to format value
+     * @returns {string} String representation of value formatted with unit digits
+     *
+     * @example
+     * // Format usdc wei amount into the amount of unit
+     * const wei = '1000000';
+     * const usdc = nftfi.utils.formatUnits(wei, 'mwei'); // 1 usdc
+     *
+     * @example
+     * // Format wei into the amount of unit
+     * const wei = '1000000000000000000';
+     * const ether = nftfi.utils.formatUnits(wei, 'ether'); // 1 ether
+     */
+
+  }, {
+    key: "formatUnits",
+    value: function formatUnits(wei, unit) {
+      var weiString = wei.toLocaleString('fullwide', {
+        useGrouping: false
+      });
+      return (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatUnits(weiString, unit);
+    }
+    /**
+     * Formats value into a BigNumber representing the value in wei from the unit specified.
+     *
+     * @param {number} value - Value
+     * @param {string} unit - Unit denomination to format from
+     * @returns {BigNumber} BigNumber representation of value parsed with unit digits
+     *
+     * @example
+     * // Format usdc amount into the amount of wei
+     * const value = 1;
+     * const usdcWei = nftfi.utils.formatWei(value, 'mwei'); // 1000000
+     *
+     * @example
+     * // Format ether amount into the amount of wei
+     * const value = 100;
+     * const wei = nftfi.utils.formatWei(value, 'ether'); // 100000000000000000000
+     */
+
+  }, {
+    key: "formatWei",
+    value: function formatWei(value, unit) {
+      var valueString = value.toLocaleString('fullwide', {
+        useGrouping: false
+      });
+      return (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.parseUnits(valueString, unit);
+    }
+    /**
      * Calculates the loan repayment amount given its other parameters.
      *
      * @param {number} principal - The loan's principal amount, in base units (eg. 1000000000000000000 wei)
@@ -154,7 +206,7 @@ var Utils = /*#__PURE__*/function () {
     key: "calcRepaymentAmount",
     value: function calcRepaymentAmount(principal, apr, duration) {
       var p = (0, _classPrivateFieldGet2["default"])(this, _Number).parseInt(principal);
-      return p * apr / 100 * (duration / 365) + p;
+      return Math.floor(p * apr / 100 * (duration / 365) + p);
     }
     /**
      * Calculates the loan APR (yearly percentage rate) given its other parameters

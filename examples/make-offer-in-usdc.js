@@ -1,5 +1,6 @@
 import NFTfi from '@nftfi/js';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 async function run() {
@@ -24,14 +25,17 @@ async function run() {
     }
   });
   // Get the balance of the given account
-  const currency = nftfi.config.erc20.weth.address;
-  const symbol = nftfi.config.erc20.weth.symbol;
+  const currency = nftfi.config.erc20.usdc.address;
+  const symbol = nftfi.config.erc20.usdc.symbol;
   const balance = await nftfi.erc20.balanceOf({
     token: { address: currency }
   });
   // Construct the loan terms
   const contractName = nftfi.config.loan.fixed.v2_1.name;
-  const principal = balance / 2;
+
+  // Convert 1 USDC amount into wei
+  const principal = nftfi.utils.formatWei(1, nftfi.config.erc20.usdc.unit).toString();
+
   const apr = 31.42;
   const days = 30;
   const repayment = nftfi.utils.calcRepaymentAmount(principal, apr, days);
@@ -42,6 +46,7 @@ async function run() {
     duration,
     currency
   };
+
   // Approve principal with NFTfi contracts
   await nftfi.erc20.approve({
     token: { address: currency },

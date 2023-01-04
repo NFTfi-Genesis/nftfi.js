@@ -1,6 +1,6 @@
 {
   "name": "@nftfi/js",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "main": "./src/nftfi.js",
   "exports": {
     "import": "./src/nftfi.js",

@@ -5,10 +5,12 @@
 class Listings {
   #api;
   #config;
+  #helper;
 
   constructor(options = {}) {
     this.#api = options?.api;
     this.#config = options?.config;
+    this.#helper = options?.helper;
   }
 
   /**
@@ -49,6 +51,8 @@ class Listings {
       }
     });
     let listings = response['results'];
+
+    listings = listings.map(this.#helper.addCurrencyUnit);
     return listings;
   }
 }

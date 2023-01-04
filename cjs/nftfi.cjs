@@ -89,6 +89,8 @@ var _result = _interopRequireDefault(require("./nftfi/result.cjs"));
 
 var _error = _interopRequireDefault(require("./nftfi/error.cjs"));
 
+var _helper2 = _interopRequireDefault(require("./nftfi/shared/helper.cjs"));
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -144,6 +146,7 @@ var _default = {
           api,
           error,
           result,
+          helper,
           listings,
           contractFactory,
           loanFixedV1,
@@ -345,9 +348,13 @@ var _default = {
               });
               error = new _error["default"]();
               result = new _result["default"]();
+              helper = new _helper2["default"]({
+                config: config
+              });
               listings = new _listings["default"]({
                 api: api,
-                config: config
+                config: config,
+                helper: helper
               });
               contractFactory = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.contractFactory) || new _factory["default"]({
                 signer: signer,
@@ -383,7 +390,9 @@ var _default = {
               loans = new _loans["default"]({
                 api: api,
                 account: account,
-                fixed: loanFixed
+                fixed: loanFixed,
+                config: config,
+                helper: helper
               });
               offersSignatures = new _signatures["default"]({
                 account: account,
@@ -418,7 +427,8 @@ var _default = {
                 loans: loans,
                 config: config,
                 result: result,
-                error: error
+                error: error,
+                helper: helper
               });
               erc721 = new _erc2["default"]({
                 config: config,
@@ -441,7 +451,7 @@ var _default = {
 
               return _context.abrupt("return", nftfi);
 
-            case 78:
+            case 79:
             case "end":
               return _context.stop();
           }

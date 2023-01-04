@@ -27,6 +27,8 @@ var _api = /*#__PURE__*/new WeakMap();
 
 var _config = /*#__PURE__*/new WeakMap();
 
+var _helper = /*#__PURE__*/new WeakMap();
+
 /**
  * @class
  * Class for working with listings.
@@ -46,8 +48,14 @@ var Listings = /*#__PURE__*/function () {
       value: void 0
     });
 
+    _classPrivateFieldInitSpec(this, _helper, {
+      writable: true,
+      value: void 0
+    });
+
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
+    (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
   }
   /**
    * Gets all current listings.
@@ -110,9 +118,10 @@ var Listings = /*#__PURE__*/function () {
               case 6:
                 response = _context.sent;
                 listings = response['results'];
+                listings = listings.map((0, _classPrivateFieldGet2["default"])(this, _helper).addCurrencyUnit);
                 return _context.abrupt("return", listings);
 
-              case 9:
+              case 10:
               case "end":
                 return _context.stop();
             }

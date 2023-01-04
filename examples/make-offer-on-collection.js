@@ -58,8 +58,17 @@ async function run() {
     console.log(`[ERROR] could not create collection offer with the following: ${JSON.stringify(terms)}.`);
     console.log(`[ERROR] validation errors are: ${JSON.stringify(result.errors)}.`);
   } else {
+    const currency = result.result.terms.loan.currency;
+    const [ticker] = Object.keys(nftfi.config.erc20).filter(key => nftfi.config.erc20[key].address === currency);
+    const unit = nftfi.config.erc20[ticker]?.unit;
+    const duration = Math.floor(result.result.terms.loan.duration / 86400);
+    const repayment = nftfi.utils.formatUnits(result.result.terms.loan.repayment, unit);
+    const principal = nftfi.utils.formatUnits(result.result.terms.loan.principal, unit);
+    const apr = nftfi.utils.calcApr(principal, repayment, duration).toFixed(2);
     console.log(`[INFO] made collection offer on ${nft.address}`);
-    console.log(`[INFO] offer terms: ${JSON.stringify(terms)}.`);
+    console.log(
+      `[INFO] tokenId: ${result.result.nft.id} duration: ${duration} days; principal: ${principal} ${ticker}; repayment: ${repayment} ${ticker}; APR: ${apr}%`
+    );
   }
 }
 

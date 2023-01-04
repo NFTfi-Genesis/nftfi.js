@@ -37,6 +37,7 @@ import merge from 'lodash.merge';
 import set from 'lodash.set';
 import Result from './nftfi/result.js';
 import Error from './nftfi/error.js';
+import Helper from './nftfi/shared/helper.js';
 
 export default {
   init: async function (options = {}) {
@@ -139,7 +140,8 @@ export default {
     const api = options?.dependencies?.api || new Api({ config, auth, http });
     const error = new Error();
     const result = new Result();
-    const listings = new Listings({ api, config });
+    const helper = new Helper({ config });
+    const listings = new Listings({ api, config, helper });
     const contractFactory =
       options?.dependencies?.contractFactory || new ContractFactory({ signer, ethers, account, Contract });
 
@@ -154,12 +156,12 @@ export default {
       v2_1: loanFixedV2_1,
       collection: loanFixedCollection
     });
-    const loans = new Loans({ api, account, fixed: loanFixed });
+    const loans = new Loans({ api, account, fixed: loanFixed, config, helper });
     const offersSignatures = new OffersSignatures({ account, ethers, config });
     const erc20 = new Erc20({ config, account, contractFactory, BN });
     const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account });
     const offersValidator = new OffersValidator({ erc20, ethers, config, contractFactory });
-    const offers = new Offers({ api, account, offersHelper, offersValidator, loans, config, result, error });
+    const offers = new Offers({ api, account, offersHelper, offersValidator, loans, config, result, error, helper });
     const erc721 = new Erc721({ config, contractFactory });
     const nftfi = new NFTfi({ config, account, listings, offers, loans, erc20, erc721, utils });
 
