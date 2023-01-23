@@ -14,7 +14,10 @@ import LoansFixed from './nftfi/loans/fixed/index.js';
 import LoansFixedV1 from './nftfi/loans/fixed/v1/index.js';
 import LoansFixedV2 from './nftfi/loans/fixed/v2/index.js';
 import LoansFixedV2_1 from './nftfi/loans/fixed/v2_1/index.js';
+import Bundles from './nftfi/bundles.js';
+import BundlesHelper from './nftfi/bundles/helper.js';
 import LoansFixedCollection from './nftfi/loans/fixed/collection/index.js';
+import Immutables from './nftfi/immutables.js';
 import LoansFixedCollectionV2 from './nftfi/loans/fixed/collection/v2/index.js';
 import Erc20 from './nftfi/erc20.js';
 import Erc721 from './nftfi/erc721.js';
@@ -24,20 +27,20 @@ import MultisigGnosis from './nftfi/account/multisig/gnosis.js';
 import MultisigGnosisOwner from './nftfi/account/multisig/gnosis/owner.js';
 import ContractFactory from './nftfi/contract/factory.js';
 import Contract from './nftfi/contract.js';
+import Helper from './nftfi/shared/helper.js';
+import Result from './nftfi/result.js';
+import Error from './nftfi/error.js';
 import NFTfi from './nftfi/index.js';
 
-import { SafeEthersSigner, SafeService } from '@gnosis.pm/safe-ethers-adapters';
-import Safe from '@gnosis.pm/safe-core-sdk';
-import EthersAdapter from '@gnosis.pm/safe-ethers-lib';
+import { SafeEthersSigner, SafeService } from '@safe-global/safe-ethers-adapters';
+import Safe from '@safe-global/safe-core-sdk';
+import EthersAdapter from '@safe-global/safe-ethers-lib';
 import BN from 'bn.js';
 import { ethers as ethersjs } from 'ethers';
 import web3 from 'web3';
 import axios from 'axios';
 import merge from 'lodash.merge';
 import set from 'lodash.set';
-import Result from './nftfi/result.js';
-import Error from './nftfi/error.js';
-import Helper from './nftfi/shared/helper.js';
 
 export default {
   init: async function (options = {}) {
@@ -95,7 +98,7 @@ export default {
       const privateKeys = gnosisOptions?.safe?.owners.privateKeys;
       const service = new SafeService(config.ethereum.account.multisig.gnosis.service.url);
       signer = new ethersjs.Wallet(privateKeys[0], provider);
-      const ethAdapter = new EthersAdapter.default({ ethers: ethersjs, signer });
+      const ethAdapter = new EthersAdapter.default({ ethers: ethersjs, signerOrProvider: signer });
       const safeAddress = gnosisOptions?.safe?.address;
       const safe = await Safe.default.create({
         ethAdapter,
@@ -161,9 +164,12 @@ export default {
     const erc20 = new Erc20({ config, account, contractFactory, BN });
     const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account });
     const offersValidator = new OffersValidator({ erc20, ethers, config, contractFactory });
-    const offers = new Offers({ api, account, offersHelper, offersValidator, loans, config, result, error, helper });
-    const erc721 = new Erc721({ config, contractFactory });
-    const nftfi = new NFTfi({ config, account, listings, offers, loans, erc20, erc721, utils });
+    const offers = new Offers({ api, account, offersHelper, offersValidator, loans, config, helper, result, error });
+    const erc721 = new Erc721({ config, contractFactory, account });
+    const immutables = new Immutables({ config, contractFactory, account, error, result });
+    const bundlesHelper = new BundlesHelper({ config, contractFactory, ethers });
+    const bundles = new Bundles({ config, contractFactory, account, error, result, immutables, helper: bundlesHelper });
+    const nftfi = new NFTfi({ config, account, listings, offers, loans, erc20, erc721, bundles, immutables, utils });
 
     if (options?.logging?.verbose === true) {
       console.log('NFTfi SDK initialised.');

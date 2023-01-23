@@ -9,13 +9,30 @@ repaid. If the Borrower fails to repay in time, the Lender can claim the NFT.
 
 Please note that this SDK is in **closed beta**, and is constantly under development. **USE AT YOUR OWN RISK**.
 
+## Table of Contents
+
+- [Install](#install)
+- [Getting Started](#getting-started)
+- [SDK Reference](#sdk-reference)
+  - [Listings](#listings)
+  - [Offers](#offers)
+  - [Bundles](#bundles)
+  - [Immutables](#immutables)
+  - [Loans](#loans)
+  - [Utils](#utils)
+  - [Erc20](#erc20)
+  - [Erc721](#erc721)
+- [Examples](#examples)
+  - [SDK using an EOA](#sdk-using-an-eoa-externally-owned-account)
+  - [SDK using a Multisig](#sdk-using-a-multisig-gnosis-safe)
+
 ## Install
 
 ```shell
 yarn install
 ```
 
-## Introduction
+## Getting Started
 
 To begin experimenting, please ensure that the following are available:
 
@@ -26,8 +43,6 @@ To begin experimenting, please ensure that the following are available:
 You will need the values above when initialising the SDK. We recommend that you start by using the SDK on the Goerli network, to get a feeling for the various functionality. Then once you are ready, transitioning over to Mainnet.
 
 Please note that if the SDK is configured to use Goerli, it will use the dApp located at [https://goerli-integration.nftfi.com](https://goerli-integration.nftfi.com). If a Mainnet configuration is used, the SDK will use the dApp located at [https://app.nftfi.com](https://app.nftfi.com).
-
-## Getting Started
 
 After you've set up and configured the environment, you need to initialise NFTfi.
 
@@ -54,6 +69,176 @@ We recommend that you **don't hardcode your credentials** into `NFTfi.init(...)`
 Once the SDK is initialised, you can use all the methods documented below.
 
 ## SDK Reference
+
+<a name="Bundles"></a>
+
+### Bundles
+Class for working with bundles.
+
+**Kind**: global class  
+
+* [Bundles](#Bundles)
+    * [`.mint()`](#Bundles+mint) ⇒ <code>Object</code>
+    * [`.add(options)`](#Bundles+add) ⇒ <code>Object</code>
+    * [`.remove(options)`](#Bundles+remove) ⇒ <code>Object</code>
+    * [`.seal(options)`](#Bundles+seal) ⇒ <code>Object</code>
+    * [`.empty(options)`](#Bundles+empty) ⇒ <code>Object</code>
+    * [`.elements(options)`](#Bundles+elements) ⇒ <code>Object</code>
+
+
+* * *
+
+<a name="Bundles+mint"></a>
+
+#### `bundles.mint()` ⇒ <code>Object</code>
+Mint a new bundle.
+
+**Kind**: instance method of [<code>Bundles</code>](#Bundles)  
+**Returns**: <code>Object</code> - An object containing information about the minted bundle.  
+**Example**  
+```js
+// Mint a new bundle.
+const bundle = await nftfi.bundles.mint();
+```
+
+* * *
+
+<a name="Bundles+add"></a>
+
+#### `bundles.add(options)` ⇒ <code>Object</code>
+Add one or more elements to a bundle.
+
+**Kind**: instance method of [<code>Bundles</code>](#Bundles)  
+**Returns**: <code>Object</code> - An object containing information about the bundle and added elements.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the add operation. |
+| options.bundle | <code>Object</code> | An object containing the ID of the bundle to add elements to. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to add elements to. |
+| options.elements | <code>Array.&lt;Object&gt;</code> | An array of objects containing information about the elements to add. |
+| options.elements[].token | <code>Object</code> | An object containing the address and IDs of the token contract and the elements to add. |
+| options.elements[].token.address | <code>string</code> | The address of the token contract. |
+| options.elements[].token.ids | <code>Array.&lt;string&gt;</code> | An array of strings containing the IDs of the elements to add. |
+
+**Example**  
+```js
+// Add elements from multiple token contracts to a bundle.
+const bundle = await nftfi.bundles.add({
+  bundle: { id: '123' },
+  elements: [
+    { token: { address: '0xabc', ids: ['1', '2'] } },
+    { token: { address: '0xdef', ids: ['3'] } }
+  ]
+});
+```
+
+* * *
+
+<a name="Bundles+remove"></a>
+
+#### `bundles.remove(options)` ⇒ <code>Object</code>
+Remove one or more elements from a bundle.
+
+**Kind**: instance method of [<code>Bundles</code>](#Bundles)  
+**Returns**: <code>Object</code> - An object containing information about the bundle and removed elements.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the remove operation. |
+| options.bundle | <code>Object</code> | An object containing the ID of the bundle to remove elements from. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to remove elements from. |
+| options.elements | <code>Array.&lt;Object&gt;</code> | An array of objects containing information about the elements to remove. |
+| options.elements[].token | <code>Object</code> | An object containing the address and IDs of the token contract and the elements to remove. |
+| options.elements[].token.address | <code>string</code> | The address of the token contract. |
+| options.elements[].token.ids | <code>Array.&lt;string&gt;</code> | An array of strings containing the IDs of the elements to remove. |
+
+**Example**  
+```js
+// Removes elements from multiple token contracts from a bundle.
+const bundle = await nftfi.bundles.remove({
+  bundle: { id: '123' },
+  elements: [
+    { token: { address: '0xabc', ids: ['1', '2'] } },
+    { token: { address: '0xdef', ids: ['3'] } }
+  ]
+});
+```
+
+* * *
+
+<a name="Bundles+seal"></a>
+
+#### `bundles.seal(options)` ⇒ <code>Object</code>
+Seal a bundle, making it immutable.
+
+**Kind**: instance method of [<code>Bundles</code>](#Bundles)  
+**Returns**: <code>Object</code> - An object containing information about the immutable contract.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the seal operation. |
+| options.bundle | <code>Object</code> | An object containing the ID of the bundle to seal. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to seal. |
+
+**Example**  
+```js
+// Seals a bundle.
+const immutable = await nftfi.bundles.seal({
+  bundle: { id: '123' }
+});
+```
+
+* * *
+
+<a name="Bundles+empty"></a>
+
+#### `bundles.empty(options)` ⇒ <code>Object</code>
+Empty a bundle.
+
+**Kind**: instance method of [<code>Bundles</code>](#Bundles)  
+**Returns**: <code>Object</code> - An object containing a success property.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the empty operation. |
+| options.bundle | <code>Object</code> | An object containing the ID of the bundle to empty. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to empty. |
+
+**Example**  
+```js
+// Empties a bundle.
+const result = await nftfi.bundles.empty({
+  bundle: { id: '123' }
+});
+```
+
+* * *
+
+<a name="Bundles+elements"></a>
+
+#### `bundles.elements(options)` ⇒ <code>Object</code>
+Get the elements inside a bundle.
+
+**Kind**: instance method of [<code>Bundles</code>](#Bundles)  
+**Returns**: <code>Object</code> - An object containing information about the bundle and an array of elements.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the elements operation. |
+| options.bundle | <code>Object</code> | An object containing the ID of the bundle to get elements for. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to get elements for. |
+
+**Example**  
+```js
+// Gets the elements in a bundle.
+const bundle = await nftfi.bundles.elements({
+  bundle: { id: '123' }
+});
+console.log(bundle.data.elements);
+```
+
+* * *
 
 <a name="Erc20"></a>
 
@@ -179,6 +364,7 @@ Class for working with ERC721 non-fungible tokens.
 * [Erc721](#Erc721)
     * [`.ownerOf(options)`](#Erc721+ownerOf) ⇒ <code>string</code>
     * [`.setApprovalForAll(options)`](#Erc721+setApprovalForAll) ⇒ <code>boolean</code>
+    * [`.isApprovedForAll(options)`](#Erc721+isApprovedForAll) ⇒ <code>boolean</code>
 
 
 * * *
@@ -231,6 +417,95 @@ const address = await nftfi.erc721.setApprovalForAll({
    address: '0x00000000'
   },
   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+});
+```
+
+* * *
+
+<a name="Erc721+isApprovedForAll"></a>
+
+#### `erc721.isApprovedForAll(options)` ⇒ <code>boolean</code>
+Retruns the approval of a given NFTfi contract.
+The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
+
+**Kind**: instance method of [<code>Erc721</code>](#Erc721)  
+**Returns**: <code>boolean</code> - Boolean value indicating whether permission has been granted or not  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options |
+| options.token.address | <code>string</code> | The ERC721 token address |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+
+**Example**  
+```js
+const address = await nftfi.erc721.isApprovalForAll({
+  token: {
+   address: '0x00000000'
+  },
+  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+});
+```
+
+* * *
+
+<a name="Immutables"></a>
+
+### Immutables
+Class for working with immutables.
+
+**Kind**: global class  
+
+* [Immutables](#Immutables)
+    * [`.unseal(options)`](#Immutables+unseal) ⇒ <code>Object</code>
+    * [`.get(options)`](#Immutables+get) ⇒ <code>Object</code>
+
+
+* * *
+
+<a name="Immutables+unseal"></a>
+
+#### `immutables.unseal(options)` ⇒ <code>Object</code>
+Unseal an immutable.
+
+**Kind**: instance method of [<code>Immutables</code>](#Immutables)  
+**Returns**: <code>Object</code> - An object containing information about the bundle that was released from the immutable.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the unseal operation. |
+| options.immutable | <code>Object</code> | An object containing the ID of the immutable bundle to unseal. |
+| options.immutable.id | <code>string</code> | The ID of the immutable bundle to unseal. |
+
+**Example**  
+```js
+// Unseal an immutable bundle.
+const bundle = await nftfi.immutables.unseal({
+  immutable: { id: '123' }
+});
+```
+
+* * *
+
+<a name="Immutables+get"></a>
+
+#### `immutables.get(options)` ⇒ <code>Object</code>
+Get an immutable.
+
+**Kind**: instance method of [<code>Immutables</code>](#Immutables)  
+**Returns**: <code>Object</code> - An object containing information about an immutable.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the get operation. |
+| options.bundle | <code>Object</code> | An object containing the ID of the bundle to get the corresponding immutable for. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to get the corresponding immutable for. |
+
+**Example**  
+```js
+// Get the corresponding immutable for a given bundle.
+const immutable = await nftfi.immutables.get({
+  bundle: { id: '123' }
 });
 ```
 
@@ -978,6 +1253,7 @@ node examples/begin-loan.js
 node examples/get-my-active-loans.js
 node examples/repay-loan.js
 node examples/liquidate-my-defaulted-loans.js
+node examples/bundle-operations.js
 ```
 
 ### SDK using a Multisig (Gnosis Safe)

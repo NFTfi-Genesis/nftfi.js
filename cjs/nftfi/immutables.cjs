@@ -1,0 +1,160 @@
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _classPrivateFieldGet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldGet"));
+var _classPrivateFieldSet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldSet"));
+function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+var _config = /*#__PURE__*/new WeakMap();
+var _contractFactory = /*#__PURE__*/new WeakMap();
+var _immutableContract = /*#__PURE__*/new WeakMap();
+var _account = /*#__PURE__*/new WeakMap();
+var _error = /*#__PURE__*/new WeakMap();
+var _result = /*#__PURE__*/new WeakMap();
+/**
+ * @class
+ * Class for working with immutables.
+ */
+var Immutables = /*#__PURE__*/function () {
+  function Immutables(options) {
+    (0, _classCallCheck2["default"])(this, Immutables);
+    _classPrivateFieldInitSpec(this, _config, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _contractFactory, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _immutableContract, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _account, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _error, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _result, {
+      writable: true,
+      value: void 0
+    });
+    (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
+    (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
+    (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
+    (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
+    (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
+    (0, _classPrivateFieldSet2["default"])(this, _immutableContract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+      address: (0, _classPrivateFieldGet2["default"])(this, _config).immutable.v1.address,
+      abi: (0, _classPrivateFieldGet2["default"])(this, _config).immutable.v1.abi
+    }));
+  }
+
+  /**
+   * Unseal an immutable.
+   *
+   * @param {Object} options - An object containing options for the unseal operation.
+   * @param {Object} options.immutable - An object containing the ID of the immutable bundle to unseal.
+   * @param {string} options.immutable.id - The ID of the immutable bundle to unseal.
+   *
+   * @returns {Object} An object containing information about the bundle that was released from the immutable.
+   *
+   * @example
+   * // Unseal an immutable bundle.
+   * const bundle = await nftfi.immutables.unseal({
+   *   immutable: { id: '123' }
+   * });
+   */
+  (0, _createClass2["default"])(Immutables, [{
+    key: "unseal",
+    value: function unseal(options) {
+      var _this = this;
+      return (0, _classPrivateFieldGet2["default"])(this, _immutableContract).call({
+        "function": 'withdraw',
+        args: [options.immutable.id, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()]
+      }).then( /*#__PURE__*/function () {
+        var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(result) {
+          var transfer;
+          return _regenerator["default"].wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                transfer = result.logs.filter(function (log) {
+                  return log.name === 'Transfer' && log.args.from.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).immutable.v1.address.toLowerCase() && log.args.to.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _account).getAddress().toLowerCase();
+                }, _this)[0];
+                return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(_this, _result).handle({
+                  bundle: {
+                    id: transfer.args.tokenId.toString()
+                  },
+                  nftfi: {
+                    contract: {
+                      name: (0, _classPrivateFieldGet2["default"])(_this, _config).bundler.v1.name
+                    }
+                  }
+                }));
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        }));
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }())["catch"](function (e) {
+        return (0, _classPrivateFieldGet2["default"])(_this, _error).handle(e);
+      });
+    }
+
+    /**
+     * Get an immutable.
+     *
+     * @param {Object} options - An object containing options for the get operation.
+     * @param {Object} options.bundle - An object containing the ID of the bundle to get the corresponding immutable for.
+     * @param {string} options.bundle.id - The ID of the bundle to get the corresponding immutable for.
+     *
+     * @returns {Object} An object containing information about an immutable.
+     *
+     * @example
+     * // Get the corresponding immutable for a given bundle.
+     * const immutable = await nftfi.immutables.get({
+     *   bundle: { id: '123' }
+     * });
+     */
+  }, {
+    key: "get",
+    value: function get(options) {
+      var _this2 = this;
+      return (0, _classPrivateFieldGet2["default"])(this, _immutableContract).call({
+        "function": 'immutableOfBundle',
+        args: [options.bundle.id]
+      }).then(function (id) {
+        return (0, _classPrivateFieldGet2["default"])(_this2, _result).handle({
+          immutable: {
+            id: id.toString()
+          },
+          nftfi: {
+            contract: {
+              name: (0, _classPrivateFieldGet2["default"])(_this2, _config).immutable.v1.name
+            }
+          }
+        });
+      })["catch"](function (e) {
+        return (0, _classPrivateFieldGet2["default"])(_this2, _error).handle(e);
+      });
+    }
+  }]);
+  return Immutables;
+}();
+var _default = Immutables;
+exports["default"] = _default;

@@ -7,6 +7,31 @@ class Contract {
     this.#contract = options?.contract;
   }
 
+  _parseLogs(logs) {
+    logs = logs || [];
+    if (logs && logs.length > 0) {
+      return logs
+        .map(function (log) {
+          try {
+            const event = this.#contract.interface.parseLog(log);
+            return {
+              name: event.name,
+              args: event.args,
+              frag: event.eventFragment
+            };
+          } catch (e) {
+            // Cant find suitable entry in contract ABI.
+            return false;
+          }
+        }, this)
+        .filter(function (log) {
+          return log;
+        });
+    } else {
+      return logs;
+    }
+  }
+
   async call(options) {
     let result;
     const isViewFn = this._isViewFn(options.function);
@@ -14,7 +39,8 @@ class Contract {
       result = this.#contract[options.function](...options.args);
     } else {
       const tx = await this.#contract.populateTransaction[options.function](...options.args);
-      result = this.#account.execTransaction(tx);
+      result = await this.#account.execTransaction(tx);
+      result.logs = this._parseLogs(result?.logs);
     }
     return result;
   }
@@ -48,7 +74,7 @@ class Contract {
   }
 
   _getFnFragment(fn) {
-    return this.#contract.interface.fragments.filter(fragment => fragment.name === fn)[0];
+    return this.#contract.interface.fragments.filter(fragment => fn.startsWith(fragment.name))[0];
   }
 }
 

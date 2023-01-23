@@ -6,6 +6,8 @@ class NFTfi {
   loans;
   erc20;
   erc721;
+  bundles;
+  immutables;
   utils;
 
   constructor(options = {}) {
@@ -16,6 +18,8 @@ class NFTfi {
     this.loans = options.loans;
     this.erc20 = options.erc20;
     this.erc721 = options.erc721;
+    this.bundles = options?.bundles;
+    this.immutables = options?.immutables;
     this.utils = options.utils;
   }
 }
