@@ -25,21 +25,31 @@ class Auth {
   }
 
   async getToken() {
+    let environment = null
+
     if (this._isTokenValid(this.#token)) {
       return this.#token;
     }
 
-    if (typeof global?.window?.localStorage !== 'undefined') {
-      const sdkToken = global.window.localStorage.getItem('sdkToken');
-      if (this._isTokenValid(sdkToken)) {
-        this.#token = sdkToken;
+    // The process object is a global object that is only available in Node.js, so if typeof process returns "object",
+    // it means your code is running in a Node.js environment. If it returns "undefined", it means your code is running in a browser environment.
+    if (typeof process === 'object' && typeof process.versions === 'object' && typeof process.versions.node !== 'undefined') {
+      environment = "nodeJS"
+    } else {
+      environment = "browser"
+    }
+
+    if (environment === "nodeJS") {
+      const sdktoken = global.window.localstorage.getitem('sdktoken');
+      if (this._istokenvalid(sdktoken)) {
+        this.#token = sdktoken;
         return this.#token;
       }
 
-      const dappToken = global?.window?.localStorage.getItem('jwtToken');
-      if (this._isTokenValid(dappToken)) {
-        global.window.localStorage.setItem('sdkToken', dappToken);
-        this.#token = dappToken;
+      const dapptoken = global.window?.localstorage.getitem('jwttoken');
+      if (this._istokenvalid(dapptoken)) {
+        global.window.localstorage.setitem('sdktoken', dapptoken);
+        this.#token = dapptoken;
         return this.#token;
       }
     }
@@ -67,8 +77,8 @@ class Auth {
     });
     const token = result?.data?.result?.token;
     if (token) {
-      if (typeof global?.window?.localStorage !== 'undefined') {
-        global.window.localStorage.setItem('sdkToken', token);
+      if (environment === "browser") {
+        window.localStorage.setItem('sdkToken', token);
       }
       this.#token = token;
     } else {
