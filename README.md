@@ -458,7 +458,7 @@ Class for working with immutables.
 
 * [Immutables](#Immutables)
     * [`.unseal(options)`](#Immutables+unseal) ⇒ <code>Object</code>
-    * [`.get(options)`](#Immutables+get) ⇒ <code>Object</code>
+    * [`.getBundle(options)`](#Immutables+getBundle) ⇒ <code>Object</code>
 
 
 * * *
@@ -487,25 +487,25 @@ const bundle = await nftfi.immutables.unseal({
 
 * * *
 
-<a name="Immutables+get"></a>
+<a name="Immutables+getBundle"></a>
 
-#### `immutables.get(options)` ⇒ <code>Object</code>
-Get an immutable.
+#### `immutables.getBundle(options)` ⇒ <code>Object</code>
+Get a bundle.
 
 **Kind**: instance method of [<code>Immutables</code>](#Immutables)  
-**Returns**: <code>Object</code> - An object containing information about an immutable.  
+**Returns**: <code>Object</code> - An object containing information about an bundle.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> | An object containing options for the get operation. |
-| options.bundle | <code>Object</code> | An object containing the ID of the bundle to get the corresponding immutable for. |
-| options.bundle.id | <code>string</code> | The ID of the bundle to get the corresponding immutable for. |
+| options.immutable | <code>Object</code> | An object containing the ID of the immutable to get the corresponding bundle for. |
+| options.immutable.id | <code>string</code> | The ID of the immutable to get the corresponding bundle for. |
 
 **Example**  
 ```js
 // Get the corresponding immutable for a given bundle.
-const immutable = await nftfi.immutables.get({
-  bundle: { id: '123' }
+const bundle = await nftfi.immutables.getBundle({
+  immutable: { id: '123' }
 });
 ```
 
@@ -1253,7 +1253,8 @@ node examples/begin-loan.js
 node examples/get-my-active-loans.js
 node examples/repay-loan.js
 node examples/liquidate-my-defaulted-loans.js
-node examples/bundle-operations.js
+node examples/bundles/basics.js
+node examples/bundles/get-nfts-in-bundle-listing.js
 ```
 
 ### SDK using a Multisig (Gnosis Safe)

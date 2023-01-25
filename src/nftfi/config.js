@@ -163,6 +163,7 @@ mainnetConfig.bundler.v1.name = 'v1.bundler';
 mainnetConfig.bundler.v1.address = '0x18faa7748Bfd533638Aab95c2E26F4df00614aeb';
 mainnetConfig.bundler.v1.abi = [
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
+  'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId, address indexed personalBundler)',
   'function decomposeBundle(uint256 tokenId, address receiver)',
   'function addBundleElements(uint256 bundleId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)',
   'function removeBundleElements(uint256 bundleId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)',
@@ -177,7 +178,7 @@ mainnetConfig.immutable.v1.name = 'v1.immutable.bundle';
 mainnetConfig.immutable.v1.address = '0xB9F55139FC79Ed58D9845461f70483f778eBfeF2';
 mainnetConfig.immutable.v1.abi = [
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
-  'function immutableOfBundle(uint256 bundleId) view returns (uint256 immutableId)',
+  'function bundleOfImmutable(uint256 bundleId) view returns (uint256 immutableId)',
   'function withdraw(uint256 immutableId, address to)'
 ];
 
@@ -305,6 +306,7 @@ goerliConfig.bundler.v1.name = 'v1.bundler';
 goerliConfig.bundler.v1.address = '0xb5FB95bc206a930089d9b36F1A99C640b0D4F136';
 goerliConfig.bundler.v1.abi = [
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
+  'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId, address indexed personalBundler)',
   'function decomposeBundle(uint256 tokenId, address receiver)',
   'function addBundleElements(uint256 bundleId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)',
   'function removeBundleElements(uint256 bundleId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)',
@@ -319,7 +321,7 @@ goerliConfig.immutable.v1.name = 'v1.immutable.bundle';
 goerliConfig.immutable.v1.address = '0xEAc68594060fd8C2C7Af9Cc368Eb8e6622D16845';
 goerliConfig.immutable.v1.abi = [
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
-  'function immutableOfBundle(uint256 bundleId) view returns (uint256 immutableId)',
+  'function bundleOfImmutable(uint256 bundleId) view returns (uint256 immutableId)',
   'function withdraw(uint256 immutableId, address to)'
 ];
 

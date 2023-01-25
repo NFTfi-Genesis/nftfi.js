@@ -117,42 +117,61 @@ var Immutables = /*#__PURE__*/function () {
     }
 
     /**
-     * Get an immutable.
+     * Get a bundle.
      *
      * @param {Object} options - An object containing options for the get operation.
-     * @param {Object} options.bundle - An object containing the ID of the bundle to get the corresponding immutable for.
-     * @param {string} options.bundle.id - The ID of the bundle to get the corresponding immutable for.
+     * @param {Object} options.immutable - An object containing the ID of the immutable to get the corresponding bundle for.
+     * @param {string} options.immutable.id - The ID of the immutable to get the corresponding bundle for.
      *
-     * @returns {Object} An object containing information about an immutable.
+     * @returns {Object} An object containing information about an bundle.
      *
      * @example
      * // Get the corresponding immutable for a given bundle.
-     * const immutable = await nftfi.immutables.get({
-     *   bundle: { id: '123' }
+     * const bundle = await nftfi.immutables.getBundle({
+     *   immutable: { id: '123' }
      * });
      */
   }, {
-    key: "get",
-    value: function get(options) {
-      var _this2 = this;
-      return (0, _classPrivateFieldGet2["default"])(this, _immutableContract).call({
-        "function": 'immutableOfBundle',
-        args: [options.bundle.id]
-      }).then(function (id) {
-        return (0, _classPrivateFieldGet2["default"])(_this2, _result).handle({
-          immutable: {
-            id: id.toString()
-          },
-          nftfi: {
-            contract: {
-              name: (0, _classPrivateFieldGet2["default"])(_this2, _config).immutable.v1.name
-            }
+    key: "getBundle",
+    value: function () {
+      var _getBundle = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
+        var bundleId;
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return (0, _classPrivateFieldGet2["default"])(this, _immutableContract).call({
+                "function": 'bundleOfImmutable',
+                args: [options.immutable.id]
+              });
+            case 3:
+              bundleId = _context2.sent;
+              return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
+                bundle: {
+                  id: bundleId.toString()
+                },
+                nftfi: {
+                  contract: {
+                    name: (0, _classPrivateFieldGet2["default"])(this, _config).bundler.v1.name
+                  }
+                }
+              }));
+            case 7:
+              _context2.prev = 7;
+              _context2.t0 = _context2["catch"](0);
+              return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context2.t0));
+            case 10:
+            case "end":
+              return _context2.stop();
           }
-        });
-      })["catch"](function (e) {
-        return (0, _classPrivateFieldGet2["default"])(_this2, _error).handle(e);
-      });
-    }
+        }, _callee2, this, [[0, 7]]);
+      }));
+      function getBundle(_x2) {
+        return _getBundle.apply(this, arguments);
+      }
+      return getBundle;
+    }()
   }]);
   return Immutables;
 }();

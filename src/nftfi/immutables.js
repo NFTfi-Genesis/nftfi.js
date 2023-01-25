@@ -62,35 +62,33 @@ class Immutables {
   }
 
   /**
-   * Get an immutable.
+   * Get a bundle.
    *
    * @param {Object} options - An object containing options for the get operation.
-   * @param {Object} options.bundle - An object containing the ID of the bundle to get the corresponding immutable for.
-   * @param {string} options.bundle.id - The ID of the bundle to get the corresponding immutable for.
+   * @param {Object} options.immutable - An object containing the ID of the immutable to get the corresponding bundle for.
+   * @param {string} options.immutable.id - The ID of the immutable to get the corresponding bundle for.
    *
-   * @returns {Object} An object containing information about an immutable.
+   * @returns {Object} An object containing information about an bundle.
    *
    * @example
    * // Get the corresponding immutable for a given bundle.
-   * const immutable = await nftfi.immutables.get({
-   *   bundle: { id: '123' }
+   * const bundle = await nftfi.immutables.getBundle({
+   *   immutable: { id: '123' }
    * });
    */
-  get(options) {
-    return this.#immutableContract
-      .call({
-        function: 'immutableOfBundle',
-        args: [options.bundle.id]
-      })
-      .then(id =>
-        this.#result.handle({
-          immutable: { id: id.toString() },
-          nftfi: { contract: { name: this.#config.immutable.v1.name } }
-        })
-      )
-      .catch(e => {
-        return this.#error.handle(e);
+  async getBundle(options) {
+    try {
+      const bundleId = await this.#immutableContract.call({
+        function: 'bundleOfImmutable',
+        args: [options.immutable.id]
       });
+      return this.#result.handle({
+        bundle: { id: bundleId.toString() },
+        nftfi: { contract: { name: this.#config.bundler.v1.name } }
+      });
+    } catch (e) {
+      return this.#error.handle(e);
+    }
   }
 }
 

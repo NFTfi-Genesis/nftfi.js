@@ -6,11 +6,11 @@ __metadata:
   cacheKey: 8
 
 "@babel/runtime@npm:^7.17.9":
-  version: 7.20.7
-  resolution: "@babel/runtime@npm:7.20.7"
+  version: 7.20.13
+  resolution: "@babel/runtime@npm:7.20.13"
   dependencies:
     regenerator-runtime: ^0.13.11
-  checksum: 4629ce5c46f06cca9cfb9b7fc00d48003335a809888e2b91ec2069a2dcfbfef738480cff32ba81e0b7c290f8918e5c22ddcf2b710001464ee84ba62c7e32a3a3
+  checksum: 09b7a97a05c80540db6c9e4ddf8c5d2ebb06cae5caf3a87e33c33f27f8c4d49d9c67a2d72f1570e796045288fad569f98a26ceba0c4f5fad2af84b6ad855c4fb
   languageName: node
   linkType: hard
 
@@ -453,12 +453,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gnosis.pm/safe-deployments@npm:1.17.0":
-  version: 1.17.0
-  resolution: "@gnosis.pm/safe-deployments@npm:1.17.0"
+"@gnosis.pm/safe-deployments@npm:1.19.0":
+  version: 1.19.0
+  resolution: "@gnosis.pm/safe-deployments@npm:1.19.0"
   dependencies:
     semver: ^7.3.7
-  checksum: fd77cb6d4bb4980941ffb2a9210a2b9a107fe6fccca23250d72dbc248c7dc0211d28cbb824f369e95050f3bd4a00764023acc3c6422d34dc89ddc25bcfd3591b
+  checksum: 9566179ad6e370166ea62d4f14ef0d7cd80f6e7aaa7360042973df1e6722e22d4e8845ea92f7740b01858ab514ea7000beb54569780abaf0f50279c03323db16
   languageName: node
   linkType: hard
 
@@ -499,69 +499,69 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@safe-global/safe-core-sdk-types@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@safe-global/safe-core-sdk-types@npm:1.8.0"
+"@safe-global/safe-core-sdk-types@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@safe-global/safe-core-sdk-types@npm:1.9.0"
   dependencies:
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/contracts": ^5.7.0
-    "@gnosis.pm/safe-deployments": 1.17.0
+    "@gnosis.pm/safe-deployments": 1.19.0
     web3-core: ^1.8.1
     web3-utils: ^1.8.1
-  checksum: bc76668e780db17b10608c3e9e95da6b0f3b892d199939376c1e3f056d107f6b1879e998ff4313d10d01666dccfcfbff68974dc6f96706ab27bf74653baf949e
+  checksum: 4fe3f1b8b7e3d50f2a23e31c3e7769da66b9d67abcba7234a865388767b6532ea06b0e7b9ad60689eb63889d0539f83d3361bfde58e42b6544dcafd293c9e7ef
   languageName: node
   linkType: hard
 
-"@safe-global/safe-core-sdk-utils@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "@safe-global/safe-core-sdk-utils@npm:1.6.0"
+"@safe-global/safe-core-sdk-utils@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@safe-global/safe-core-sdk-utils@npm:1.7.0"
   dependencies:
-    "@safe-global/safe-core-sdk-types": ^1.8.0
+    "@safe-global/safe-core-sdk-types": ^1.9.0
     semver: ^7.3.8
     web3-utils: ^1.8.1
-  checksum: 3aaf6cf04c6348e41a7bee30d39b0bd87c11e9835fd37c8162ca54ec4a91830578b3a24f30b32fdd46f9fbb644e231a9e9b9a92030ab9a86d3cfe69dd736f018
+  checksum: 08f5ac8d9996134bb9e3b76e3f84443eb29360aae323ddf6711ec312d4287b3509746567d9f4e3489b75c6185d31fbb73ec7d3b95037eddfc55847b298711187
   languageName: node
   linkType: hard
 
-"@safe-global/safe-core-sdk@npm:^3.2.2":
-  version: 3.2.2
-  resolution: "@safe-global/safe-core-sdk@npm:3.2.2"
+"@safe-global/safe-core-sdk@npm:^3.2.2, @safe-global/safe-core-sdk@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@safe-global/safe-core-sdk@npm:3.3.0"
   dependencies:
     "@ethersproject/solidity": ^5.7.0
-    "@gnosis.pm/safe-deployments": 1.17.0
-    "@safe-global/safe-core-sdk-types": ^1.8.0
+    "@gnosis.pm/safe-deployments": 1.19.0
+    "@safe-global/safe-core-sdk-types": ^1.9.0
     ethereumjs-util: ^7.1.5
     semver: ^7.3.8
     web3-utils: ^1.8.1
-  checksum: bcc25adba967115f2e7586961337c6de302cf1effd49e1d61d2712f3007f31c6268257bcd7ac357636190ad12880545d6ffc8da72e9d89aa236f157b27b52c97
+  checksum: b74b92e6d5069a698b17f2e21e1a3a1a5d4f47127d5560619c253ea9d319de97c7f1e9d4d89549a7d3ebea89b54f1212f30584ea463cb11cdce1bae3279fa5f7
   languageName: node
   linkType: hard
 
 "@safe-global/safe-ethers-adapters@npm:^0.1.0-alpha.15":
-  version: 0.1.0-alpha.15
-  resolution: "@safe-global/safe-ethers-adapters@npm:0.1.0-alpha.15"
+  version: 0.1.0-alpha.16
+  resolution: "@safe-global/safe-ethers-adapters@npm:0.1.0-alpha.16"
   dependencies:
-    "@gnosis.pm/safe-deployments": 1.17.0
-    "@safe-global/safe-core-sdk": ^3.2.2
-    "@safe-global/safe-core-sdk-types": ^1.8.0
+    "@gnosis.pm/safe-deployments": 1.19.0
+    "@safe-global/safe-core-sdk": ^3.3.0
+    "@safe-global/safe-core-sdk-types": ^1.9.0
     axios: ^0.27.2
   peerDependencies:
     "@ethersproject/abstract-provider": ^5.7.0
     "@ethersproject/abstract-signer": ^5.7.0
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/properties": ^5.7.0
-  checksum: 201f78ef12ba56136e5b842f74bbf3111bb73b18afdc0b400d64a6c6a872327081ffb362bcb9ec4ce9ae48eb7affc6f6b234c3be5ca8fe275b64182c75599238
+  checksum: 6c644c1303c2a2f8905d3918e56b4614fc793d0ddcd38ebd4cdb115ce40fb16a432f1ece6caee6ad232f6d5cacba771016132d3d2787105581e0e81d05036451
   languageName: node
   linkType: hard
 
 "@safe-global/safe-ethers-lib@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@safe-global/safe-ethers-lib@npm:1.8.0"
+  version: 1.9.0
+  resolution: "@safe-global/safe-ethers-lib@npm:1.9.0"
   dependencies:
-    "@safe-global/safe-core-sdk-types": ^1.8.0
-    "@safe-global/safe-core-sdk-utils": ^1.6.0
+    "@safe-global/safe-core-sdk-types": ^1.9.0
+    "@safe-global/safe-core-sdk-utils": ^1.7.0
     ethers: 5.7.2
-  checksum: 75577c16509c8e5b231675f73336cba3ad0d0275a5d237b5c98857af2e24938b9bcac5e067f3492ab2ab1d239031d35ce7516426cb12b2ea5e1490c43c40500e
+  checksum: 0b8a5c05c3556842ab45a0758e6c40f609ff0d1fabcdd6444af609664c8ed3b7d15ff7f991945ced0f7cd7c9d9c410e51629fc708ad71a51a4d2c2d63352ff22
   languageName: node
   linkType: hard
 

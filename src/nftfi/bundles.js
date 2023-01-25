@@ -209,15 +209,13 @@ class Bundles {
    */
   async seal(options) {
     try {
-      await this.#bundlerContract.call({
+      const transferred = await this.#bundlerContract.call({
         function: 'safeTransferFrom(address,address,uint256)',
         args: [this.#account.getAddress(), this.#config.immutable.v1.address, options.bundle.id]
       });
-      const result = await this.#immutables.get({
-        bundle: { id: options.bundle.id }
-      });
+      const log = transferred.logs.find(log => log.name === 'ImmutableMinted');
       return this.#result.handle({
-        immutable: { id: result.data.immutable.id },
+        immutable: { id: log.args.immutableId.toString() },
         nftfi: { contract: { name: this.#config.immutable.v1.name } }
       });
     } catch (e) {

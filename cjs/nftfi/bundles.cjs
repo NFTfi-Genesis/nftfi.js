@@ -392,7 +392,7 @@ var Bundles = /*#__PURE__*/function () {
     key: "seal",
     value: function () {
       var _seal = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(options) {
-        var result;
+        var transferred, log;
         return _regenerator["default"].wrap(function _callee7$(_context7) {
           while (1) switch (_context7.prev = _context7.next) {
             case 0:
@@ -403,17 +403,13 @@ var Bundles = /*#__PURE__*/function () {
                 args: [(0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), (0, _classPrivateFieldGet2["default"])(this, _config).immutable.v1.address, options.bundle.id]
               });
             case 3:
-              _context7.next = 5;
-              return (0, _classPrivateFieldGet2["default"])(this, _immutables).get({
-                bundle: {
-                  id: options.bundle.id
-                }
+              transferred = _context7.sent;
+              log = transferred.logs.find(function (log) {
+                return log.name === 'ImmutableMinted';
               });
-            case 5:
-              result = _context7.sent;
               return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 immutable: {
-                  id: result.data.immutable.id
+                  id: log.args.immutableId.toString()
                 },
                 nftfi: {
                   contract: {
@@ -421,15 +417,15 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 9:
-              _context7.prev = 9;
+            case 8:
+              _context7.prev = 8;
               _context7.t0 = _context7["catch"](0);
               return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context7.t0));
-            case 12:
+            case 11:
             case "end":
               return _context7.stop();
           }
-        }, _callee7, this, [[0, 9]]);
+        }, _callee7, this, [[0, 8]]);
       }));
       function seal(_x6) {
         return _seal.apply(this, arguments);
