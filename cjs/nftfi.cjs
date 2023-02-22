@@ -41,6 +41,7 @@ var _helper3 = _interopRequireDefault(require("./nftfi/shared/helper.cjs"));
 var _result = _interopRequireDefault(require("./nftfi/result.cjs"));
 var _error = _interopRequireDefault(require("./nftfi/error.cjs"));
 var _index7 = _interopRequireDefault(require("./nftfi/index.cjs"));
+var _storage = _interopRequireDefault(require("./nftfi/storage.cjs"));
 var _safeEthersAdapters = require("@safe-global/safe-ethers-adapters");
 var _safeCoreSdk = _interopRequireDefault(require("@safe-global/safe-core-sdk"));
 var _safeEthersLib = _interopRequireDefault(require("@safe-global/safe-ethers-lib"));
@@ -55,7 +56,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 var _default = {
   init: function () {
     var _init = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-      var _options$config, _options$config$api, _options$config2, _options$config2$api, _options$ethereum, _options$ethereum$acc, _options$ethereum$acc2, _options$ethereum$acc3, _options$ethereum$acc4, _options$ethereum$acc5, _options$ethereum2, _options$ethereum2$ac, _options$ethereum2$ac2, _options$ethereum2$ac3, _options$ethereum2$ac4, _options$ethereum3, _options$ethereum3$ac, _options$ethereum4, _options$ethereum4$ac, _options$ethereum5, _options$ethereum5$we, _options$ethereum6, _options$ethereum6$pr, _options$dependencies, _options$ethereum7, _options$ethereum7$we, _options$ethereum8, _options$ethereum8$we, _options$ethereum9, _options$ethereum9$pr, _options$ethereum10, _options$ethereum10$a, _options$ethereum10$a2, _options$dependencies4, _options$dependencies5, _options$dependencies6, _options$logging;
+      var _options$config, _options$config$api, _options$config2, _options$config2$api, _options$ethereum, _options$ethereum$acc, _options$ethereum$acc2, _options$ethereum$acc3, _options$ethereum$acc4, _options$ethereum$acc5, _options$ethereum2, _options$ethereum2$ac, _options$ethereum2$ac2, _options$ethereum2$ac3, _options$ethereum2$ac4, _options$ethereum3, _options$ethereum3$ac, _options$ethereum4, _options$ethereum4$ac, _options$ethereum5, _options$ethereum5$we, _options$ethereum6, _options$ethereum6$pr, _window, _options$dependencies, _options$ethereum7, _options$ethereum7$we, _options$ethereum8, _options$ethereum8$we, _options$ethereum9, _options$ethereum9$pr, _options$ethereum10, _options$ethereum10$a, _options$ethereum10$a2, _options$dependencies4, _options$dependencies5, _options$dependencies6, _options$dependencies7, _options$logging;
       var options,
         _options$api,
         hasApiKey,
@@ -65,6 +66,7 @@ var _default = {
         hasAccountAddress,
         hasWeb3Provider,
         hasProviderUrl,
+        localStorage,
         ethers,
         provider,
         network,
@@ -98,6 +100,7 @@ var _default = {
         eoa,
         http,
         utils,
+        storage,
         auth,
         api,
         error,
@@ -138,41 +141,42 @@ var _default = {
             hasAccountAddress = options === null || options === void 0 ? void 0 : (_options$ethereum4 = options.ethereum) === null || _options$ethereum4 === void 0 ? void 0 : (_options$ethereum4$ac = _options$ethereum4.account) === null || _options$ethereum4$ac === void 0 ? void 0 : _options$ethereum4$ac.address;
             hasWeb3Provider = options === null || options === void 0 ? void 0 : (_options$ethereum5 = options.ethereum) === null || _options$ethereum5 === void 0 ? void 0 : (_options$ethereum5$we = _options$ethereum5.web3) === null || _options$ethereum5$we === void 0 ? void 0 : _options$ethereum5$we.provider;
             hasProviderUrl = options === null || options === void 0 ? void 0 : (_options$ethereum6 = options.ethereum) === null || _options$ethereum6 === void 0 ? void 0 : (_options$ethereum6$pr = _options$ethereum6.provider) === null || _options$ethereum6$pr === void 0 ? void 0 : _options$ethereum6$pr.url;
+            localStorage = typeof window !== 'undefined' && typeof ((_window = window) === null || _window === void 0 ? void 0 : _window.localStorage) !== 'undefined' ? window.localStorage : null;
             if (!(!hasWeb3Provider && !hasProviderUrl)) {
-              _context.next = 11;
+              _context.next = 12;
               break;
             }
             throw 'Please provide a value for the ethereum.provider.url field in the options parameter.';
-          case 11:
+          case 12:
             if (!(!hasWeb3Provider && !hasGnosisSafePks && !hasAccountPk)) {
-              _context.next = 13;
+              _context.next = 14;
               break;
             }
             throw 'Please provide a value for the ethereum.account.privateKey field in the options parameter.';
-          case 13:
+          case 14:
             if (hasApiKey) {
-              _context.next = 15;
+              _context.next = 16;
               break;
             }
             throw 'Please provide a value for the api.key field in the options parameter.';
-          case 15:
+          case 16:
             if (!(!hasGnosisSafeAddress && !hasAccountPk && !hasAccountAddress)) {
-              _context.next = 17;
+              _context.next = 18;
               break;
             }
             throw 'Please provide a value for the ethereum.account.address field in the options parameter.';
-          case 17:
+          case 18:
             if (!(hasGnosisSafePks && (hasWeb3Provider || hasAccountPk) || hasWeb3Provider && (hasGnosisSafePks || hasAccountPk) || hasAccountPk && (hasGnosisSafePks || hasWeb3Provider))) {
-              _context.next = 19;
+              _context.next = 20;
               break;
             }
             throw 'Please supply values for either account.privateKey, account.web3.provider, or account.multisig.';
-          case 19:
+          case 20:
             ethers = (options === null || options === void 0 ? void 0 : (_options$dependencies = options.dependencies) === null || _options$dependencies === void 0 ? void 0 : _options$dependencies.ethers) || _ethers.ethers;
             provider = options !== null && options !== void 0 && (_options$ethereum7 = options.ethereum) !== null && _options$ethereum7 !== void 0 && (_options$ethereum7$we = _options$ethereum7.web3) !== null && _options$ethereum7$we !== void 0 && _options$ethereum7$we.provider ? new _ethers.ethers.providers.Web3Provider(options === null || options === void 0 ? void 0 : (_options$ethereum8 = options.ethereum) === null || _options$ethereum8 === void 0 ? void 0 : (_options$ethereum8$we = _options$ethereum8.web3) === null || _options$ethereum8$we === void 0 ? void 0 : _options$ethereum8$we.provider) : new _ethers.ethers.providers.getDefaultProvider(options === null || options === void 0 ? void 0 : (_options$ethereum9 = options.ethereum) === null || _options$ethereum9 === void 0 ? void 0 : (_options$ethereum9$pr = _options$ethereum9.provider) === null || _options$ethereum9$pr === void 0 ? void 0 : _options$ethereum9$pr.url);
-            _context.next = 23;
+            _context.next = 24;
             return provider.getNetwork();
-          case 23:
+          case 24:
             network = _context.sent;
             config = new _config["default"]({
               merge: _lodash["default"],
@@ -180,7 +184,7 @@ var _default = {
               config: _objectSpread({}, options.config)
             }); // Create an account, which is either an EOA or Multisig (Gnosis)
             if (!((_options$ethereum10 = options.ethereum) !== null && _options$ethereum10 !== void 0 && (_options$ethereum10$a = _options$ethereum10.account) !== null && _options$ethereum10$a !== void 0 && (_options$ethereum10$a2 = _options$ethereum10$a.multisig) !== null && _options$ethereum10$a2 !== void 0 && _options$ethereum10$a2.gnosis)) {
-              _context.next = 42;
+              _context.next = 43;
               break;
             }
             gnosisOptions = (_options$ethereum11 = options.ethereum) === null || _options$ethereum11 === void 0 ? void 0 : (_options$ethereum11$a = _options$ethereum11.account) === null || _options$ethereum11$a === void 0 ? void 0 : (_options$ethereum11$a2 = _options$ethereum11$a.multisig) === null || _options$ethereum11$a2 === void 0 ? void 0 : _options$ethereum11$a2.gnosis;
@@ -192,12 +196,12 @@ var _default = {
               signerOrProvider: signer
             });
             safeAddress = gnosisOptions === null || gnosisOptions === void 0 ? void 0 : (_gnosisOptions$safe2 = gnosisOptions.safe) === null || _gnosisOptions$safe2 === void 0 ? void 0 : _gnosisOptions$safe2.address;
-            _context.next = 34;
+            _context.next = 35;
             return _safeCoreSdk["default"]["default"].create({
               ethAdapter: ethAdapter,
               safeAddress: safeAddress
             });
-          case 34:
+          case 35:
             safe = _context.sent;
             safeSigner = new _safeEthersAdapters.SafeEthersSigner(safe, service, provider);
             owners = privateKeys.map(function (privateKey) {
@@ -228,24 +232,24 @@ var _default = {
             account = new _account["default"]({
               account: (options === null || options === void 0 ? void 0 : (_options$dependencies2 = options.dependencies) === null || _options$dependencies2 === void 0 ? void 0 : _options$dependencies2.account) || multisig
             });
-            _context.next = 54;
+            _context.next = 55;
             break;
-          case 42:
+          case 43:
             pk = options === null || options === void 0 ? void 0 : (_options$ethereum12 = options.ethereum) === null || _options$ethereum12 === void 0 ? void 0 : (_options$ethereum12$a = _options$ethereum12.account) === null || _options$ethereum12$a === void 0 ? void 0 : _options$ethereum12$a.privateKey;
             address = (options === null || options === void 0 ? void 0 : (_options$ethereum13 = options.ethereum) === null || _options$ethereum13 === void 0 ? void 0 : (_options$ethereum13$a = _options$ethereum13.account) === null || _options$ethereum13$a === void 0 ? void 0 : _options$ethereum13$a.address) || _ethers.ethers.utils.computeAddress(pk);
             if (pk) {
-              _context.next = 50;
+              _context.next = 51;
               break;
             }
-            _context.next = 47;
+            _context.next = 48;
             return provider.getSigner(address);
-          case 47:
+          case 48:
             _context.t0 = _context.sent;
-            _context.next = 51;
+            _context.next = 52;
             break;
-          case 50:
-            _context.t0 = new _ethers.ethers.Wallet(pk, provider);
           case 51:
+            _context.t0 = new _ethers.ethers.Wallet(pk, provider);
+          case 52:
             signer = _context.t0;
             eoa = new _eoa["default"]({
               address: address,
@@ -255,7 +259,7 @@ var _default = {
             account = new _account["default"]({
               account: (options === null || options === void 0 ? void 0 : (_options$dependencies3 = options.dependencies) === null || _options$dependencies3 === void 0 ? void 0 : _options$dependencies3.account) || eoa
             });
-          case 54:
+          case 55:
             /////////////////////////////
             http = new _http["default"]({
               axios: _axios["default"]
@@ -268,13 +272,18 @@ var _default = {
               Number: Number,
               web3: _web["default"]
             });
+            storage = (options === null || options === void 0 ? void 0 : (_options$dependencies5 = options.dependencies) === null || _options$dependencies5 === void 0 ? void 0 : _options$dependencies5.storage) || new _storage["default"]({
+              storage: localStorage,
+              config: config
+            });
             auth = new _auth["default"]({
               http: http,
               account: account,
               config: config,
-              utils: utils
+              utils: utils,
+              storage: storage
             });
-            api = (options === null || options === void 0 ? void 0 : (_options$dependencies5 = options.dependencies) === null || _options$dependencies5 === void 0 ? void 0 : _options$dependencies5.api) || new _api["default"]({
+            api = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.api) || new _api["default"]({
               config: config,
               auth: auth,
               http: http
@@ -289,7 +298,7 @@ var _default = {
               config: config,
               helper: helper
             });
-            contractFactory = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.contractFactory) || new _factory["default"]({
+            contractFactory = (options === null || options === void 0 ? void 0 : (_options$dependencies7 = options.dependencies) === null || _options$dependencies7 === void 0 ? void 0 : _options$dependencies7.contractFactory) || new _factory["default"]({
               signer: signer,
               ethers: ethers,
               account: account,
@@ -405,7 +414,7 @@ var _default = {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 82:
+          case 84:
           case "end":
             return _context.stop();
         }

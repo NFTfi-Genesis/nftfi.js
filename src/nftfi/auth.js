@@ -4,12 +4,14 @@ class Auth {
   #config;
   #utils;
   #token;
+  #storage;
 
   constructor(options = {}) {
     this.#http = options?.http;
     this.#account = options?.account;
     this.#config = options?.config;
     this.#utils = options?.utils;
+    this.#storage = options?.storage;
     this.#token;
   }
 
@@ -29,22 +31,31 @@ class Auth {
       return this.#token;
     }
 
-    if (typeof global?.window?.localStorage !== 'undefined') {
-      const sdkToken = global.window.localStorage.getItem('sdkToken');
-      if (this._isTokenValid(sdkToken)) {
-        this.#token = sdkToken;
-        return this.#token;
-      }
+    const sdkToken = this.#storage.get(this.#config.auth.token.key);
+    if (this._isTokenValid(sdkToken)) {
+      this.#token = sdkToken;
+      return this.#token;
+    }
 
-      const dappToken = global?.window?.localStorage.getItem('jwtToken');
-      if (this._isTokenValid(dappToken)) {
-        global.window.localStorage.setItem('sdkToken', dappToken);
-        this.#token = dappToken;
+    const sdkRefreshToken = this.#storage.get(this.#config.auth.refreshToken.key);
+    if (sdkRefreshToken) {
+      const uri = `${this.#config.api.baseURI}/authorization/refresh-token`;
+      const headers = {
+        'X-API-Key': this.#config.api.key
+      };
+
+      const result = await this.#http.post(uri, { refreshToken: sdkRefreshToken }, { headers });
+      const token = result?.data?.result?.token;
+      const refreshToken = result?.data?.result?.refreshToken;
+      if (this._isTokenValid(token)) {
+        this.#storage.set(this.#config.auth.token.key, token);
+        this.#storage.set(this.#config.auth.refreshToken.key, refreshToken);
+
+        this.#token = sdkToken;
         return this.#token;
       }
     }
 
-    // Request token
     const nonce = this.#utils.getNonce();
     const accountAddress = this.#account.getAuthAddress();
     const message = `This message proves you own this wallet address : ${this.#account.getAuthAddress()}`;
@@ -62,14 +73,12 @@ class Auth {
     const headers = {
       'X-API-Key': this.#config.api.key
     };
-    const result = await this.#http.post(uri, body, {
-      headers
-    });
+    const result = await this.#http.post(uri, body, { headers });
     const token = result?.data?.result?.token;
-    if (token) {
-      if (typeof global?.window?.localStorage !== 'undefined') {
-        global.window.localStorage.setItem('sdkToken', token);
-      }
+    const refreshToken = result?.data?.result?.refreshToken;
+    if (token && refreshToken) {
+      this.#storage.set(this.#config.auth.token.key, token);
+      this.#storage.set(this.#config.auth.refreshToken.key, refreshToken);
       this.#token = token;
     } else {
       throw result?.data?.message;

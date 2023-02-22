@@ -95,6 +95,10 @@ const baseConfig = {
       address: '',
       abi: []
     }
+  },
+  auth: {
+    token: { key: '' },
+    refreshToken: { key: '' }
   }
 };
 
@@ -181,6 +185,8 @@ mainnetConfig.immutable.v1.abi = [
   'function bundleOfImmutable(uint256) view returns (uint256)',
   'function withdraw(uint256 immutableId, address to)'
 ];
+mainnetConfig.auth.token.key = 'nftfiSdkToken';
+mainnetConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 
 const rinkebyConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 rinkebyConfig.chainId = 4;
@@ -324,6 +330,8 @@ goerliConfig.immutable.v1.abi = [
   'function bundleOfImmutable(uint256) view returns (uint256)',
   'function withdraw(uint256 immutableId, address to)'
 ];
+goerliConfig.auth.token.key = 'nftfiSdkToken';
+goerliConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 
 const baseConfigs = {
   [mainnetConfig.chainId]: mainnetConfig,

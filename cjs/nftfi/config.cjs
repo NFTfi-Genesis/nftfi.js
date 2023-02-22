@@ -110,6 +110,14 @@ var baseConfig = {
       address: '',
       abi: []
     }
+  },
+  auth: {
+    token: {
+      key: ''
+    },
+    refreshToken: {
+      key: ''
+    }
   }
 };
 var mainnetConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
@@ -151,6 +159,8 @@ mainnetConfig.bundler.v1.abi = ['event Transfer(address indexed from, address in
 mainnetConfig.immutable.v1.name = 'v1.immutable.bundle';
 mainnetConfig.immutable.v1.address = '0x9a129032F01EB4dDD764c1777c81b771C34a2fbE';
 mainnetConfig.immutable.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function bundleOfImmutable(uint256) view returns (uint256)', 'function withdraw(uint256 immutableId, address to)'];
+mainnetConfig.auth.token.key = 'nftfiSdkToken';
+mainnetConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 var rinkebyConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 rinkebyConfig.chainId = 4;
 rinkebyConfig.website.baseURI = 'https://integration.nftfi.com';
@@ -214,6 +224,8 @@ goerliConfig.bundler.v1.abi = ['event Transfer(address indexed from, address ind
 goerliConfig.immutable.v1.name = 'v1.immutable.bundle';
 goerliConfig.immutable.v1.address = '0x69a0D346df2659dbb4BcE4b9276DD76B059e8EFc';
 goerliConfig.immutable.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function bundleOfImmutable(uint256) view returns (uint256)', 'function withdraw(uint256 immutableId, address to)'];
+goerliConfig.auth.token.key = 'nftfiSdkToken';
+goerliConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 var baseConfigs = (_baseConfigs = {}, (0, _defineProperty2["default"])(_baseConfigs, mainnetConfig.chainId, mainnetConfig), (0, _defineProperty2["default"])(_baseConfigs, rinkebyConfig.chainId, rinkebyConfig), (0, _defineProperty2["default"])(_baseConfigs, goerliConfig.chainId, goerliConfig), _baseConfigs);
 var Config = /*#__PURE__*/(0, _createClass2["default"])(function Config() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};

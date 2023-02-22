@@ -31,6 +31,7 @@ import Helper from './nftfi/shared/helper.js';
 import Result from './nftfi/result.js';
 import Error from './nftfi/error.js';
 import NFTfi from './nftfi/index.js';
+import Storage from './nftfi/storage.js';
 
 import { SafeEthersSigner, SafeService } from '@safe-global/safe-ethers-adapters';
 import Safe from '@safe-global/safe-core-sdk';
@@ -56,6 +57,8 @@ export default {
     const hasAccountAddress = options?.ethereum?.account?.address;
     const hasWeb3Provider = options?.ethereum?.web3?.provider;
     const hasProviderUrl = options?.ethereum?.provider?.url;
+    const localStorage =
+      typeof window !== 'undefined' && typeof window?.localStorage !== 'undefined' ? window.localStorage : null;
 
     if (!hasWeb3Provider && !hasProviderUrl) {
       throw 'Please provide a value for the ethereum.provider.url field in the options parameter.';
@@ -139,7 +142,8 @@ export default {
     /////////////////////////////
     const http = new Http({ axios });
     const utils = options?.dependencies?.utils || new Utils({ ethers, BN, Date, Math, Number, web3 });
-    const auth = new Auth({ http, account, config, utils });
+    const storage = options?.dependencies?.storage || new Storage({ storage: localStorage, config });
+    const auth = new Auth({ http, account, config, utils, storage });
     const api = options?.dependencies?.api || new Api({ config, auth, http });
     const error = new Error();
     const result = new Result();

@@ -540,7 +540,7 @@ var Bundles = /*#__PURE__*/function () {
             return {
               tokenContract: tokenContract.contract,
               ids: ids.map(function (id) {
-                return id.toNumber();
+                return id.toString();
               })
             };
           });

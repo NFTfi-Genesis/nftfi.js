@@ -313,7 +313,7 @@ class Bundles {
           return Promise.all(elementTokenIdPromises).then(ids => {
             return {
               tokenContract: tokenContract.contract,
-              ids: ids.map(id => id.toNumber())
+              ids: ids.map(id => id.toString())
             };
           });
         });
