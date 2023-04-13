@@ -6,7 +6,7 @@ async function run() {
   // Init the NFTfi SDK
   const borrower = await NFTfi.init({
     config: {
-      api: { key: process.env.NFTFI_SDK_DEMO_API_KEY }
+      api: { key: process.env.NFTFI_SDK_API_KEY }
     },
     ethereum: {
       account: { privateKey: process.env.NFTFI_SDK_ETHEREUM_BORROWER_ACCOUNT_PRIVATE_KEY },
@@ -36,7 +36,7 @@ async function run() {
       nftfi: { contract: { name: loan.nftfi.contract.name } }
     });
     if (result.success === true) {
-      console.log('[INFO] loan has be repaid');
+      console.log('[INFO] loan has been repaid');
     } else {
       console.log('[INFO] loan could not be repaid');
     }

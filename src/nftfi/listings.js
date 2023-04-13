@@ -51,7 +51,6 @@ class Listings {
       }
     });
     let listings = response['results'];
-
     listings = listings.map(this.#helper.addCurrencyUnit);
     return listings;
   }

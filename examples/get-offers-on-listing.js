@@ -42,7 +42,9 @@ async function run() {
       for (var i = 0; i < offers.length; i++) {
         const offer = offers[i];
         const currency = offer.terms.loan.currency;
-        const [ticker] = Object.keys(nftfi.config.erc20).filter(key => nftfi.config.erc20[key].address === currency);
+        const [ticker] = Object.keys(nftfi.config.erc20).filter(
+          key => nftfi.config.erc20[key].address === currency.toLowerCase()
+        );
         const unit = nftfi.config.erc20[ticker]?.unit;
         const duration = Math.floor(offer.terms.loan.duration / 86400);
         const repayment = nftfi.utils.formatUnits(offer.terms.loan.repayment, unit);

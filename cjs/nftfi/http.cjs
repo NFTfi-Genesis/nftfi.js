@@ -110,18 +110,19 @@ var Http = /*#__PURE__*/function () {
               return (0, _classPrivateFieldGet2["default"])(this, _axios).post(uri, body, options);
             case 4:
               result = _context3.sent;
-              return _context3.abrupt("return", result);
-            case 8:
-              _context3.prev = 8;
+              _context3.next = 10;
+              break;
+            case 7:
+              _context3.prev = 7;
               _context3.t0 = _context3["catch"](1);
               result = _context3.t0.response;
-            case 11:
+            case 10:
               return _context3.abrupt("return", result);
-            case 12:
+            case 11:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[1, 8]]);
+        }, _callee3, this, [[1, 7]]);
       }));
       function post(_x3, _x4) {
         return _post.apply(this, arguments);

@@ -22,6 +22,7 @@ var _offersHelper = /*#__PURE__*/new WeakMap();
 var _loans = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
 var _validator = /*#__PURE__*/new WeakMap();
+var _requests = /*#__PURE__*/new WeakMap();
 var _result = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
 var _helper = /*#__PURE__*/new WeakMap();
@@ -57,6 +58,10 @@ var Offers = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _requests, {
+      writable: true,
+      value: void 0
+    });
     _classPrivateFieldInitSpec(this, _result, {
       writable: true,
       value: void 0
@@ -75,6 +80,7 @@ var Offers = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _loans, options === null || options === void 0 ? void 0 : options.loans);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _validator, options === null || options === void 0 ? void 0 : options.offersValidator);
+    (0, _classPrivateFieldSet2["default"])(this, _requests, options === null || options === void 0 ? void 0 : options.offersRequests);
     (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
     (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
     (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
@@ -429,6 +435,11 @@ var Offers = /*#__PURE__*/function () {
       }
       return revoke;
     }()
+  }, {
+    key: "requests",
+    get: function get() {
+      return (0, _classPrivateFieldGet2["default"])(this, _requests);
+    }
   }]);
   return Offers;
 }();

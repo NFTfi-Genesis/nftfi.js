@@ -84,6 +84,7 @@ Class for working with bundles.
     * [`.seal(options)`](#Bundles+seal) ⇒ <code>Object</code>
     * [`.empty(options)`](#Bundles+empty) ⇒ <code>Object</code>
     * [`.elements(options)`](#Bundles+elements) ⇒ <code>Object</code>
+    * [`.migrate(options)`](#Bundles+migrate) ⇒ <code>Object</code>
 
 
 * * *
@@ -97,7 +98,8 @@ Mint a new bundle.
 **Returns**: <code>Object</code> - An object containing information about the minted bundle.  
 **Example**  
 ```js
-// Mint a new bundle.
+// Mint a new v1.1 bundle.
+// NOTE: v1 bundles have been deprecated, therefore this method wont mint a v1 bundle anymore.
 const bundle = await nftfi.bundles.mint();
 ```
 
@@ -106,30 +108,36 @@ const bundle = await nftfi.bundles.mint();
 <a name="Bundles+add"></a>
 
 #### `bundles.add(options)` ⇒ <code>Object</code>
-Add one or more elements to a bundle.
+Adds elements to a bundle.
 
 **Kind**: instance method of [<code>Bundles</code>](#Bundles)  
-**Returns**: <code>Object</code> - An object containing information about the bundle and added elements.  
+**Returns**: <code>Object</code> - An object containing information about the updated bundle.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> | An object containing options for the add operation. |
-| options.bundle | <code>Object</code> | An object containing the ID of the bundle to add elements to. |
-| options.bundle.id | <code>string</code> | The ID of the bundle to add elements to. |
-| options.elements | <code>Array.&lt;Object&gt;</code> | An array of objects containing information about the elements to add. |
-| options.elements[].token | <code>Object</code> | An object containing the address and IDs of the token contract and the elements to add. |
-| options.elements[].token.address | <code>string</code> | The address of the token contract. |
-| options.elements[].token.ids | <code>Array.&lt;string&gt;</code> | An array of strings containing the IDs of the elements to add. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to which elements will be added. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used for adding elements to the bundle. |
+| options.elements | <code>Array.&lt;Object&gt;</code> | An array of objects representing the elements to be added. |
+| options.elements[].token | <code>Object</code> | An object containing information about the token associated with the element. |
+| options.elements[].token.address | <code>string</code> | The address of the token contract associated with the element. |
+| options.elements[].token.ids | <code>Array.&lt;string&gt;</code> | An array of token IDs associated with the element. |
 
 **Example**  
 ```js
-// Add elements from multiple token contracts to a bundle.
+// Add elements to a v1.1 bundle.
+// NOTE: v1 bundles have been deprecated. You can migrate your v1 bundle to a v1.1 bundle using `bundles.migrate()`, then add elements afterwards.
 const bundle = await nftfi.bundles.add({
-  bundle: { id: '123' },
+  bundle: { id: '42' },
   elements: [
     { token: { address: '0xabc', ids: ['1', '2'] } },
     { token: { address: '0xdef', ids: ['3'] } }
-  ]
+  ],
+  nftfi: {
+    contract: {
+      name: 'v1-1.bundler'
+    }
+  }
 });
 ```
 
@@ -138,30 +146,39 @@ const bundle = await nftfi.bundles.add({
 <a name="Bundles+remove"></a>
 
 #### `bundles.remove(options)` ⇒ <code>Object</code>
-Remove one or more elements from a bundle.
+Removes elements from a bundle.
 
 **Kind**: instance method of [<code>Bundles</code>](#Bundles)  
-**Returns**: <code>Object</code> - An object containing information about the bundle and removed elements.  
+**Returns**: <code>Object</code> - An object containing information about the updated bundle.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> | An object containing options for the remove operation. |
-| options.bundle | <code>Object</code> | An object containing the ID of the bundle to remove elements from. |
-| options.bundle.id | <code>string</code> | The ID of the bundle to remove elements from. |
-| options.elements | <code>Array.&lt;Object&gt;</code> | An array of objects containing information about the elements to remove. |
-| options.elements[].token | <code>Object</code> | An object containing the address and IDs of the token contract and the elements to remove. |
-| options.elements[].token.address | <code>string</code> | The address of the token contract. |
-| options.elements[].token.ids | <code>Array.&lt;string&gt;</code> | An array of strings containing the IDs of the elements to remove. |
+| options.bundle.id | <code>string</code> | The ID of the bundle from which elements will be removed. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used for removing elements from the bundle. |
+| options.elements | <code>Array.&lt;Object&gt;</code> | An array of objects representing the elements to be removed. |
+| options.elements[].token | <code>Object</code> | An object containing information about the token associated with the element. |
+| options.elements[].token.address | <code>string</code> | The address of the token contract associated with the element. |
+| options.elements[].token.ids | <code>Array.&lt;string&gt;</code> | An array of token IDs associated with the element. |
 
 **Example**  
 ```js
-// Removes elements from multiple token contracts from a bundle.
+// Remove elements from a v1.1 bundle.
 const bundle = await nftfi.bundles.remove({
-  bundle: { id: '123' },
+  bundle: { id: '42' },
   elements: [
-    { token: { address: '0xabc', ids: ['1', '2'] } },
-    { token: { address: '0xdef', ids: ['3'] } }
-  ]
+    {
+      token: {
+        address: '0xabc',
+        ids: ['1', '2', '3']
+      }
+    }
+  ],
+  nftfi: {
+    contract: {
+      name: 'v1-1.bundler'
+    }
+  }
 });
 ```
 
@@ -170,22 +187,28 @@ const bundle = await nftfi.bundles.remove({
 <a name="Bundles+seal"></a>
 
 #### `bundles.seal(options)` ⇒ <code>Object</code>
-Seal a bundle, making it immutable.
+Seals a bundle, transferring it to an immutable contract, and mints a new immutable.
 
 **Kind**: instance method of [<code>Bundles</code>](#Bundles)  
-**Returns**: <code>Object</code> - An object containing information about the immutable contract.  
+**Returns**: <code>Object</code> - A promise that resolves to an object containing information about the newly minted immutable object.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> | An object containing options for the seal operation. |
-| options.bundle | <code>Object</code> | An object containing the ID of the bundle to seal. |
-| options.bundle.id | <code>string</code> | The ID of the bundle to seal. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to be sealed. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used for sealing the bundle. |
 
 **Example**  
 ```js
-// Seals a bundle.
+// Seal a v1.1 bundle and mint a new v1.1 immutable.
+// NOTE: v1 bundles have been deprecated. You can migrate your v1 bundle to a v1.1 bundle using `bundles.migrate()`, then seal afterwards.
 const immutable = await nftfi.bundles.seal({
-  bundle: { id: '123' }
+  bundle: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1-1.bundler'
+    }
+  }
 });
 ```
 
@@ -194,22 +217,45 @@ const immutable = await nftfi.bundles.seal({
 <a name="Bundles+empty"></a>
 
 #### `bundles.empty(options)` ⇒ <code>Object</code>
-Empty a bundle.
+Empties a bundle, transferring its contents to your account.
 
 **Kind**: instance method of [<code>Bundles</code>](#Bundles)  
-**Returns**: <code>Object</code> - An object containing a success property.  
+**Returns**: <code>Object</code> - An object containing the status of the empty operation.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> | An object containing options for the empty operation. |
-| options.bundle | <code>Object</code> | An object containing the ID of the bundle to empty. |
-| options.bundle.id | <code>string</code> | The ID of the bundle to empty. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to be emptied. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used for emptying the bundle. |
 
 **Example**  
 ```js
-// Empties a bundle.
-const result = await nftfi.bundles.empty({
-  bundle: { id: '123' }
+// NOTE: v1 bundles are deprecated, after emptying one it will be destroyed and you will not be able to use it anymore.
+// Approve the migration contract to handle your v1 bundle.
+const approvalResult = await nftfi.erc721.setApprovalForAll({
+  token: { address: nftfi.config.bundler.v1.address },
+  nftfi: { contract: { name: 'v1.bundler.migrate' } }
+});
+// Empty the v1 bundle and transfer its contents to your account.
+const response = await nftfi.bundles.empty({
+  bundle: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1.bundler'
+    }
+  }
+});
+```
+**Example**  
+```js
+// Empty a v1.1 bundle and transfer its contents to your account.
+const response = await nftfi.bundles.empty({
+  bundle: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1-1.bundler'
+    }
+  }
 });
 ```
 
@@ -218,24 +264,73 @@ const result = await nftfi.bundles.empty({
 <a name="Bundles+elements"></a>
 
 #### `bundles.elements(options)` ⇒ <code>Object</code>
-Get the elements inside a bundle.
+Retrieves the elements in a bundle.
 
 **Kind**: instance method of [<code>Bundles</code>](#Bundles)  
-**Returns**: <code>Object</code> - An object containing information about the bundle and an array of elements.  
+**Returns**: <code>Object</code> - An object containing information about the bundle and its elements.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| options | <code>Object</code> | An object containing options for the elements operation. |
-| options.bundle | <code>Object</code> | An object containing the ID of the bundle to get elements for. |
-| options.bundle.id | <code>string</code> | The ID of the bundle to get elements for. |
+| options | <code>Object</code> | An object containing options for retrieving the elements. |
+| options.bundle.id | <code>string</code> | The ID of the bundle whose elements are to be retrieved. |
+| options.nftfi.contract | <code>Object</code> | An object containing information about the contract. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used for retrieving the elements. |
 
 **Example**  
 ```js
-// Gets the elements in a bundle.
-const bundle = await nftfi.bundles.elements({
-  bundle: { id: '123' }
+// Get the elements of a bundle.
+const elements = await nftfi.bundles.elements({
+  bundle: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1-1.bundler'
+    }
+  }
 });
-console.log(bundle.data.elements);
+```
+
+* * *
+
+<a name="Bundles+migrate"></a>
+
+#### `bundles.migrate(options)` ⇒ <code>Object</code>
+Migrates a bundle from one bundler contract to another.
+
+**Kind**: instance method of [<code>Bundles</code>](#Bundles)  
+**Returns**: <code>Object</code> - An object containing information about the migrated bundle.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for migrating the bundle. |
+| options.bundle.id | <code>string</code> | The ID of the bundle to be migrated. |
+| options.from.nftfi.contract.name | <code>string</code> | Name of the source contract. |
+| options.to.nftfi.contract.name | <code>string</code> | Name of the destination contract. |
+
+**Example**  
+```js
+// Approve the v1 bundler contract with the v1 migration contract.
+const approvalResult = await nftfi.erc721.setApprovalForAll({
+  token: { address: nftfi.config.bundler.v1.address },
+  nftfi: { contract: { name: 'v1.bundler.migrate' } }
+});
+// Migrate a bundle from v1 bundle to v1.1 bundle.
+const migrateResult = await nftfi.bundles.migrate({
+  bundle: { id: '42' },
+  from: {
+    nftfi: {
+      contract: {
+        name: 'v1.bundler'
+      }
+    }
+  },
+  to: {
+    nftfi: {
+      contract: {
+        name: 'v1-1.bundler'
+      }
+    }
+  }
+});
 ```
 
 * * *
@@ -459,6 +554,8 @@ Class for working with immutables.
 * [Immutables](#Immutables)
     * [`.unseal(options)`](#Immutables+unseal) ⇒ <code>Object</code>
     * [`.getBundle(options)`](#Immutables+getBundle) ⇒ <code>Object</code>
+    * [`.empty(options)`](#Immutables+empty) ⇒ <code>Object</code>
+    * [`.migrate(options)`](#Immutables+migrate) ⇒ <code>Object</code>
 
 
 * * *
@@ -466,7 +563,7 @@ Class for working with immutables.
 <a name="Immutables+unseal"></a>
 
 #### `immutables.unseal(options)` ⇒ <code>Object</code>
-Unseal an immutable.
+Unseals an immutable bundle.
 
 **Kind**: instance method of [<code>Immutables</code>](#Immutables)  
 **Returns**: <code>Object</code> - An object containing information about the bundle that was released from the immutable.  
@@ -474,14 +571,21 @@ Unseal an immutable.
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>Object</code> | An object containing options for the unseal operation. |
-| options.immutable | <code>Object</code> | An object containing the ID of the immutable bundle to unseal. |
 | options.immutable.id | <code>string</code> | The ID of the immutable bundle to unseal. |
+| options.nftfi.contract | <code>Object</code> | An object containing information about the contract used to facilitate the bundle. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used to facilitate the bundle: `v1.immutable.bundle` (deprecated), `v1-1.immutable.bundle`. |
 
 **Example**  
 ```js
-// Unseal an immutable bundle.
+// Unseal a v1.1 immutable bundle.
+// NOTE: v1 immutables have been deprecated. You must call `nftfi.immutables.empty()` instead, or you can migrate your v1 immutable to a v1.1 immutable using `nftfi.immutables.migrate()`, then unseal it.
 const bundle = await nftfi.immutables.unseal({
-  immutable: { id: '123' }
+  immutable: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1-1.immutable.bundle'
+    }
+  }
 });
 ```
 
@@ -490,22 +594,133 @@ const bundle = await nftfi.immutables.unseal({
 <a name="Immutables+getBundle"></a>
 
 #### `immutables.getBundle(options)` ⇒ <code>Object</code>
-Get a bundle.
+Retrieves a bundle of an immutable.
 
 **Kind**: instance method of [<code>Immutables</code>](#Immutables)  
 **Returns**: <code>Object</code> - An object containing information about an bundle.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| options | <code>Object</code> | An object containing options for the get operation. |
-| options.immutable | <code>Object</code> | An object containing the ID of the immutable to get the corresponding bundle for. |
-| options.immutable.id | <code>string</code> | The ID of the immutable to get the corresponding bundle for. |
+| options | <code>Object</code> | An object containing options for the getBundle operation. |
+| options.immutable.id | <code>string</code> | The ID of the immutable object. |
+| options.nftfi.contract | <code>Object</code> | An object containing information about the contract used to facilitate the bundle. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used to facilitate the bundle: `v1.immutable.bundle` (deprecated), `v1-1.immutable.bundle`. |
 
 **Example**  
 ```js
-// Get the corresponding immutable for a given bundle.
+// Get a bundle of a v1 immutable.
 const bundle = await nftfi.immutables.getBundle({
-  immutable: { id: '123' }
+  immutable: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1.immutable.bundle'
+    }
+  }
+});
+```
+**Example**  
+```js
+// Get a bundle of a v1.1 immutable.
+const bundle = await nftfi.immutables.getBundle({
+  immutable: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1-1.immutable.bundle'
+    }
+  }
+});
+```
+
+* * *
+
+<a name="Immutables+empty"></a>
+
+#### `immutables.empty(options)` ⇒ <code>Object</code>
+Empties an immutable according to the specified contract.
+
+**Kind**: instance method of [<code>Immutables</code>](#Immutables)  
+**Returns**: <code>Object</code> - An object containing the success status of the empty operation.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the empty operation. |
+| options.immutable.id | <code>string</code> | The ID of the immutable object to be emptied. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used for emptying the immutable object: `v1.immutable.bundle`, `v1-1.immutable.bundle`. |
+
+**Example**  
+```js
+// NOTE: v1 immutables have been deprecated. If you empty it you will also burn the bundle after the NFTs have been transferred back into your account. You could optionally migrate your v1 immutable to a v1.1 immutable using `nftfi.immutables.migrate()`, then empty it.
+// Approve the migration contract to handle your v1 immutable.
+const approvalResult = await nftfi.erc721.setApprovalForAll({
+  token: { address: nftfi.config.immutable.v1.address },
+  nftfi: { contract: { name: 'v1.bundler.migrate' } }
+});
+// Empty the v1 immutable and transfer its contents to your account.
+const result = await nftfi.immutables.empty({
+  immutable: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1.immutable.bundle'
+    }
+  }
+});
+```
+**Example**  
+```js
+// Empty an v1.1 immutable and transfer its contents to your account.
+const result = await nftfi.immutables.empty({
+  immutable: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1-1.immutable.bundle'
+    }
+  }
+});
+```
+
+* * *
+
+<a name="Immutables+migrate"></a>
+
+#### `immutables.migrate(options)` ⇒ <code>Object</code>
+Migrates an immutable from one contract to another.
+
+**Kind**: instance method of [<code>Immutables</code>](#Immutables)  
+**Returns**: <code>Object</code> - An object containing information about the migrated immutable object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the migration operation. |
+| options.immutable.id | <code>string</code> | The ID of the immutable object to be migrated. |
+| options.from.nftfi.contract.name | <code>string</code> | Name of the source immutable contract. |
+| options.to.nftfi.contract.name | <code>string</code> | Name of the destination immutable contract. |
+
+**Example**  
+```js
+// Approve the v1 immutable contract with the v1 migration contract.
+const approvalResult = await nftfi.erc721.setApprovalForAll({
+  token: {
+    address: nftfi.config.immutable.v1.address
+  },
+  nftfi: { contract: { name: 'v1.bundler.migrate' } }
+});
+// Migrate an immutable from a v1 contract to a v1.1 contract.
+const migrateResult = await nftfi.immutables.migrate({
+  immutable: { id: '42' },
+  from: {
+    nftfi: {
+      contract: {
+        name: 'v1.immutable.bundle'
+      }
+    }
+  },
+  to: {
+    nftfi: {
+      contract: {
+        name: 'v1-1.immutable.bundle'
+      }
+    }
+  }
 });
 ```
 

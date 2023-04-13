@@ -117,7 +117,8 @@ class OffersHelper {
         fee: {
           bps: this.#config.loan.adminFeeInBasisPoints
         }
-      }
+      },
+      metadata: options.metadata
     };
     offer['signature'] = await this.#signatures.getV2OfferSignature({
       ...options,
@@ -165,7 +166,8 @@ class OffersHelper {
         fee: {
           bps: this.#config.loan.adminFeeInBasisPoints
         }
-      }
+      },
+      metadata: options.metadata
     };
     offer.signature = await this.#signatures.getV2FixedCollectionOfferSignature({
       ...options,

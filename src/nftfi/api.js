@@ -10,7 +10,7 @@ class API {
   }
 
   async get(options) {
-    const uri = `${this.#config.api.baseURI}/${options.uri}`;
+    const uri = this.concatUri(options.uri);
     const params = options?.params;
     const authToken = await this.#auth.getToken();
     const headers = {
@@ -25,7 +25,7 @@ class API {
   }
 
   async post(options) {
-    const uri = `${this.#config.api.baseURI}/${options.uri}`;
+    const uri = this.concatUri(options.uri);
     const authToken = await this.#auth.getToken();
     const headers = {
       'X-API-Key': this.#config.api.key,
@@ -38,7 +38,7 @@ class API {
   }
 
   async delete(options) {
-    const uri = `${this.#config.api.baseURI}/${options.uri}`;
+    const uri = this.concatUri(options.uri);
     const authToken = await this.#auth.getToken();
     const headers = {
       'X-API-Key': this.#config.api.key,
@@ -48,6 +48,11 @@ class API {
       headers
     });
     return result.data;
+  }
+
+  concatUri(path) {
+    const url = new URL(path, this.#config.api.baseURI);
+    return url.href;
   }
 }
 

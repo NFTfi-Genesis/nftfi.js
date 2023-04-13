@@ -12,6 +12,7 @@ var _config = _interopRequireDefault(require("./nftfi/config.cjs"));
 var _account = _interopRequireDefault(require("./nftfi/account.cjs"));
 var _http = _interopRequireDefault(require("./nftfi/http.cjs"));
 var _utils = _interopRequireDefault(require("./nftfi/utils.cjs"));
+var _websocket = _interopRequireDefault(require("./nftfi/websocket.cjs"));
 var _auth = _interopRequireDefault(require("./nftfi/auth.cjs"));
 var _api = _interopRequireDefault(require("./nftfi/api.cjs"));
 var _listings = _interopRequireDefault(require("./nftfi/listings.cjs"));
@@ -19,6 +20,8 @@ var _offers = _interopRequireDefault(require("./nftfi/offers.cjs"));
 var _signatures = _interopRequireDefault(require("./nftfi/offers/signatures.cjs"));
 var _helper = _interopRequireDefault(require("./nftfi/offers/helper.cjs"));
 var _validation = _interopRequireDefault(require("./nftfi/offers/validation.cjs"));
+var _requests = _interopRequireDefault(require("./nftfi/offers/requests.cjs"));
+var _events = _interopRequireDefault(require("./nftfi/events.cjs"));
 var _loans = _interopRequireDefault(require("./nftfi/loans.cjs"));
 var _index = _interopRequireDefault(require("./nftfi/loans/fixed/index.cjs"));
 var _index2 = _interopRequireDefault(require("./nftfi/loans/fixed/v1/index.cjs"));
@@ -51,6 +54,7 @@ var _web = _interopRequireDefault(require("web3"));
 var _axios = _interopRequireDefault(require("axios"));
 var _lodash = _interopRequireDefault(require("lodash.merge"));
 var _lodash2 = _interopRequireDefault(require("lodash.set"));
+var _socket = _interopRequireDefault(require("socket.io-client"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var _default = {
@@ -98,6 +102,7 @@ var _default = {
         pk,
         address,
         eoa,
+        websocket,
         http,
         utils,
         storage,
@@ -119,11 +124,13 @@ var _default = {
         erc20,
         offersHelper,
         offersValidator,
+        offersRequests,
         offers,
         erc721,
         immutables,
         bundlesHelper,
         bundles,
+        events,
         nftfi,
         _args = arguments;
       return _regenerator["default"].wrap(function _callee$(_context) {
@@ -260,7 +267,10 @@ var _default = {
               account: (options === null || options === void 0 ? void 0 : (_options$dependencies3 = options.dependencies) === null || _options$dependencies3 === void 0 ? void 0 : _options$dependencies3.account) || eoa
             });
           case 55:
-            /////////////////////////////
+            websocket = new _websocket["default"]({
+              config: config,
+              io: _socket["default"]
+            });
             http = new _http["default"]({
               axios: _axios["default"]
             });
@@ -361,16 +371,24 @@ var _default = {
               config: config,
               contractFactory: contractFactory
             });
+            offersRequests = new _requests["default"]({
+              api: api,
+              account: account,
+              config: config,
+              result: result,
+              error: error
+            });
             offers = new _offers["default"]({
               api: api,
               account: account,
               offersHelper: offersHelper,
               offersValidator: offersValidator,
+              offersRequests: offersRequests,
               loans: loans,
               config: config,
-              helper: helper,
               result: result,
-              error: error
+              error: error,
+              helper: helper
             });
             erc721 = new _erc2["default"]({
               config: config,
@@ -379,10 +397,10 @@ var _default = {
             });
             immutables = new _immutables["default"]({
               config: config,
-              contractFactory: contractFactory,
               account: account,
               error: error,
-              result: result
+              result: result,
+              contractFactory: contractFactory
             });
             bundlesHelper = new _helper2["default"]({
               config: config,
@@ -391,12 +409,14 @@ var _default = {
             });
             bundles = new _bundles["default"]({
               config: config,
-              contractFactory: contractFactory,
               account: account,
               error: error,
               result: result,
-              immutables: immutables,
-              helper: bundlesHelper
+              helper: bundlesHelper,
+              contractFactory: contractFactory
+            });
+            events = new _events["default"]({
+              websocket: websocket
             });
             nftfi = new _index7["default"]({
               config: config,
@@ -408,13 +428,14 @@ var _default = {
               erc721: erc721,
               bundles: bundles,
               immutables: immutables,
+              events: events,
               utils: utils
             });
             if ((options === null || options === void 0 ? void 0 : (_options$logging = options.logging) === null || _options$logging === void 0 ? void 0 : _options$logging.verbose) === true) {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 84:
+          case 87:
           case "end":
             return _context.stop();
         }

@@ -43,14 +43,12 @@ class Auth {
       const headers = {
         'X-API-Key': this.#config.api.key
       };
-
       const result = await this.#http.post(uri, { refreshToken: sdkRefreshToken }, { headers });
       const token = result?.data?.result?.token;
       const refreshToken = result?.data?.result?.refreshToken;
       if (this._isTokenValid(token)) {
         this.#storage.set(this.#config.auth.token.key, token);
         this.#storage.set(this.#config.auth.refreshToken.key, refreshToken);
-
         this.#token = sdkToken;
         return this.#token;
       }

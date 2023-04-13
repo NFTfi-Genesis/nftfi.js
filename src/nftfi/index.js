@@ -9,6 +9,7 @@ class NFTfi {
   bundles;
   immutables;
   utils;
+  events;
 
   constructor(options = {}) {
     this.config = options.config;
@@ -21,6 +22,7 @@ class NFTfi {
     this.bundles = options?.bundles;
     this.immutables = options?.immutables;
     this.utils = options.utils;
+    this.events = options.events;
   }
 }
 

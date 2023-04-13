@@ -2,6 +2,7 @@ import Config from './nftfi/config.js';
 import Account from './nftfi/account.js';
 import Http from './nftfi/http.js';
 import Utils from './nftfi/utils.js';
+import Websocket from './nftfi/websocket.js';
 import Auth from './nftfi/auth.js';
 import Api from './nftfi/api.js';
 import Listings from './nftfi/listings.js';
@@ -9,6 +10,8 @@ import Offers from './nftfi/offers.js';
 import OffersSignatures from './nftfi/offers/signatures.js';
 import OffersHelper from './nftfi/offers/helper.js';
 import OffersValidator from './nftfi/offers/validation.js';
+import OffersRequests from './nftfi/offers/requests.js';
+import Events from './nftfi/events.js';
 import Loans from './nftfi/loans.js';
 import LoansFixed from './nftfi/loans/fixed/index.js';
 import LoansFixedV1 from './nftfi/loans/fixed/v1/index.js';
@@ -42,6 +45,7 @@ import web3 from 'web3';
 import axios from 'axios';
 import merge from 'lodash.merge';
 import set from 'lodash.set';
+import io from 'socket.io-client';
 
 export default {
   init: async function (options = {}) {
@@ -139,7 +143,8 @@ export default {
       const eoa = new EOA({ address, signer, provider });
       account = new Account({ account: options?.dependencies?.account || eoa });
     }
-    /////////////////////////////
+
+    const websocket = new Websocket({ config, io });
     const http = new Http({ axios });
     const utils = options?.dependencies?.utils || new Utils({ ethers, BN, Date, Math, Number, web3 });
     const storage = options?.dependencies?.storage || new Storage({ storage: localStorage, config });
@@ -168,12 +173,37 @@ export default {
     const erc20 = new Erc20({ config, account, contractFactory, BN });
     const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account });
     const offersValidator = new OffersValidator({ erc20, ethers, config, contractFactory });
-    const offers = new Offers({ api, account, offersHelper, offersValidator, loans, config, helper, result, error });
+    const offersRequests = new OffersRequests({ api, account, config, result, error });
+    const offers = new Offers({
+      api,
+      account,
+      offersHelper,
+      offersValidator,
+      offersRequests,
+      loans,
+      config,
+      result,
+      error,
+      helper
+    });
     const erc721 = new Erc721({ config, contractFactory, account });
-    const immutables = new Immutables({ config, contractFactory, account, error, result });
+    const immutables = new Immutables({ config, account, error, result, contractFactory });
     const bundlesHelper = new BundlesHelper({ config, contractFactory, ethers });
-    const bundles = new Bundles({ config, contractFactory, account, error, result, immutables, helper: bundlesHelper });
-    const nftfi = new NFTfi({ config, account, listings, offers, loans, erc20, erc721, bundles, immutables, utils });
+    const bundles = new Bundles({ config, account, error, result, helper: bundlesHelper, contractFactory });
+    const events = new Events({ websocket });
+    const nftfi = new NFTfi({
+      config,
+      account,
+      listings,
+      offers,
+      loans,
+      erc20,
+      erc721,
+      bundles,
+      immutables,
+      events,
+      utils
+    });
 
     if (options?.logging?.verbose === true) {
       console.log('NFTfi SDK initialised.');

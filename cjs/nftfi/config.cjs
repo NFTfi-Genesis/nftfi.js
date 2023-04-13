@@ -63,14 +63,38 @@ var baseConfig = {
   },
   bundler: {
     v1: {
+      name: '',
       address: '',
       abi: []
+    },
+    v1_1: {
+      name: '',
+      address: '',
+      abi: []
+    },
+    migrate: {
+      v1: {
+        address: '',
+        abi: ''
+      }
     }
   },
   immutable: {
     v1: {
+      name: '',
       address: '',
       abi: []
+    },
+    v1_1: {
+      name: '',
+      address: '',
+      abi: []
+    },
+    migrate: {
+      v1: {
+        address: '',
+        abi: ''
+      }
     }
   },
   erc721: {
@@ -101,6 +125,9 @@ var baseConfig = {
     key: '',
     baseURI: ''
   },
+  websocket: {
+    baseURI: ''
+  },
   pagination: {
     limit: 20,
     page: 1
@@ -124,6 +151,7 @@ var mainnetConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 mainnetConfig.chainId = 1;
 mainnetConfig.website.baseURI = 'https://www.nftfi.com';
 mainnetConfig.api.baseURI = 'https://sdk-api.nftfi.com';
+mainnetConfig.websocket.baseURI = 'https://sdk-websocket.nftfi.com';
 mainnetConfig.erc721.abi = ['function ownerOf(uint256 tokenId) public view returns (address)', 'function setApprovalForAll(address to, bool approved) public returns()', 'function isApprovedForAll(address owner, address operator) view returns (bool)'];
 mainnetConfig.erc20.abi = ['function balanceOf(address owner) view returns (uint256)', 'function approve(address spender, uint256 value) returns (bool)', 'function allowance(address owner, address spender) public view returns (uint256)'];
 mainnetConfig.erc20.weth.address = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
@@ -156,9 +184,18 @@ mainnetConfig.signingUtils.v2.abi = ['function isValidLenderSignature(tuple(uint
 mainnetConfig.bundler.v1.name = 'v1.bundler';
 mainnetConfig.bundler.v1.address = '0x16c583748faeD1C5A5bcd744b4892ee6B6290094';
 mainnetConfig.bundler.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId, address indexed personalBundler)', 'function decomposeBundle(uint256 tokenId, address receiver)', 'function addBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function removeBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function safeMint(address to) returns (uint256)', 'function safeTransferFrom(address from, address to, uint256 tokenId)', 'function totalChildContracts(uint256 tokenId) view returns (uint256)', 'function childContractByIndex(uint256 tokenId, uint256 index) view returns (address childContract)', 'function totalChildTokens(uint256 tokenId, address childContract) view returns (uint256)', 'function childTokenByIndex(uint256 tokenId, address childContract, uint256 index) view returns (uint256 childTokenId)'];
+mainnetConfig.bundler.v1_1.name = 'v1-1.bundler';
+mainnetConfig.bundler.v1_1.address = '0x0259119359Bf053ebF42C9807752de6bbb4925f3';
+mainnetConfig.bundler.v1_1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId)', 'function decomposeBundle(uint256 tokenId, address receiver)', 'function addBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function removeBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function safeMint(address to) returns (uint256)', 'function safeTransferFrom(address from, address to, uint256 tokenId)', 'function totalChildContracts(uint256 tokenId) view returns (uint256)', 'function childContractByIndex(uint256 tokenId, uint256 index) view returns (address childContract)', 'function totalChildTokens(uint256 tokenId, address childContract) view returns (uint256)', 'function childTokenByIndex(uint256 tokenId, address childContract, uint256 index) view returns (uint256 childTokenId)'];
+mainnetConfig.bundler.migrate.v1.name = 'v1.bundler.migrate';
+mainnetConfig.bundler.migrate.v1.address = '0xa2Cb0dE6006Eff2B5b20719152231Bcd651BeC2f';
+mainnetConfig.bundler.migrate.v1.abi = ['event BundleMigrated(uint256 newBundleId)', 'event BundleBurned(uint256 bundleId)', 'event ImmutableMigrated(uint256 newImmutableId)', 'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function migrateBundle(address oldBundleContract, address newBundleContract, uint256 oldBundleId) returns (uint256)', 'function migrateImmutable(address oldImmutableContract, address newImmutableContract, uint256 oldImmutableId) returns (uint256)', 'function decomposeAndBurnBundle(address _bundleContract, uint256 _bundleId, address _receiver)', 'function decomposeAndBurnImmutable(address _immutableContract, uint256 _immutableId, address _receiver)'];
 mainnetConfig.immutable.v1.name = 'v1.immutable.bundle';
 mainnetConfig.immutable.v1.address = '0x9a129032F01EB4dDD764c1777c81b771C34a2fbE';
-mainnetConfig.immutable.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function bundleOfImmutable(uint256) view returns (uint256)', 'function withdraw(uint256 immutableId, address to)'];
+mainnetConfig.immutable.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function bundleOfImmutable(uint256) view returns (uint256)', 'function withdraw(uint256 immutableId, address to)', 'function withdrawAndDecompose(uint256 immutableId, address to)'];
+mainnetConfig.immutable.v1_1.name = 'v1-1.immutable.bundle';
+mainnetConfig.immutable.v1_1.address = '0x46C9CFB32627B74F91e0B5ad575c247AEc7e7847';
+mainnetConfig.immutable.v1_1.abi = mainnetConfig.immutable.v1.abi;
 mainnetConfig.auth.token.key = 'nftfiSdkToken';
 mainnetConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 var rinkebyConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
@@ -188,6 +225,7 @@ var goerliConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 goerliConfig.chainId = 5;
 goerliConfig.website.baseURI = 'https://goerli-integration.nftfi.com';
 goerliConfig.api.baseURI = 'https://goerli-integration-sdk-api.nftfi.com';
+goerliConfig.websocket.baseURI = 'https://goerli-integration-sdk-websocket.nftfi.com';
 goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.goerli.gnosis.io';
 goerliConfig.erc721.abi = ['function superOperators(address _operator, bool _status)', 'function updateApprovedOperator(address _operator, bool _status)', 'function drip(address _recipient)', 'function approve(address to, uint256 tokenId)', 'function transferFrom(address from, address to, uint256 tokenId)', 'function ownerOf(uint256 tokenId) public view returns (address)', 'function setApprovalForAll(address to, bool approved) public returns()', 'function isApprovedForAll(address owner, address operator) view returns (bool)'];
 goerliConfig.erc20.abi = ['function mint(address account, uint256 amount)', 'function transferFrom(address sender, address recipient, uint256 amount) returns (bool)', 'function balanceOf(address owner) view returns (uint256)', 'function approve(address spender, uint256 value) returns (bool)', 'function allowance(address owner, address spender) public view returns (uint256)'];
@@ -221,9 +259,18 @@ goerliConfig.signingUtils.v2.abi = ['function isValidLenderSignature(tuple(uint2
 goerliConfig.bundler.v1.name = 'v1.bundler';
 goerliConfig.bundler.v1.address = '0x17672f745C6c1F8aFF713Ac0EA97B865d97CCf24';
 goerliConfig.bundler.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId, address indexed personalBundler)', 'function decomposeBundle(uint256 tokenId, address receiver)', 'function addBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function removeBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function safeMint(address to) returns (uint256)', 'function safeTransferFrom(address from, address to, uint256 tokenId)', 'function totalChildContracts(uint256 tokenId) view returns (uint256)', 'function childContractByIndex(uint256 tokenId, uint256 index) view returns (address childContract)', 'function totalChildTokens(uint256 tokenId, address childContract) view returns (uint256)', 'function childTokenByIndex(uint256 tokenId, address childContract, uint256 index) view returns (uint256 childTokenId)'];
+goerliConfig.bundler.v1_1.name = 'v1-1.bundler';
+goerliConfig.bundler.v1_1.address = '0x7d5c5c9b6a24db20067fee4ff59c07567def368d';
+goerliConfig.bundler.v1_1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId)', 'function decomposeBundle(uint256 tokenId, address receiver)', 'function addBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function removeBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function safeMint(address to) returns (uint256)', 'function safeTransferFrom(address from, address to, uint256 tokenId)', 'function totalChildContracts(uint256 tokenId) view returns (uint256)', 'function childContractByIndex(uint256 tokenId, uint256 index) view returns (address childContract)', 'function totalChildTokens(uint256 tokenId, address childContract) view returns (uint256)', 'function childTokenByIndex(uint256 tokenId, address childContract, uint256 index) view returns (uint256 childTokenId)'];
+goerliConfig.bundler.migrate.v1.name = 'v1.bundler.migrate';
+goerliConfig.bundler.migrate.v1.address = '0xFc33A489A8082e9F6F48cbD8ba7D93a6fD36E494';
+goerliConfig.bundler.migrate.v1.abi = mainnetConfig.bundler.migrate.v1.abi;
 goerliConfig.immutable.v1.name = 'v1.immutable.bundle';
 goerliConfig.immutable.v1.address = '0x69a0D346df2659dbb4BcE4b9276DD76B059e8EFc';
-goerliConfig.immutable.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function bundleOfImmutable(uint256) view returns (uint256)', 'function withdraw(uint256 immutableId, address to)'];
+goerliConfig.immutable.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function bundleOfImmutable(uint256) view returns (uint256)', 'function withdraw(uint256 immutableId, address to)', 'function withdrawAndDecompose(uint256 immutableId, address to)'];
+goerliConfig.immutable.v1_1.name = 'v1-1.immutable.bundle';
+goerliConfig.immutable.v1_1.address = '0xE78097873C44f45ea06A5A36669a8866f6dC61E2';
+goerliConfig.immutable.v1_1.abi = goerliConfig.immutable.v1.abi;
 goerliConfig.auth.token.key = 'nftfiSdkToken';
 goerliConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 var baseConfigs = (_baseConfigs = {}, (0, _defineProperty2["default"])(_baseConfigs, mainnetConfig.chainId, mainnetConfig), (0, _defineProperty2["default"])(_baseConfigs, rinkebyConfig.chainId, rinkebyConfig), (0, _defineProperty2["default"])(_baseConfigs, goerliConfig.chainId, goerliConfig), _baseConfigs);

@@ -6,7 +6,7 @@ async function run() {
   // Init the NFTfi SDK
   const nftfi = await NFTfi.init({
     config: {
-      api: { key: process.env.NFTFI_SDK_DEMO_API_KEY }
+      api: { key: process.env.NFTFI_SDK_API_KEY }
     },
     ethereum: {
       account: { privateKey: process.env.NFTFI_SDK_ETHEREUM_LENDER_ACCOUNT_PRIVATE_KEY },

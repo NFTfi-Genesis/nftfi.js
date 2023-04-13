@@ -18,6 +18,9 @@ var Error = /*#__PURE__*/function () {
       if (message) return {
         error: message
       };
+      if (e !== null && e !== void 0 && e.errors) return {
+        errors: e === null || e === void 0 ? void 0 : e.errors
+      };
       if (e !== null && e !== void 0 && (_e$error = e.error) !== null && _e$error !== void 0 && _e$error.reason) return {
         error: e === null || e === void 0 ? void 0 : (_e$error2 = e.error) === null || _e$error2 === void 0 ? void 0 : _e$error2.reason
       };

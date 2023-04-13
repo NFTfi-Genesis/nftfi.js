@@ -9,6 +9,7 @@ class Offers {
   #loans;
   #config;
   #validator;
+  #requests;
   #result;
   #error;
   #helper;
@@ -20,6 +21,7 @@ class Offers {
     this.#loans = options?.loans;
     this.#config = options?.config;
     this.#validator = options?.offersValidator;
+    this.#requests = options?.offersRequests;
     this.#error = options?.error;
     this.#result = options?.result;
     this.#helper = options?.helper;
@@ -242,6 +244,10 @@ class Offers {
   async revoke(options) {
     let result = await this.#loans.revokeOffer(options);
     return result;
+  }
+
+  get requests() {
+    return this.#requests;
   }
 }
 

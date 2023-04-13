@@ -3,6 +3,7 @@ class Error {
 
   handle(e, message) {
     if (message) return { error: message };
+    if (e?.errors) return { errors: e?.errors };
     if (e?.error?.reason) return { error: e?.error?.reason };
     if (e?.response?.data?.message) return { error: e?.response?.data?.message };
     if (e?.response?.data?.errors) return { error: e?.response?.data?.errors };

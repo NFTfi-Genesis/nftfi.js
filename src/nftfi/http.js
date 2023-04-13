@@ -29,7 +29,6 @@ class Http {
     let result;
     try {
       result = await this.#axios.post(uri, body, options);
-      return result;
     } catch (e) {
       result = e.response;
     }

@@ -44,7 +44,7 @@ var API = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/").concat(options.uri);
+              uri = this.concatUri(options.uri);
               params = options === null || options === void 0 ? void 0 : options.params;
               _context.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
@@ -81,7 +81,7 @@ var API = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/").concat(options.uri);
+              uri = this.concatUri(options.uri);
               _context2.next = 3;
               return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
             case 3:
@@ -116,7 +116,7 @@ var API = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/").concat(options.uri);
+              uri = this.concatUri(options.uri);
               _context3.next = 3;
               return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
             case 3:
@@ -143,6 +143,12 @@ var API = /*#__PURE__*/function () {
       }
       return _delete;
     }()
+  }, {
+    key: "concatUri",
+    value: function concatUri(path) {
+      var url = new URL(path, (0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI);
+      return url.href;
+    }
   }]);
   return API;
 }();

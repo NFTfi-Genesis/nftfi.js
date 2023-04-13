@@ -204,7 +204,8 @@ var OffersHelper = /*#__PURE__*/function () {
                   fee: {
                     bps: (0, _classPrivateFieldGet2["default"])(this, _config).loan.adminFeeInBasisPoints
                   }
-                }
+                },
+                metadata: options.metadata
               };
               _context.next = 8;
               return (0, _classPrivateFieldGet2["default"])(this, _signatures).getV2OfferSignature(_objectSpread(_objectSpread({}, options), {}, {
@@ -275,7 +276,8 @@ var OffersHelper = /*#__PURE__*/function () {
                   fee: {
                     bps: (0, _classPrivateFieldGet2["default"])(this, _config).loan.adminFeeInBasisPoints
                   }
-                }
+                },
+                metadata: options.metadata
               };
               _context2.next = 9;
               return (0, _classPrivateFieldGet2["default"])(this, _signatures).getV2FixedCollectionOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
