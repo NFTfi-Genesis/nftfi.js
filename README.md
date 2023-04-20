@@ -335,6 +335,15 @@ const migrateResult = await nftfi.bundles.migrate({
 
 * * *
 
+<a name="Drops"></a>
+
+### Drops
+Class for working with drops.
+
+**Kind**: global class  
+
+* * *
+
 <a name="Erc20"></a>
 
 ### Erc20

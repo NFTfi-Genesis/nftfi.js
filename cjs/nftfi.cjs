@@ -55,6 +55,9 @@ var _axios = _interopRequireDefault(require("axios"));
 var _lodash = _interopRequireDefault(require("lodash.merge"));
 var _lodash2 = _interopRequireDefault(require("lodash.set"));
 var _socket = _interopRequireDefault(require("socket.io-client"));
+var _index8 = _interopRequireDefault(require("./nftfi/drops/og/index.cjs"));
+var _drops = _interopRequireDefault(require("./nftfi/drops.cjs"));
+var _index9 = _interopRequireDefault(require("./nftfi/drops/og/allocations/index.cjs"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var _default = {
@@ -131,6 +134,9 @@ var _default = {
         bundlesHelper,
         bundles,
         events,
+        allocationsOg,
+        dropOg,
+        drops,
         nftfi,
         _args = arguments;
       return _regenerator["default"].wrap(function _callee$(_context) {
@@ -418,6 +424,18 @@ var _default = {
             events = new _events["default"]({
               websocket: websocket
             });
+            allocationsOg = new _index9["default"]({
+              account: account,
+              api: api,
+              result: result,
+              error: error
+            });
+            dropOg = new _index8["default"]({
+              allocations: allocationsOg
+            });
+            drops = new _drops["default"]({
+              og: dropOg
+            });
             nftfi = new _index7["default"]({
               config: config,
               account: account,
@@ -429,13 +447,14 @@ var _default = {
               bundles: bundles,
               immutables: immutables,
               events: events,
+              drops: drops,
               utils: utils
             });
             if ((options === null || options === void 0 ? void 0 : (_options$logging = options.logging) === null || _options$logging === void 0 ? void 0 : _options$logging.verbose) === true) {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 87:
+          case 90:
           case "end":
             return _context.stop();
         }

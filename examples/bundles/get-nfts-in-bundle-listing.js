@@ -40,7 +40,7 @@ async function run() {
     // Set approval for NFT to get transfered into the bundle
     await borrower.erc721.setApprovalForAll({
       token: { address: nfts.address },
-      nftfi: { contract: { name: 'v1.bundler' } }
+      nftfi: { contract: { name: 'v1-1.bundler' } }
     });
 
     // Add elements to bundle
@@ -68,7 +68,7 @@ async function run() {
         address: borrower.account.getAddress()
       },
       nft: {
-        address: borrower.config.immutable.v1.address,
+        address: borrower.config.immutable.v1_1.address,
         id: immutable.data.immutable.id
       },
       nftfi: {
@@ -82,7 +82,7 @@ async function run() {
     // Create offer on the listing ///////////////////////////////////
 
     // Check if listing is for an immutable bundle
-    const isBundle = listing.nft.address.toLowerCase() === lender.config.immutable.v1.address.toLowerCase();
+    const isBundle = listing.nft.address.toLowerCase() === lender.config.immutable.v1_1.address.toLowerCase();
     if (isBundle) {
       // Get the elements inside of the immutable bundle
       bundle = await lender.immutables.getBundle({ immutable: { id: listing.nft.id } });

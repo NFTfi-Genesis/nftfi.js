@@ -46,6 +46,9 @@ import axios from 'axios';
 import merge from 'lodash.merge';
 import set from 'lodash.set';
 import io from 'socket.io-client';
+import DropsOg from './nftfi/drops/og/index.js';
+import Drops from './nftfi/drops.js';
+import DropsOgAllocations from './nftfi/drops/og/allocations/index.js';
 
 export default {
   init: async function (options = {}) {
@@ -191,6 +194,10 @@ export default {
     const bundlesHelper = new BundlesHelper({ config, contractFactory, ethers });
     const bundles = new Bundles({ config, account, error, result, helper: bundlesHelper, contractFactory });
     const events = new Events({ websocket });
+    const allocationsOg = new DropsOgAllocations({ account, api, result, error });
+    const dropOg = new DropsOg({ allocations: allocationsOg });
+    const drops = new Drops({ og: dropOg });
+
     const nftfi = new NFTfi({
       config,
       account,
@@ -202,6 +209,7 @@ export default {
       bundles,
       immutables,
       events,
+      drops,
       utils
     });
 

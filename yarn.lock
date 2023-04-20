@@ -501,15 +501,15 @@ __metadata:
   linkType: hard
 
 "@safe-global/safe-core-sdk-types@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "@safe-global/safe-core-sdk-types@npm:1.9.0"
+  version: 1.10.1
+  resolution: "@safe-global/safe-core-sdk-types@npm:1.10.1"
   dependencies:
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/contracts": ^5.7.0
-    "@gnosis.pm/safe-deployments": 1.19.0
+    "@safe-global/safe-deployments": ^1.20.2
     web3-core: ^1.8.1
     web3-utils: ^1.8.1
-  checksum: 4fe3f1b8b7e3d50f2a23e31c3e7769da66b9d67abcba7234a865388767b6532ea06b0e7b9ad60689eb63889d0539f83d3361bfde58e42b6544dcafd293c9e7ef
+  checksum: f4f232982027ab0555455ac9d4c7349bbe568d633cb27e0846a28d0ff34ddd8a15d2714079753a7b8b14e0ebf528f36027317e553ef64eca5711940b28164ef9
   languageName: node
   linkType: hard
 
@@ -2845,11 +2845,11 @@ __metadata:
   linkType: hard
 
 "mkdirp@npm:*":
-  version: 2.1.6
-  resolution: "mkdirp@npm:2.1.6"
+  version: 3.0.0
+  resolution: "mkdirp@npm:3.0.0"
   bin:
     mkdirp: dist/cjs/src/bin.js
-  checksum: 8a1d09ffac585e55f41c54f445051f5bc33a7de99b952bb04c576cafdf1a67bb4bae8cb93736f7da6838771fbf75bc630430a3a59e1252047d2278690bd150ee
+  checksum: a17062c41d10ee91a25127c594d919767517ba08e547aeaa4272ec0c03a0c6d7a07a2d5a5aa1ba8621716df57b5f09a4c9ec0dfbda81b8aad166daf744fb04b6
   languageName: node
   linkType: hard
 
@@ -3466,6 +3466,17 @@ __metadata:
   linkType: hard
 
 "semver@npm:^7.3.5":
+  version: 7.5.0
+  resolution: "semver@npm:7.5.0"
+  dependencies:
+    lru-cache: ^6.0.0
+  bin:
+    semver: bin/semver.js
+  checksum: 2d266937756689a76f124ffb4c1ea3e1bbb2b263219f90ada8a11aebebe1280b13bb76cca2ca96bdee3dbc554cbc0b24752eb895b2a51577aa644427e9229f2b
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.3.7, semver@npm:^7.3.8":
   version: 7.4.0
   resolution: "semver@npm:7.4.0"
   dependencies:
@@ -3473,17 +3484,6 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: debf7f4d6fa36fdc5ef82bd7fc3603b6412165c8a3963a30be0c45a587be1a49e7681e80aa109da1875765741af24edc6e021cee1ba16ae96f649d06c5df296d
-  languageName: node
-  linkType: hard
-
-"semver@npm:^7.3.7, semver@npm:^7.3.8":
-  version: 7.3.8
-  resolution: "semver@npm:7.3.8"
-  dependencies:
-    lru-cache: ^6.0.0
-  bin:
-    semver: bin/semver.js
-  checksum: ba9c7cbbf2b7884696523450a61fee1a09930d888b7a8d7579025ad93d459b2d1949ee5bbfeb188b2be5f4ac163544c5e98491ad6152df34154feebc2cc337c1
   languageName: node
   linkType: hard
 
