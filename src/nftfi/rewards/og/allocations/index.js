@@ -2,7 +2,7 @@
  * @class
  * Class for working with OG allocations.
  */
-class DropsOgAllocations {
+class RewardsOgAllocations {
   #account;
   #api;
   #result;
@@ -22,13 +22,13 @@ class DropsOgAllocations {
    *
    * @example
    * // Get your OG drop allocation
-   * const allocation = await nftfi.drops.og.allocations.get();
+   * const allocation = await nftfi.rewards.og.allocations.get();
    */
   async get() {
     try {
       const accountAddress = this.#account.getAddress();
       const response = await this.#api.get({
-        uri: `drops/og/allocations/${accountAddress}`
+        uri: `rewards/og/allocations/${accountAddress}`
       });
       if (!response) {
         return this.#result.handle({ status: { id: 'not-eligible' } });
@@ -40,4 +40,4 @@ class DropsOgAllocations {
   }
 }
 
-export default DropsOgAllocations;
+export default RewardsOgAllocations;

@@ -10,7 +10,7 @@ class NFTfi {
   immutables;
   utils;
   events;
-  drops;
+  rewards;
 
   constructor(options = {}) {
     this.config = options.config;
@@ -24,7 +24,7 @@ class NFTfi {
     this.immutables = options?.immutables;
     this.utils = options.utils;
     this.events = options.events;
-    this.drops = options.drops;
+    this.rewards = options.rewards;
   }
 }
 

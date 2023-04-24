@@ -1,8 +1,8 @@
 /**
  * @class
- * Class for working with OG drops.
+ * Class for working with OG rewards.
  */
-class DropsOg {
+class RewardsOg {
   allocations;
 
   constructor(options = {}) {
@@ -10,4 +10,4 @@ class DropsOg {
   }
 }
 
-export default DropsOg;
+export default RewardsOg;

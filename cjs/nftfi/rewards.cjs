@@ -10,13 +10,13 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 /**
  * @class
- * Class for working with OG drops.
+ * Class for working with rewards.
  */
-var DropsOg = /*#__PURE__*/(0, _createClass2["default"])(function DropsOg() {
+var Rewards = /*#__PURE__*/(0, _createClass2["default"])(function Rewards() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  (0, _classCallCheck2["default"])(this, DropsOg);
-  (0, _defineProperty2["default"])(this, "allocations", void 0);
-  this.allocations = options === null || options === void 0 ? void 0 : options.allocations;
+  (0, _classCallCheck2["default"])(this, Rewards);
+  (0, _defineProperty2["default"])(this, "og", void 0);
+  this.og = options === null || options === void 0 ? void 0 : options.og;
 });
-var _default = DropsOg;
+var _default = Rewards;
 exports["default"] = _default;

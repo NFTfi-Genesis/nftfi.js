@@ -21,10 +21,10 @@ var _error = /*#__PURE__*/new WeakMap();
  * @class
  * Class for working with OG allocations.
  */
-var DropsOgAllocations = /*#__PURE__*/function () {
-  function DropsOgAllocations() {
+var RewardsOgAllocations = /*#__PURE__*/function () {
+  function RewardsOgAllocations() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    (0, _classCallCheck2["default"])(this, DropsOgAllocations);
+    (0, _classCallCheck2["default"])(this, RewardsOgAllocations);
     _classPrivateFieldInitSpec(this, _account, {
       writable: true,
       value: void 0
@@ -54,9 +54,9 @@ var DropsOgAllocations = /*#__PURE__*/function () {
    *
    * @example
    * // Get your OG drop allocation
-   * const allocation = await nftfi.drops.og.allocations.get();
+   * const allocation = await nftfi.rewards.og.allocations.get();
    */
-  (0, _createClass2["default"])(DropsOgAllocations, [{
+  (0, _createClass2["default"])(RewardsOgAllocations, [{
     key: "get",
     value: function () {
       var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
@@ -68,7 +68,7 @@ var DropsOgAllocations = /*#__PURE__*/function () {
               accountAddress = (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
               _context.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: "drops/og/allocations/".concat(accountAddress)
+                uri: "rewards/og/allocations/".concat(accountAddress)
               });
             case 4:
               response = _context.sent;
@@ -99,7 +99,7 @@ var DropsOgAllocations = /*#__PURE__*/function () {
       return get;
     }()
   }]);
-  return DropsOgAllocations;
+  return RewardsOgAllocations;
 }();
-var _default = DropsOgAllocations;
+var _default = RewardsOgAllocations;
 exports["default"] = _default;

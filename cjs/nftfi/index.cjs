@@ -22,7 +22,7 @@ var NFTfi = /*#__PURE__*/(0, _createClass2["default"])(function NFTfi() {
   (0, _defineProperty2["default"])(this, "immutables", void 0);
   (0, _defineProperty2["default"])(this, "utils", void 0);
   (0, _defineProperty2["default"])(this, "events", void 0);
-  (0, _defineProperty2["default"])(this, "drops", void 0);
+  (0, _defineProperty2["default"])(this, "rewards", void 0);
   this.config = options.config;
   this.account = options.account;
   this.listings = options.listings;
@@ -34,7 +34,7 @@ var NFTfi = /*#__PURE__*/(0, _createClass2["default"])(function NFTfi() {
   this.immutables = options === null || options === void 0 ? void 0 : options.immutables;
   this.utils = options.utils;
   this.events = options.events;
-  this.drops = options.drops;
+  this.rewards = options.rewards;
 });
 var _default = NFTfi;
 exports["default"] = _default;

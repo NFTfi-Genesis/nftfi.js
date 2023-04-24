@@ -335,15 +335,6 @@ const migrateResult = await nftfi.bundles.migrate({
 
 * * *
 
-<a name="Drops"></a>
-
-### Drops
-Class for working with drops.
-
-**Kind**: global class  
-
-* * *
-
 <a name="Erc20"></a>
 
 ### Erc20
@@ -1277,6 +1268,15 @@ const revoked = await nftfi.offers.revoke({
   nftfi: { contract: { name: contractName } }
 });
 ```
+
+* * *
+
+<a name="Rewards"></a>
+
+### Rewards
+Class for working with rewards.
+
+**Kind**: global class  
 
 * * *
 

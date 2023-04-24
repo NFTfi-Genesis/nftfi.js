@@ -55,9 +55,9 @@ var _axios = _interopRequireDefault(require("axios"));
 var _lodash = _interopRequireDefault(require("lodash.merge"));
 var _lodash2 = _interopRequireDefault(require("lodash.set"));
 var _socket = _interopRequireDefault(require("socket.io-client"));
-var _index8 = _interopRequireDefault(require("./nftfi/drops/og/index.cjs"));
-var _drops = _interopRequireDefault(require("./nftfi/drops.cjs"));
-var _index9 = _interopRequireDefault(require("./nftfi/drops/og/allocations/index.cjs"));
+var _index8 = _interopRequireDefault(require("./nftfi/rewards/og/index.cjs"));
+var _rewards = _interopRequireDefault(require("./nftfi/rewards.cjs"));
+var _index9 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var _default = {
@@ -135,8 +135,8 @@ var _default = {
         bundles,
         events,
         allocationsOg,
-        dropOg,
-        drops,
+        rewardsOg,
+        rewards,
         nftfi,
         _args = arguments;
       return _regenerator["default"].wrap(function _callee$(_context) {
@@ -430,11 +430,11 @@ var _default = {
               result: result,
               error: error
             });
-            dropOg = new _index8["default"]({
+            rewardsOg = new _index8["default"]({
               allocations: allocationsOg
             });
-            drops = new _drops["default"]({
-              og: dropOg
+            rewards = new _rewards["default"]({
+              og: rewardsOg
             });
             nftfi = new _index7["default"]({
               config: config,
@@ -447,7 +447,7 @@ var _default = {
               bundles: bundles,
               immutables: immutables,
               events: events,
-              drops: drops,
+              rewards: rewards,
               utils: utils
             });
             if ((options === null || options === void 0 ? void 0 : (_options$logging = options.logging) === null || _options$logging === void 0 ? void 0 : _options$logging.verbose) === true) {
