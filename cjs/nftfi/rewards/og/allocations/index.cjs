@@ -50,22 +50,26 @@ var RewardsOgAllocations = /*#__PURE__*/function () {
   /**
    * Gets og points for your account.
    *
+   * @param {object} [options] - Hashmap of config options for this method
+   * @param {object} [options.account.address] - The account address to get the OG allocation of (optional)
+   *
    * @returns {Object} An object containing information about your OG allocation.
    *
    * @example
    * // Get your OG drop allocation
    * const allocation = await nftfi.rewards.og.allocations.get();
+   * const allocation = await nftfi.rewards.og.allocations.get({ account: { address: '0x11111111' } });
    */
   (0, _createClass2["default"])(RewardsOgAllocations, [{
     key: "get",
     value: function () {
-      var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-        var accountAddress, response;
+      var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
+        var _options$account, accountAddress, response;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              accountAddress = (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
+              accountAddress = (options === null || options === void 0 ? void 0 : (_options$account = options.account) === null || _options$account === void 0 ? void 0 : _options$account.address) || (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
               _context.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
                 uri: "rewards/og/allocations/".concat(accountAddress)
@@ -93,7 +97,7 @@ var RewardsOgAllocations = /*#__PURE__*/function () {
           }
         }, _callee, this, [[0, 10]]);
       }));
-      function get() {
+      function get(_x) {
         return _get.apply(this, arguments);
       }
       return get;

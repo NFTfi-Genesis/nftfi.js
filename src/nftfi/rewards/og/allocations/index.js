@@ -18,15 +18,19 @@ class RewardsOgAllocations {
   /**
    * Gets og points for your account.
    *
+   * @param {object} [options] - Hashmap of config options for this method
+   * @param {object} [options.account.address] - The account address to get the OG allocation of (optional)
+   *
    * @returns {Object} An object containing information about your OG allocation.
    *
    * @example
    * // Get your OG drop allocation
    * const allocation = await nftfi.rewards.og.allocations.get();
+   * const allocation = await nftfi.rewards.og.allocations.get({ account: { address: '0x11111111' } });
    */
-  async get() {
+  async get(options) {
     try {
-      const accountAddress = this.#account.getAddress();
+      const accountAddress = options?.account?.address || this.#account.getAddress();
       const response = await this.#api.get({
         uri: `rewards/og/allocations/${accountAddress}`
       });
