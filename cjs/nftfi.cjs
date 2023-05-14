@@ -56,8 +56,10 @@ var _lodash = _interopRequireDefault(require("lodash.merge"));
 var _lodash2 = _interopRequireDefault(require("lodash.set"));
 var _socket = _interopRequireDefault(require("socket.io-client"));
 var _index8 = _interopRequireDefault(require("./nftfi/rewards/og/index.cjs"));
+var _index9 = _interopRequireDefault(require("./nftfi/rewards/earn/index.cjs"));
+var _index10 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
+var _index11 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/index.cjs"));
 var _rewards = _interopRequireDefault(require("./nftfi/rewards.cjs"));
-var _index9 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var _default = {
@@ -136,6 +138,8 @@ var _default = {
         events,
         allocationsOg,
         rewardsOg,
+        allocationsEarn,
+        rewardsEarn,
         rewards,
         nftfi,
         _args = arguments;
@@ -424,7 +428,7 @@ var _default = {
             events = new _events["default"]({
               websocket: websocket
             });
-            allocationsOg = new _index9["default"]({
+            allocationsOg = new _index10["default"]({
               account: account,
               api: api,
               result: result,
@@ -433,8 +437,18 @@ var _default = {
             rewardsOg = new _index8["default"]({
               allocations: allocationsOg
             });
+            allocationsEarn = new _index11["default"]({
+              account: account,
+              api: api,
+              result: result,
+              error: error
+            });
+            rewardsEarn = new _index9["default"]({
+              allocations: allocationsEarn
+            });
             rewards = new _rewards["default"]({
-              og: rewardsOg
+              og: rewardsOg,
+              earn: rewardsEarn
             });
             nftfi = new _index7["default"]({
               config: config,
@@ -454,7 +468,7 @@ var _default = {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 90:
+          case 92:
           case "end":
             return _context.stop();
         }

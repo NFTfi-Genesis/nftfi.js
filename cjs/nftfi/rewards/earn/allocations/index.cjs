@@ -19,12 +19,12 @@ var _result = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
 /**
  * @class
- * Class for working with OG allocations.
+ * Class for working with Earn allocations.
  */
-var RewardsOgAllocations = /*#__PURE__*/function () {
-  function RewardsOgAllocations() {
+var RewardsEarnAllocations = /*#__PURE__*/function () {
+  function RewardsEarnAllocations() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    (0, _classCallCheck2["default"])(this, RewardsOgAllocations);
+    (0, _classCallCheck2["default"])(this, RewardsEarnAllocations);
     _classPrivateFieldInitSpec(this, _account, {
       writable: true,
       value: void 0
@@ -48,19 +48,19 @@ var RewardsOgAllocations = /*#__PURE__*/function () {
   }
 
   /**
-   * Gets og points for your account.
+   * Gets Earn points for your account.
    *
-   * @param {object} [options] - Hashmap of config options for this method
-   * @param {object} [options.account.address] - The account address to get the OG allocation of (optional)
+   * @param {object} options - Hashmap of config options for this method
+   * @param {object} [options.account.address] - The account address to get the allocations of (optional)
    *
-   * @returns {Object} An object containing information about your OG allocation.
+   * @returns {Object} An object containing information about your Earn allocations.
    *
    * @example
-   * // Get your OG reward allocation
-   * const allocation = await nftfi.rewards.og.allocations.get();
-   * const allocation = await nftfi.rewards.og.allocations.get({ account: { address: '0x11111111' } });
+   * // Get your Earn reward allocation
+   * const points = await nftfi.rewards.earn.allocations.get();
+   * const points = await nftfi.rewards.earn.allocations.get({ account: { address: walletAddress } });
    */
-  (0, _createClass2["default"])(RewardsOgAllocations, [{
+  (0, _createClass2["default"])(RewardsEarnAllocations, [{
     key: "get",
     value: function () {
       var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
@@ -72,38 +72,67 @@ var RewardsOgAllocations = /*#__PURE__*/function () {
               accountAddress = (options === null || options === void 0 ? void 0 : (_options$account = options.account) === null || _options$account === void 0 ? void 0 : _options$account.address) || (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
               _context.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: "rewards/og/allocations/".concat(accountAddress)
+                uri: "rewards/earn/allocations/".concat(accountAddress)
               });
             case 4:
               response = _context.sent;
-              if (response) {
-                _context.next = 7;
-                break;
-              }
-              return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
-                status: {
-                  id: 'not-eligible'
-                }
-              }));
-            case 7:
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(response));
-            case 10:
-              _context.prev = 10;
+            case 8:
+              _context.prev = 8;
               _context.t0 = _context["catch"](0);
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context.t0));
-            case 13:
+            case 11:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[0, 10]]);
+        }, _callee, this, [[0, 8]]);
       }));
       function get(_x) {
         return _get.apply(this, arguments);
       }
       return get;
     }()
+    /**
+     * Gets Earn points for the first 100 accounts sorted by rank.
+     *
+     * @returns {Object} An array containing objects about user's Earn allocations.
+     *
+     * @example
+     * const list = await nftfi.rewards.earn.allocations.list();
+     */
+  }, {
+    key: "list",
+    value: function () {
+      var _list = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
+        var _list2;
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return (0, _classPrivateFieldGet2["default"])(this, _api).get({
+                uri: 'rewards/earn/allocations'
+              });
+            case 3:
+              _list2 = _context2.sent;
+              return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(_list2));
+            case 7:
+              _context2.prev = 7;
+              _context2.t0 = _context2["catch"](0);
+              return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context2.t0));
+            case 10:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, this, [[0, 7]]);
+      }));
+      function list() {
+        return _list.apply(this, arguments);
+      }
+      return list;
+    }()
   }]);
-  return RewardsOgAllocations;
+  return RewardsEarnAllocations;
 }();
-var _default = RewardsOgAllocations;
+var _default = RewardsEarnAllocations;
 exports["default"] = _default;

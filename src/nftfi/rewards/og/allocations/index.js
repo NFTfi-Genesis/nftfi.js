@@ -24,7 +24,7 @@ class RewardsOgAllocations {
    * @returns {Object} An object containing information about your OG allocation.
    *
    * @example
-   * // Get your OG drop allocation
+   * // Get your OG reward allocation
    * const allocation = await nftfi.rewards.og.allocations.get();
    * const allocation = await nftfi.rewards.og.allocations.get({ account: { address: '0x11111111' } });
    */

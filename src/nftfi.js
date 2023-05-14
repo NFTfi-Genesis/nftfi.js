@@ -47,8 +47,10 @@ import merge from 'lodash.merge';
 import set from 'lodash.set';
 import io from 'socket.io-client';
 import RewardsOg from './nftfi/rewards/og/index.js';
-import Rewards from './nftfi/rewards.js';
+import RewardsEarn from './nftfi/rewards/earn/index.js';
 import RewardsOgAllocations from './nftfi/rewards/og/allocations/index.js';
+import RewardsEarnAllocations from './nftfi/rewards/earn/allocations/index.js';
+import Rewards from './nftfi/rewards.js';
 
 export default {
   init: async function (options = {}) {
@@ -196,7 +198,10 @@ export default {
     const events = new Events({ websocket });
     const allocationsOg = new RewardsOgAllocations({ account, api, result, error });
     const rewardsOg = new RewardsOg({ allocations: allocationsOg });
-    const rewards = new Rewards({ og: rewardsOg });
+    const allocationsEarn = new RewardsEarnAllocations({ account, api, result, error });
+    const rewardsEarn = new RewardsEarn({ allocations: allocationsEarn });
+    const rewards = new Rewards({ og: rewardsOg, earn: rewardsEarn });
+
     const nftfi = new NFTfi({
       config,
       account,

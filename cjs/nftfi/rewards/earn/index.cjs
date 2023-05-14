@@ -10,15 +10,13 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 /**
  * @class
- * Class for working with rewards.
+ * Class for working with Earn rewards.
  */
-var Rewards = /*#__PURE__*/(0, _createClass2["default"])(function Rewards() {
+var RewardsEarn = /*#__PURE__*/(0, _createClass2["default"])(function RewardsEarn() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  (0, _classCallCheck2["default"])(this, Rewards);
-  (0, _defineProperty2["default"])(this, "og", void 0);
-  (0, _defineProperty2["default"])(this, "earn", void 0);
-  this.og = options === null || options === void 0 ? void 0 : options.og;
-  this.earn = options === null || options === void 0 ? void 0 : options.earn;
+  (0, _classCallCheck2["default"])(this, RewardsEarn);
+  (0, _defineProperty2["default"])(this, "allocations", void 0);
+  this.allocations = options === null || options === void 0 ? void 0 : options.allocations;
 });
-var _default = Rewards;
+var _default = RewardsEarn;
 exports["default"] = _default;
