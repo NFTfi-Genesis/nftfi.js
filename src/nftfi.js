@@ -50,6 +50,7 @@ import RewardsOg from './nftfi/rewards/og/index.js';
 import RewardsEarn from './nftfi/rewards/earn/index.js';
 import RewardsOgAllocations from './nftfi/rewards/og/allocations/index.js';
 import RewardsEarnAllocations from './nftfi/rewards/earn/allocations/index.js';
+import RewardsEarnPoints from './nftfi/rewards/earn/points/index.js';
 import Rewards from './nftfi/rewards.js';
 
 export default {
@@ -199,7 +200,8 @@ export default {
     const allocationsOg = new RewardsOgAllocations({ account, api, result, error });
     const rewardsOg = new RewardsOg({ allocations: allocationsOg });
     const allocationsEarn = new RewardsEarnAllocations({ account, api, result, error });
-    const rewardsEarn = new RewardsEarn({ allocations: allocationsEarn });
+    const pointsEarn = new RewardsEarnPoints({ api, result, error });
+    const rewardsEarn = new RewardsEarn({ allocations: allocationsEarn, points: pointsEarn });
     const rewards = new Rewards({ og: rewardsOg, earn: rewardsEarn });
 
     const nftfi = new NFTfi({

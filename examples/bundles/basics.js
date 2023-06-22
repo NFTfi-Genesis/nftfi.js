@@ -33,39 +33,45 @@ async function run() {
   // Add elements to bundle
   bundle = await nftfi.bundles.add({
     bundle: { id: bundle.data.bundle.id },
-    elements: [{ token: { address: nft.address, ids: nft.ids } }]
+    elements: [{ token: { address: nft.address, ids: nft.ids } }],
+    nftfi: { contract: { name: 'v1-1.bundler' } }
   });
   console.log('[INFO] bundle after add', JSON.stringify(bundle));
 
   // Elements of bundle
   bundle = await nftfi.bundles.elements({
-    bundle: { id: bundle.data.bundle.id }
+    bundle: { id: bundle.data.bundle.id },
+    nftfi: { contract: { name: 'v1-1.bundler' } }
   });
   console.log('[INFO] bundle elements', JSON.stringify(bundle));
 
   // Remove bundle elements
   bundle = await nftfi.bundles.remove({
     bundle: { id: bundle.data.bundle.id },
-    elements: [{ token: { address: nft.address, ids: [nft.ids[0]] } }]
+    elements: [{ token: { address: nft.address, ids: [nft.ids[0]] } }],
+    nftfi: { contract: { name: 'v1-1.bundler' } }
   });
   console.log('[INFO] bundle after remove', JSON.stringify(bundle));
 
   // Wrap the bundle (produces an immutable bundle)
   const immutable = await nftfi.bundles.seal({
-    bundle: { id: bundle.data.bundle.id }
+    bundle: { id: bundle.data.bundle.id },
+    nftfi: { contract: { name: 'v1-1.bundler' } }
   });
   console.log('[INFO] sealed bundle (immutable bundle)', immutable);
 
   // Withdraw the bundle from the immutable
   const immutableId = immutable.data.immutable.id;
   bundle = await nftfi.immutables.unseal({
-    immutable: { id: immutableId }
+    immutable: { id: immutableId },
+    nftfi: { contract: { name: 'v1-1.immutable.bundle' } }
   });
   console.log('[INFO] unsealed bundle', bundle);
 
   // Empty the bundle
   bundle = await nftfi.bundles.empty({
-    bundle: { id: bundle.data.bundle.id }
+    bundle: { id: bundle.data.bundle.id },
+    nftfi: { contract: { name: 'v1-1.bundler' } }
   });
   console.log('[INFO] empty bundle', bundle);
 }

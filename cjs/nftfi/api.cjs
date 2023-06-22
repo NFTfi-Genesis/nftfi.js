@@ -40,29 +40,36 @@ var API = /*#__PURE__*/function () {
     key: "get",
     value: function () {
       var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var uri, params, authToken, headers, result;
+        var httpOptions,
+          uri,
+          params,
+          authToken,
+          headers,
+          result,
+          _args = arguments;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
+              httpOptions = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
               uri = this.concatUri(options.uri);
               params = options === null || options === void 0 ? void 0 : options.params;
-              _context.next = 4;
+              _context.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
-            case 4:
+            case 5:
               authToken = _context.sent;
               headers = {
                 'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key,
                 Authorization: "Bearer ".concat(authToken)
               };
-              _context.next = 8;
+              _context.next = 9;
               return (0, _classPrivateFieldGet2["default"])(this, _http).get(uri, {
                 headers: headers,
                 params: params
-              });
-            case 8:
+              }, httpOptions);
+            case 9:
               result = _context.sent;
               return _context.abrupt("return", result.data);
-            case 10:
+            case 11:
             case "end":
               return _context.stop();
           }

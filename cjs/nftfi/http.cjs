@@ -29,30 +29,39 @@ var Http = /*#__PURE__*/function () {
     value: function () {
       var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(uri) {
         var options,
+          execOptions,
           result,
+          _execOptions$error,
           _args = arguments;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               options = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
-              _context.prev = 1;
-              _context.next = 4;
+              execOptions = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+              _context.prev = 2;
+              _context.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _axios).get(uri, options);
-            case 4:
+            case 5:
               result = _context.sent;
-              _context.next = 10;
+              _context.next = 13;
               break;
-            case 7:
-              _context.prev = 7;
-              _context.t0 = _context["catch"](1);
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](2);
+              if (!((_execOptions$error = execOptions.error) !== null && _execOptions$error !== void 0 && _execOptions$error.rethrow)) {
+                _context.next = 12;
+                break;
+              }
+              throw _context.t0;
+            case 12:
               result = _context.t0.response;
-            case 10:
+            case 13:
               return _context.abrupt("return", result);
-            case 11:
+            case 14:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[1, 7]]);
+        }, _callee, this, [[2, 8]]);
       }));
       function get(_x) {
         return _get.apply(this, arguments);

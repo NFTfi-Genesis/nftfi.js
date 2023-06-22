@@ -59,6 +59,7 @@ var _index8 = _interopRequireDefault(require("./nftfi/rewards/og/index.cjs"));
 var _index9 = _interopRequireDefault(require("./nftfi/rewards/earn/index.cjs"));
 var _index10 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
 var _index11 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/index.cjs"));
+var _index12 = _interopRequireDefault(require("./nftfi/rewards/earn/points/index.cjs"));
 var _rewards = _interopRequireDefault(require("./nftfi/rewards.cjs"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -139,6 +140,7 @@ var _default = {
         allocationsOg,
         rewardsOg,
         allocationsEarn,
+        pointsEarn,
         rewardsEarn,
         rewards,
         nftfi,
@@ -443,8 +445,14 @@ var _default = {
               result: result,
               error: error
             });
+            pointsEarn = new _index12["default"]({
+              api: api,
+              result: result,
+              error: error
+            });
             rewardsEarn = new _index9["default"]({
-              allocations: allocationsEarn
+              allocations: allocationsEarn,
+              points: pointsEarn
             });
             rewards = new _rewards["default"]({
               og: rewardsOg,
@@ -468,7 +476,7 @@ var _default = {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 92:
+          case 93:
           case "end":
             return _context.stop();
         }

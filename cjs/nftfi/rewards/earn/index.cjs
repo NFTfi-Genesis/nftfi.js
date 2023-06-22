@@ -16,7 +16,9 @@ var RewardsEarn = /*#__PURE__*/(0, _createClass2["default"])(function RewardsEar
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   (0, _classCallCheck2["default"])(this, RewardsEarn);
   (0, _defineProperty2["default"])(this, "allocations", void 0);
+  (0, _defineProperty2["default"])(this, "points", void 0);
   this.allocations = options === null || options === void 0 ? void 0 : options.allocations;
+  this.points = options === null || options === void 0 ? void 0 : options.points;
 });
 var _default = RewardsEarn;
 exports["default"] = _default;

@@ -46,12 +46,14 @@ async function run() {
     // Add elements to bundle
     bundle = await borrower.bundles.add({
       bundle: { id: bundle.data.bundle.id },
-      elements: [{ token: { address: nfts.address, ids: nfts.ids } }]
+      elements: [{ token: { address: nfts.address, ids: nfts.ids } }],
+      nftfi: { contract: { name: 'v1-1.bundler' } }
     });
 
     // Seal the bundle
     immutable = await borrower.bundles.seal({
-      bundle: { id: bundle.data.bundle.id }
+      bundle: { id: bundle.data.bundle.id },
+      nftfi: { contract: { name: 'v1-1.bundler' } }
     });
 
     // Create a listing //////////////////////////////////////////////
@@ -85,8 +87,14 @@ async function run() {
     const isBundle = listing.nft.address.toLowerCase() === lender.config.immutable.v1_1.address.toLowerCase();
     if (isBundle) {
       // Get the elements inside of the immutable bundle
-      bundle = await lender.immutables.getBundle({ immutable: { id: listing.nft.id } });
-      bundle = await lender.bundles.elements({ bundle: { id: bundle.data.bundle.id } });
+      bundle = await lender.immutables.getBundle({
+        immutable: { id: listing.nft.id },
+        nftfi: { contract: { name: 'v1-1.immutable.bundle' } }
+      });
+      bundle = await lender.bundles.elements({
+        bundle: { id: bundle.data.bundle.id },
+        nftfi: { contract: { name: 'v1-1.bundler' } }
+      });
       const nfts = [];
       for (const element of bundle.data.elements) {
         for (const id of element.token.ids) {
@@ -103,12 +111,14 @@ async function run() {
 
     // Unseal the immutable
     bundle = await borrower.immutables.unseal({
-      immutable: { id: immutable.data.immutable.id }
+      immutable: { id: immutable.data.immutable.id },
+      nftfi: { contract: { name: 'v1-1.immutable.bundle' } }
     });
 
     // Empty the bundle
     await borrower.bundles.empty({
-      bundle: { id: bundle.data.bundle.id }
+      bundle: { id: bundle.data.bundle.id },
+      nftfi: { contract: { name: 'v1-1.bundler' } }
     });
   }
 }

@@ -5,11 +5,14 @@ class Http {
     this.#axios = options?.axios;
   }
 
-  async get(uri, options = {}) {
+  async get(uri, options = {}, execOptions = {}) {
     let result;
     try {
       result = await this.#axios.get(uri, options);
     } catch (e) {
+      if (execOptions.error?.rethrow) {
+        throw e;
+      }
       result = e.response;
     }
     return result;

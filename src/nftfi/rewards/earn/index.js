@@ -4,9 +4,11 @@
  */
 class RewardsEarn {
   allocations;
+  points;
 
   constructor(options = {}) {
     this.allocations = options?.allocations;
+    this.points = options?.points;
   }
 }
 
