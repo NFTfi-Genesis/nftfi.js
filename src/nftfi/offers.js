@@ -30,15 +30,20 @@ class Offers {
   // We will start using #result and #error to standardise responses from the sdk. Not all functions use this pattern yet, but this is the goal.
 
   /**
-   * When called with no argument, gets all offers made by your account.
+   * When called without filtering by an NFT address, lender address or borrower address, defaults to filtering by your account address as lender.
    * When provided with filters, gets all offers by specified filters.
    *
    * @param {object} [options] - Hashmap of config options for this method
    * @param {string} [options.filters.nft.address] - NFT contract address to filter by (optional)
    * @param {string} [options.filters.nft.id] - NFT id of the asset to filter by (optional)
    * @param {string} [options.filters.lender.address.eq] - Lender wallet address to filter by (optional)
+   * @param {string} [options.filters.borrower.address.eq] - Borrower wallet address to filter by (optional)
    * @param {string} [options.filters.lender.address.ne] - Lender wallet address to exclude (optional)
    * @param {string} [options.filters.nftfi.contract.name] - Contract name to filter by (optional)
+   * @param {string} [options.filters.loan.apr.lte] - Max apr to filter by (optional)
+   * @param {string} [options.filters.loan.duration.eq] - Loan duration to filter by (optional)
+   * @param {Array<number>} [options.filters.loan.duration.nin] - Loan durations to exclude (optional)
+   * @param {string} [options.filters.loan.currency.address.eq] - Loan currency to filter by (optional)
    * @param {number} [options.pagination.page] - Pagination page (optional)
    * @param {number} [options.pagination.limit] - Pagination limit (optional)
    * @param {string} [options.pagination.sort] - Field to sort by (optional)

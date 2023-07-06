@@ -30,10 +30,15 @@ class OffersHelper {
   }
 
   _addLender(options, params) {
-    // you can eq or ne but not both, should we allow both ? not needed now let's not overthink ?
-    if (!options?.filters) {
+    // if no lender/borrower/collection address is provided, we default to the account address
+    if (
+      !options?.filters?.lender?.address?.eq &&
+      !options?.filters?.borrower?.address?.eq &&
+      !options?.filters?.nft?.address
+    ) {
       params = { lenderAddress: this.#account.getAddress() };
     }
+    // you can eq or ne but not both, should we allow both ? not needed now let's not overthink ?
     if (options?.filters?.lender?.address?.eq) {
       return { ...params, lenderAddress: options?.filters?.lender?.address?.eq };
     }
@@ -44,9 +49,34 @@ class OffersHelper {
     return params;
   }
 
+  // adding filtering by borrower address so the first condition in addLender holds and in dapp we'll probably refactor the
+  // "offers received as a borrower" page and that'll be useful
+  _addBorrower(options, params) {
+    if (options?.filters?.borrower?.address?.eq) {
+      return { ...params, borrowerAddress: options.filters.borrower.address.eq };
+    }
+    return params;
+  }
+
   _addContract(options, params) {
     if (options?.filters?.nftfi?.contract?.name) {
       return { ...params, contractName: options?.filters?.nftfi?.contract?.name };
+    }
+    return params;
+  }
+
+  _addFilters(options, params) {
+    if (options?.filters?.loan?.apr?.lte) {
+      params = { ...params, termsAprLte: options?.filters?.loan?.apr?.lte };
+    }
+    if (options?.filters?.loan?.duration?.eq) {
+      params = { ...params, termsDuration: options?.filters?.loan?.duration?.eq };
+    }
+    if (options?.filters?.loan?.duration?.nin) {
+      params = { ...params, termsDurationNin: options?.filters?.loan?.duration?.nin?.join(',') };
+    }
+    if (options?.filters?.loan?.currency?.address?.eq) {
+      params = { ...params, termsCurrencyAddress: options?.filters?.loan?.currency?.address?.eq };
     }
     return params;
   }
@@ -70,7 +100,9 @@ class OffersHelper {
     params = this._addCollectionAddress(options, params);
     params = this._addNft(options, params);
     params = this._addLender(options, params);
+    params = this._addBorrower(options, params);
     params = this._addContract(options, params);
+    params = this._addFilters(options, params);
     params = this._addPagination(options, params);
 
     return params;

@@ -1081,7 +1081,7 @@ Class for working with offers.
 <a name="Offers+get"></a>
 
 #### `offers.get([options])` ⇒ <code>Array.&lt;object&gt;</code>
-When called with no argument, gets all offers made by your account.
+When called without filtering by an NFT address, lender address or borrower address, defaults to filtering by your account address as lender.
 When provided with filters, gets all offers by specified filters.
 
 **Kind**: instance method of [<code>Offers</code>](#Offers)  
@@ -1093,8 +1093,13 @@ When provided with filters, gets all offers by specified filters.
 | [options.filters.nft.address] | <code>string</code> |  | NFT contract address to filter by (optional) |
 | [options.filters.nft.id] | <code>string</code> |  | NFT id of the asset to filter by (optional) |
 | [options.filters.lender.address.eq] | <code>string</code> |  | Lender wallet address to filter by (optional) |
+| [options.filters.borrower.address.eq] | <code>string</code> |  | Borrower wallet address to filter by (optional) |
 | [options.filters.lender.address.ne] | <code>string</code> |  | Lender wallet address to exclude (optional) |
 | [options.filters.nftfi.contract.name] | <code>string</code> |  | Contract name to filter by (optional) |
+| [options.filters.loan.apr.lte] | <code>string</code> |  | Max apr to filter by (optional) |
+| [options.filters.loan.duration.eq] | <code>string</code> |  | Loan duration to filter by (optional) |
+| [options.filters.loan.duration.nin] | <code>Array.&lt;number&gt;</code> |  | Loan durations to exclude (optional) |
+| [options.filters.loan.currency.address.eq] | <code>string</code> |  | Loan currency to filter by (optional) |
 | [options.pagination.page] | <code>number</code> |  | Pagination page (optional) |
 | [options.pagination.limit] | <code>number</code> |  | Pagination limit (optional) |
 | [options.pagination.sort] | <code>string</code> |  | Field to sort by (optional) |

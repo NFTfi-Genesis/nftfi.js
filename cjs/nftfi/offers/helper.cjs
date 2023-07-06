@@ -83,23 +83,38 @@ var OffersHelper = /*#__PURE__*/function () {
   }, {
     key: "_addLender",
     value: function _addLender(options, params) {
-      var _options$filters4, _options$filters4$len, _options$filters4$len2, _options$filters6, _options$filters6$len, _options$filters6$len2;
-      // you can eq or ne but not both, should we allow both ? not needed now let's not overthink ?
-      if (!(options !== null && options !== void 0 && options.filters)) {
+      var _options$filters4, _options$filters4$len, _options$filters4$len2, _options$filters5, _options$filters5$bor, _options$filters5$bor2, _options$filters6, _options$filters6$nft, _options$filters7, _options$filters7$len, _options$filters7$len2, _options$filters9, _options$filters9$len, _options$filters9$len2;
+      // if no lender/borrower/collection address is provided, we default to the account address
+      if (!(options !== null && options !== void 0 && (_options$filters4 = options.filters) !== null && _options$filters4 !== void 0 && (_options$filters4$len = _options$filters4.lender) !== null && _options$filters4$len !== void 0 && (_options$filters4$len2 = _options$filters4$len.address) !== null && _options$filters4$len2 !== void 0 && _options$filters4$len2.eq) && !(options !== null && options !== void 0 && (_options$filters5 = options.filters) !== null && _options$filters5 !== void 0 && (_options$filters5$bor = _options$filters5.borrower) !== null && _options$filters5$bor !== void 0 && (_options$filters5$bor2 = _options$filters5$bor.address) !== null && _options$filters5$bor2 !== void 0 && _options$filters5$bor2.eq) && !(options !== null && options !== void 0 && (_options$filters6 = options.filters) !== null && _options$filters6 !== void 0 && (_options$filters6$nft = _options$filters6.nft) !== null && _options$filters6$nft !== void 0 && _options$filters6$nft.address)) {
         params = {
           lenderAddress: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()
         };
       }
-      if (options !== null && options !== void 0 && (_options$filters4 = options.filters) !== null && _options$filters4 !== void 0 && (_options$filters4$len = _options$filters4.lender) !== null && _options$filters4$len !== void 0 && (_options$filters4$len2 = _options$filters4$len.address) !== null && _options$filters4$len2 !== void 0 && _options$filters4$len2.eq) {
-        var _options$filters5, _options$filters5$len, _options$filters5$len2;
+      // you can eq or ne but not both, should we allow both ? not needed now let's not overthink ?
+      if (options !== null && options !== void 0 && (_options$filters7 = options.filters) !== null && _options$filters7 !== void 0 && (_options$filters7$len = _options$filters7.lender) !== null && _options$filters7$len !== void 0 && (_options$filters7$len2 = _options$filters7$len.address) !== null && _options$filters7$len2 !== void 0 && _options$filters7$len2.eq) {
+        var _options$filters8, _options$filters8$len, _options$filters8$len2;
         return _objectSpread(_objectSpread({}, params), {}, {
-          lenderAddress: options === null || options === void 0 ? void 0 : (_options$filters5 = options.filters) === null || _options$filters5 === void 0 ? void 0 : (_options$filters5$len = _options$filters5.lender) === null || _options$filters5$len === void 0 ? void 0 : (_options$filters5$len2 = _options$filters5$len.address) === null || _options$filters5$len2 === void 0 ? void 0 : _options$filters5$len2.eq
+          lenderAddress: options === null || options === void 0 ? void 0 : (_options$filters8 = options.filters) === null || _options$filters8 === void 0 ? void 0 : (_options$filters8$len = _options$filters8.lender) === null || _options$filters8$len === void 0 ? void 0 : (_options$filters8$len2 = _options$filters8$len.address) === null || _options$filters8$len2 === void 0 ? void 0 : _options$filters8$len2.eq
         });
       }
-      if (options !== null && options !== void 0 && (_options$filters6 = options.filters) !== null && _options$filters6 !== void 0 && (_options$filters6$len = _options$filters6.lender) !== null && _options$filters6$len !== void 0 && (_options$filters6$len2 = _options$filters6$len.address) !== null && _options$filters6$len2 !== void 0 && _options$filters6$len2.ne) {
-        var _options$filters7, _options$filters7$len, _options$filters7$len2;
+      if (options !== null && options !== void 0 && (_options$filters9 = options.filters) !== null && _options$filters9 !== void 0 && (_options$filters9$len = _options$filters9.lender) !== null && _options$filters9$len !== void 0 && (_options$filters9$len2 = _options$filters9$len.address) !== null && _options$filters9$len2 !== void 0 && _options$filters9$len2.ne) {
+        var _options$filters10, _options$filters10$le, _options$filters10$le2;
         return _objectSpread(_objectSpread({}, params), {}, {
-          lenderAddressNe: options === null || options === void 0 ? void 0 : (_options$filters7 = options.filters) === null || _options$filters7 === void 0 ? void 0 : (_options$filters7$len = _options$filters7.lender) === null || _options$filters7$len === void 0 ? void 0 : (_options$filters7$len2 = _options$filters7$len.address) === null || _options$filters7$len2 === void 0 ? void 0 : _options$filters7$len2.ne
+          lenderAddressNe: options === null || options === void 0 ? void 0 : (_options$filters10 = options.filters) === null || _options$filters10 === void 0 ? void 0 : (_options$filters10$le = _options$filters10.lender) === null || _options$filters10$le === void 0 ? void 0 : (_options$filters10$le2 = _options$filters10$le.address) === null || _options$filters10$le2 === void 0 ? void 0 : _options$filters10$le2.ne
+        });
+      }
+      return params;
+    }
+
+    // adding filtering by borrower address so the first condition in addLender holds and in dapp we'll probably refactor the
+    // "offers received as a borrower" page and that'll be useful
+  }, {
+    key: "_addBorrower",
+    value: function _addBorrower(options, params) {
+      var _options$filters11, _options$filters11$bo, _options$filters11$bo2;
+      if (options !== null && options !== void 0 && (_options$filters11 = options.filters) !== null && _options$filters11 !== void 0 && (_options$filters11$bo = _options$filters11.borrower) !== null && _options$filters11$bo !== void 0 && (_options$filters11$bo2 = _options$filters11$bo.address) !== null && _options$filters11$bo2 !== void 0 && _options$filters11$bo2.eq) {
+        return _objectSpread(_objectSpread({}, params), {}, {
+          borrowerAddress: options.filters.borrower.address.eq
         });
       }
       return params;
@@ -107,11 +122,41 @@ var OffersHelper = /*#__PURE__*/function () {
   }, {
     key: "_addContract",
     value: function _addContract(options, params) {
-      var _options$filters8, _options$filters8$nft, _options$filters8$nft2;
-      if (options !== null && options !== void 0 && (_options$filters8 = options.filters) !== null && _options$filters8 !== void 0 && (_options$filters8$nft = _options$filters8.nftfi) !== null && _options$filters8$nft !== void 0 && (_options$filters8$nft2 = _options$filters8$nft.contract) !== null && _options$filters8$nft2 !== void 0 && _options$filters8$nft2.name) {
-        var _options$filters9, _options$filters9$nft, _options$filters9$nft2;
+      var _options$filters12, _options$filters12$nf, _options$filters12$nf2;
+      if (options !== null && options !== void 0 && (_options$filters12 = options.filters) !== null && _options$filters12 !== void 0 && (_options$filters12$nf = _options$filters12.nftfi) !== null && _options$filters12$nf !== void 0 && (_options$filters12$nf2 = _options$filters12$nf.contract) !== null && _options$filters12$nf2 !== void 0 && _options$filters12$nf2.name) {
+        var _options$filters13, _options$filters13$nf, _options$filters13$nf2;
         return _objectSpread(_objectSpread({}, params), {}, {
-          contractName: options === null || options === void 0 ? void 0 : (_options$filters9 = options.filters) === null || _options$filters9 === void 0 ? void 0 : (_options$filters9$nft = _options$filters9.nftfi) === null || _options$filters9$nft === void 0 ? void 0 : (_options$filters9$nft2 = _options$filters9$nft.contract) === null || _options$filters9$nft2 === void 0 ? void 0 : _options$filters9$nft2.name
+          contractName: options === null || options === void 0 ? void 0 : (_options$filters13 = options.filters) === null || _options$filters13 === void 0 ? void 0 : (_options$filters13$nf = _options$filters13.nftfi) === null || _options$filters13$nf === void 0 ? void 0 : (_options$filters13$nf2 = _options$filters13$nf.contract) === null || _options$filters13$nf2 === void 0 ? void 0 : _options$filters13$nf2.name
+        });
+      }
+      return params;
+    }
+  }, {
+    key: "_addFilters",
+    value: function _addFilters(options, params) {
+      var _options$filters14, _options$filters14$lo, _options$filters14$lo2, _options$filters16, _options$filters16$lo, _options$filters16$lo2, _options$filters18, _options$filters18$lo, _options$filters18$lo2, _options$filters20, _options$filters20$lo, _options$filters20$lo2, _options$filters20$lo3;
+      if (options !== null && options !== void 0 && (_options$filters14 = options.filters) !== null && _options$filters14 !== void 0 && (_options$filters14$lo = _options$filters14.loan) !== null && _options$filters14$lo !== void 0 && (_options$filters14$lo2 = _options$filters14$lo.apr) !== null && _options$filters14$lo2 !== void 0 && _options$filters14$lo2.lte) {
+        var _options$filters15, _options$filters15$lo, _options$filters15$lo2;
+        params = _objectSpread(_objectSpread({}, params), {}, {
+          termsAprLte: options === null || options === void 0 ? void 0 : (_options$filters15 = options.filters) === null || _options$filters15 === void 0 ? void 0 : (_options$filters15$lo = _options$filters15.loan) === null || _options$filters15$lo === void 0 ? void 0 : (_options$filters15$lo2 = _options$filters15$lo.apr) === null || _options$filters15$lo2 === void 0 ? void 0 : _options$filters15$lo2.lte
+        });
+      }
+      if (options !== null && options !== void 0 && (_options$filters16 = options.filters) !== null && _options$filters16 !== void 0 && (_options$filters16$lo = _options$filters16.loan) !== null && _options$filters16$lo !== void 0 && (_options$filters16$lo2 = _options$filters16$lo.duration) !== null && _options$filters16$lo2 !== void 0 && _options$filters16$lo2.eq) {
+        var _options$filters17, _options$filters17$lo, _options$filters17$lo2;
+        params = _objectSpread(_objectSpread({}, params), {}, {
+          termsDuration: options === null || options === void 0 ? void 0 : (_options$filters17 = options.filters) === null || _options$filters17 === void 0 ? void 0 : (_options$filters17$lo = _options$filters17.loan) === null || _options$filters17$lo === void 0 ? void 0 : (_options$filters17$lo2 = _options$filters17$lo.duration) === null || _options$filters17$lo2 === void 0 ? void 0 : _options$filters17$lo2.eq
+        });
+      }
+      if (options !== null && options !== void 0 && (_options$filters18 = options.filters) !== null && _options$filters18 !== void 0 && (_options$filters18$lo = _options$filters18.loan) !== null && _options$filters18$lo !== void 0 && (_options$filters18$lo2 = _options$filters18$lo.duration) !== null && _options$filters18$lo2 !== void 0 && _options$filters18$lo2.nin) {
+        var _options$filters19, _options$filters19$lo, _options$filters19$lo2, _options$filters19$lo3;
+        params = _objectSpread(_objectSpread({}, params), {}, {
+          termsDurationNin: options === null || options === void 0 ? void 0 : (_options$filters19 = options.filters) === null || _options$filters19 === void 0 ? void 0 : (_options$filters19$lo = _options$filters19.loan) === null || _options$filters19$lo === void 0 ? void 0 : (_options$filters19$lo2 = _options$filters19$lo.duration) === null || _options$filters19$lo2 === void 0 ? void 0 : (_options$filters19$lo3 = _options$filters19$lo2.nin) === null || _options$filters19$lo3 === void 0 ? void 0 : _options$filters19$lo3.join(',')
+        });
+      }
+      if (options !== null && options !== void 0 && (_options$filters20 = options.filters) !== null && _options$filters20 !== void 0 && (_options$filters20$lo = _options$filters20.loan) !== null && _options$filters20$lo !== void 0 && (_options$filters20$lo2 = _options$filters20$lo.currency) !== null && _options$filters20$lo2 !== void 0 && (_options$filters20$lo3 = _options$filters20$lo2.address) !== null && _options$filters20$lo3 !== void 0 && _options$filters20$lo3.eq) {
+        var _options$filters21, _options$filters21$lo, _options$filters21$lo2, _options$filters21$lo3;
+        params = _objectSpread(_objectSpread({}, params), {}, {
+          termsCurrencyAddress: options === null || options === void 0 ? void 0 : (_options$filters21 = options.filters) === null || _options$filters21 === void 0 ? void 0 : (_options$filters21$lo = _options$filters21.loan) === null || _options$filters21$lo === void 0 ? void 0 : (_options$filters21$lo2 = _options$filters21$lo.currency) === null || _options$filters21$lo2 === void 0 ? void 0 : (_options$filters21$lo3 = _options$filters21$lo2.address) === null || _options$filters21$lo3 === void 0 ? void 0 : _options$filters21$lo3.eq
         });
       }
       return params;
@@ -147,7 +192,9 @@ var OffersHelper = /*#__PURE__*/function () {
       params = this._addCollectionAddress(options, params);
       params = this._addNft(options, params);
       params = this._addLender(options, params);
+      params = this._addBorrower(options, params);
       params = this._addContract(options, params);
+      params = this._addFilters(options, params);
       params = this._addPagination(options, params);
       return params;
     }
