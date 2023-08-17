@@ -17,8 +17,8 @@ class LoansFixedV2_1 {
     try {
       const offer = {
         loanERC20Denomination: options.offer.terms.loan.currency,
-        loanPrincipalAmount: String(options.offer.terms.loan.principal),
-        maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
+        loanPrincipalAmount: options.offer.terms.loan.principal.toLocaleString('fullwide', { useGrouping: false }),
+        maximumRepaymentAmount: options.offer.terms.loan.repayment.toLocaleString('fullwide', { useGrouping: false }),
         nftCollateralContract: options.offer.nft.address,
         nftCollateralId: options.offer.nft.id,
         referrer: '0x0000000000000000000000000000000000000000',
