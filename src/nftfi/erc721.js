@@ -114,7 +114,6 @@ class Erc721 {
     const contractName = options.nftfi.contract.name;
     const contractAddress = this._getContractAddress(contractName);
     const accountAddress = options?.account?.address || this.#account.getAddress();
-
     const contract = this.#contractFactory.create({
       address: options.token.address,
       abi: this.#config.erc721.abi

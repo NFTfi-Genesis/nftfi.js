@@ -24,6 +24,8 @@ import Immutables from './nftfi/immutables.js';
 import LoansFixedCollectionV2 from './nftfi/loans/fixed/collection/v2/index.js';
 import Erc20 from './nftfi/erc20.js';
 import Erc721 from './nftfi/erc721.js';
+import Nft from './nftfi/nft.js';
+import NftPunk from './nftfi/nft/punk.js';
 import EOA from './nftfi/account/eoa.js';
 import Multisig from './nftfi/account/multisig.js';
 import MultisigGnosis from './nftfi/account/multisig/gnosis.js';
@@ -176,7 +178,7 @@ export default {
     });
     const loans = new Loans({ api, account, fixed: loanFixed, config, helper });
     const offersSignatures = new OffersSignatures({ account, ethers, config });
-    const erc20 = new Erc20({ config, account, contractFactory, BN });
+    const erc20 = new Erc20({ config, utils, account, contractFactory, BN });
     const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account });
     const offersValidator = new OffersValidator({ erc20, ethers, config, contractFactory });
     const offersRequests = new OffersRequests({ api, account, config, result, error });
@@ -203,6 +205,8 @@ export default {
     const pointsEarn = new RewardsEarnPoints({ api, result, error });
     const rewardsEarn = new RewardsEarn({ allocations: allocationsEarn, points: pointsEarn });
     const rewards = new Rewards({ og: rewardsOg, earn: rewardsEarn });
+    const nftPunk = new NftPunk({ config, utils, error, result, contractFactory });
+    const nft = new Nft({ config, result, erc721, nft: { punk: nftPunk }, ethers: ethersjs });
 
     const nftfi = new NFTfi({
       config,
@@ -216,6 +220,7 @@ export default {
       immutables,
       events,
       rewards,
+      nft,
       utils
     });
 

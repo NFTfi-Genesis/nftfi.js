@@ -18,6 +18,7 @@ var NFTfi = /*#__PURE__*/(0, _createClass2["default"])(function NFTfi() {
   (0, _defineProperty2["default"])(this, "loans", void 0);
   (0, _defineProperty2["default"])(this, "erc20", void 0);
   (0, _defineProperty2["default"])(this, "erc721", void 0);
+  (0, _defineProperty2["default"])(this, "nft", void 0);
   (0, _defineProperty2["default"])(this, "bundles", void 0);
   (0, _defineProperty2["default"])(this, "immutables", void 0);
   (0, _defineProperty2["default"])(this, "utils", void 0);
@@ -30,6 +31,7 @@ var NFTfi = /*#__PURE__*/(0, _createClass2["default"])(function NFTfi() {
   this.loans = options.loans;
   this.erc20 = options.erc20;
   this.erc721 = options.erc721;
+  this.nft = options.nft;
   this.bundles = options === null || options === void 0 ? void 0 : options.bundles;
   this.immutables = options === null || options === void 0 ? void 0 : options.immutables;
   this.utils = options.utils;

@@ -34,6 +34,8 @@ var _immutables = _interopRequireDefault(require("./nftfi/immutables.cjs"));
 var _index6 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/v2/index.cjs"));
 var _erc = _interopRequireDefault(require("./nftfi/erc20.cjs"));
 var _erc2 = _interopRequireDefault(require("./nftfi/erc721.cjs"));
+var _nft = _interopRequireDefault(require("./nftfi/nft.cjs"));
+var _punk = _interopRequireDefault(require("./nftfi/nft/punk.cjs"));
 var _eoa = _interopRequireDefault(require("./nftfi/account/eoa.cjs"));
 var _multisig = _interopRequireDefault(require("./nftfi/account/multisig.cjs"));
 var _gnosis = _interopRequireDefault(require("./nftfi/account/multisig/gnosis.cjs"));
@@ -143,6 +145,8 @@ var _default = {
         pointsEarn,
         rewardsEarn,
         rewards,
+        nftPunk,
+        nft,
         nftfi,
         _args = arguments;
       return _regenerator["default"].wrap(function _callee$(_context) {
@@ -365,6 +369,7 @@ var _default = {
             });
             erc20 = new _erc["default"]({
               config: config,
+              utils: utils,
               account: account,
               contractFactory: contractFactory,
               BN: _bn["default"]
@@ -458,6 +463,22 @@ var _default = {
               og: rewardsOg,
               earn: rewardsEarn
             });
+            nftPunk = new _punk["default"]({
+              config: config,
+              utils: utils,
+              error: error,
+              result: result,
+              contractFactory: contractFactory
+            });
+            nft = new _nft["default"]({
+              config: config,
+              result: result,
+              erc721: erc721,
+              nft: {
+                punk: nftPunk
+              },
+              ethers: _ethers.ethers
+            });
             nftfi = new _index7["default"]({
               config: config,
               account: account,
@@ -470,13 +491,14 @@ var _default = {
               immutables: immutables,
               events: events,
               rewards: rewards,
+              nft: nft,
               utils: utils
             });
             if ((options === null || options === void 0 ? void 0 : (_options$logging = options.logging) === null || _options$logging === void 0 ? void 0 : _options$logging.verbose) === true) {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 93:
+          case 95:
           case "end":
             return _context.stop();
         }

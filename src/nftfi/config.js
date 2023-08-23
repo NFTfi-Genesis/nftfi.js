@@ -103,6 +103,16 @@ const baseConfig = {
       unit: ''
     }
   },
+  nft: {
+    punk: {
+      address: '',
+      abi: [
+        'function offerPunkForSaleToAddress(uint256 punkIndex, uint256 minSalePriceInWei, address toAddress)',
+        'function punkIndexToAddress(uint256) view returns (address)',
+        'function punksOfferedForSale(uint256) view returns (bool isForSale, uint256 punkIndex, address seller, uint256 minValue, address onlySellTo)'
+      ]
+    }
+  },
   website: {
     baseURI: ''
   },
@@ -134,6 +144,7 @@ mainnetConfig.chainId = 1;
 mainnetConfig.website.baseURI = 'https://www.nftfi.com';
 mainnetConfig.api.baseURI = 'https://sdk-api.nftfi.com';
 mainnetConfig.websocket.baseURI = 'https://sdk-websocket.nftfi.com';
+mainnetConfig.nft.punk.address = '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB';
 mainnetConfig.erc721.abi = [
   'function ownerOf(uint256 tokenId) public view returns (address)',
   'function setApprovalForAll(address to, bool approved) public returns()',
@@ -304,6 +315,7 @@ goerliConfig.website.baseURI = 'https://goerli-integration.nftfi.com';
 goerliConfig.api.baseURI = 'https://goerli-integration-sdk-api.nftfi.com';
 goerliConfig.websocket.baseURI = 'https://goerli-integration-sdk-websocket.nftfi.com';
 goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.goerli.gnosis.io';
+goerliConfig.nft.punk.address = '0x7066d903DF9695a5a30B50C24582dA7d1269A09f';
 goerliConfig.erc721.abi = [
   'function superOperators(address _operator, bool _status)',
   'function updateApprovedOperator(address _operator, bool _status)',
