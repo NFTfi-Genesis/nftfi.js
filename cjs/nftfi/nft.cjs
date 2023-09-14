@@ -103,7 +103,7 @@ var Nft = /*#__PURE__*/function () {
               success = _context.sent;
               return _context.abrupt("break", 25);
             case 24:
-              throw 'approve: only ERC1155, ERC721 & CRYPTOPUNK contracts are supported';
+              throw 'specified contract is not supported';
             case 25:
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 success: success
@@ -165,7 +165,7 @@ var Nft = /*#__PURE__*/function () {
               approved = _context2.sent;
               return _context2.abrupt("break", 25);
             case 24:
-              throw 'isApproved: only ERC1155, ERC721 & CRYPTOPUNK contracts are supported';
+              throw 'specified contract is not supported';
             case 25:
               return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 approved: approved
@@ -206,40 +206,38 @@ var Nft = /*#__PURE__*/function () {
               });
             case 8:
               ownerAddress = _context3.sent;
-              return _context3.abrupt("break", 22);
+              return _context3.abrupt("break", 21);
             case 10:
               _context3.next = 12;
               return (0, _classPrivateFieldGet2["default"])(this, _utils).getSupportedInterface(options);
             case 12:
               supportedInterface = _context3.sent;
               _context3.t1 = true;
-              _context3.next = _context3.t1 === supportedInterface.isERC1155 ? 16 : _context3.t1 === supportedInterface.isERC721 ? 17 : 21;
+              _context3.next = _context3.t1 === supportedInterface.isERC721 ? 16 : 20;
               break;
             case 16:
-              throw 'owner: not supported by ERC1155 contract';
-            case 17:
-              _context3.next = 19;
+              _context3.next = 18;
               return this.erc721.ownerOf({
                 token: token
               });
-            case 19:
+            case 18:
               ownerAddress = _context3.sent;
-              return _context3.abrupt("break", 22);
+              return _context3.abrupt("break", 21);
+            case 20:
+              throw 'specified contract is not supported';
             case 21:
-              throw 'owner: only ERC721 & CRYPTOPUNK contracts are supported';
-            case 22:
               return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 address: ownerAddress
               }));
-            case 25:
-              _context3.prev = 25;
+            case 24:
+              _context3.prev = 24;
               _context3.t2 = _context3["catch"](2);
               return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t2));
-            case 28:
+            case 27:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[2, 25]]);
+        }, _callee3, this, [[2, 24]]);
       }));
       function owner(_x3) {
         return _owner.apply(this, arguments);
@@ -291,7 +289,7 @@ var Nft = /*#__PURE__*/function () {
               result = (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.getAddress(ownerAddress) === accountAddress;
               return _context4.abrupt("break", 28);
             case 27:
-              throw 'isOwner: only ERC1155, ERC721 & CRYPTOPUNK contracts are supported';
+              throw 'specified contract is not supported';
             case 28:
               return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 result: result
@@ -334,7 +332,7 @@ var Nft = /*#__PURE__*/function () {
               balance = _context5.sent;
               return _context5.abrupt("break", 12);
             case 11:
-              throw 'balance: only ERC1155 contracts are supported';
+              throw 'specified contract is not supported';
             case 12:
               return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 result: balance

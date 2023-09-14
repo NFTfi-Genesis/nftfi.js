@@ -39,7 +39,7 @@ export default class Nft {
               success = await this.erc721.setApprovalForAll(options);
               break;
             default:
-              throw 'approve: only ERC1155, ERC721 & CRYPTOPUNK contracts are supported';
+              throw 'specified contract is not supported';
           }
         }
       }
@@ -67,7 +67,7 @@ export default class Nft {
               approved = await this.erc721.isApprovedForAll(options);
               break;
             default:
-              throw 'isApproved: only ERC1155, ERC721 & CRYPTOPUNK contracts are supported';
+              throw 'specified contract is not supported';
           }
         }
       }
@@ -89,13 +89,11 @@ export default class Nft {
         default: {
           const supportedInterface = await this.#utils.getSupportedInterface(options);
           switch (true) {
-            case supportedInterface.isERC1155:
-              throw 'owner: not supported by ERC1155 contract';
             case supportedInterface.isERC721:
               ownerAddress = await this.erc721.ownerOf({ token });
               break;
             default:
-              throw 'owner: only ERC721 & CRYPTOPUNK contracts are supported';
+              throw 'specified contract is not supported';
           }
         }
       }
@@ -132,7 +130,7 @@ export default class Nft {
               result = this.#ethers.utils.getAddress(ownerAddress) === accountAddress;
               break;
             default:
-              throw 'isOwner: only ERC1155, ERC721 & CRYPTOPUNK contracts are supported';
+              throw 'specified contract is not supported';
           }
         }
       }
@@ -151,7 +149,7 @@ export default class Nft {
           balance = await this.erc1155.balanceOf(options);
           break;
         default:
-          throw 'balance: only ERC1155 contracts are supported';
+          throw 'specified contract is not supported';
       }
       return this.#result.handle({ result: balance });
     } catch (e) {

@@ -1565,7 +1565,7 @@ Returns the balance of a given ERC1155 token
 
 **Example**  
 ```js
-const balance = await nftfi.nft.balanceOf({
+const balance = await nftfi.nft.erc1155.balanceOf({
   token: {
    address: '0x00000000',
    id: '0'
@@ -1574,7 +1574,7 @@ const balance = await nftfi.nft.balanceOf({
 ```
 **Example**  
 ```js
-const balance = await nftfi.nft.balanceOf({
+const balance = await nftfi.nft.erc1155.balanceOf({
   token: {
    address: '0x00000000',
    id: '0'

@@ -167,7 +167,7 @@ var Erc1155 = /*#__PURE__*/function () {
      * @returns {number} The balance of tokens owned by account.
      *
      * @example
-     * const balance = await nftfi.nft.balanceOf({
+     * const balance = await nftfi.nft.erc1155.balanceOf({
      *   token: {
      *    address: '0x00000000',
      *    id: '0'
@@ -175,7 +175,7 @@ var Erc1155 = /*#__PURE__*/function () {
      * });
      *
      * @example
-     * const balance = await nftfi.nft.balanceOf({
+     * const balance = await nftfi.nft.erc1155.balanceOf({
      *   token: {
      *    address: '0x00000000',
      *    id: '0'
