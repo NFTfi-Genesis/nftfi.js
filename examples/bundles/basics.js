@@ -25,7 +25,7 @@ async function run() {
   console.log('[INFO] bundle created', JSON.stringify(bundle));
 
   // Set approval for NFT to get transfered into the bundle
-  await nftfi.erc721.setApprovalForAll({
+  await nftfi.nft.erc721.setApprovalForAll({
     token: { address: nft.address },
     nftfi: { contract: { name: 'v1-1.bundler' } }
   });

@@ -34,8 +34,9 @@ var _immutables = _interopRequireDefault(require("./nftfi/immutables.cjs"));
 var _index6 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/v2/index.cjs"));
 var _erc = _interopRequireDefault(require("./nftfi/erc20.cjs"));
 var _erc2 = _interopRequireDefault(require("./nftfi/erc721.cjs"));
+var _erc3 = _interopRequireDefault(require("./nftfi/nft/erc1155.cjs"));
+var _cryptoPunks = _interopRequireDefault(require("./nftfi/nft/cryptoPunks.cjs"));
 var _nft = _interopRequireDefault(require("./nftfi/nft.cjs"));
-var _punk = _interopRequireDefault(require("./nftfi/nft/punk.cjs"));
 var _eoa = _interopRequireDefault(require("./nftfi/account/eoa.cjs"));
 var _multisig = _interopRequireDefault(require("./nftfi/account/multisig.cjs"));
 var _gnosis = _interopRequireDefault(require("./nftfi/account/multisig/gnosis.cjs"));
@@ -112,6 +113,7 @@ var _default = {
         eoa,
         websocket,
         http,
+        contractFactory,
         utils,
         storage,
         auth,
@@ -120,7 +122,6 @@ var _default = {
         result,
         helper,
         listings,
-        contractFactory,
         loanFixedV1,
         loanFixedV2,
         loanFixedV2_1,
@@ -135,6 +136,8 @@ var _default = {
         offersRequests,
         offers,
         erc721,
+        erc1155,
+        cryptoPunks,
         immutables,
         bundlesHelper,
         bundles,
@@ -145,7 +148,6 @@ var _default = {
         pointsEarn,
         rewardsEarn,
         rewards,
-        nftPunk,
         nft,
         nftfi,
         _args = arguments;
@@ -290,15 +292,23 @@ var _default = {
             http = new _http["default"]({
               axios: _axios["default"]
             });
-            utils = (options === null || options === void 0 ? void 0 : (_options$dependencies4 = options.dependencies) === null || _options$dependencies4 === void 0 ? void 0 : _options$dependencies4.utils) || new _utils["default"]({
+            contractFactory = (options === null || options === void 0 ? void 0 : (_options$dependencies4 = options.dependencies) === null || _options$dependencies4 === void 0 ? void 0 : _options$dependencies4.contractFactory) || new _factory["default"]({
+              signer: signer,
+              ethers: ethers,
+              account: account,
+              Contract: _contract["default"]
+            });
+            utils = (options === null || options === void 0 ? void 0 : (_options$dependencies5 = options.dependencies) === null || _options$dependencies5 === void 0 ? void 0 : _options$dependencies5.utils) || new _utils["default"]({
               ethers: ethers,
               BN: _bn["default"],
               Date: Date,
               Math: Math,
               Number: Number,
-              web3: _web["default"]
+              web3: _web["default"],
+              contractFactory: contractFactory,
+              config: config
             });
-            storage = (options === null || options === void 0 ? void 0 : (_options$dependencies5 = options.dependencies) === null || _options$dependencies5 === void 0 ? void 0 : _options$dependencies5.storage) || new _storage["default"]({
+            storage = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.storage) || new _storage["default"]({
               storage: localStorage,
               config: config
             });
@@ -309,7 +319,7 @@ var _default = {
               utils: utils,
               storage: storage
             });
-            api = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.api) || new _api["default"]({
+            api = (options === null || options === void 0 ? void 0 : (_options$dependencies7 = options.dependencies) === null || _options$dependencies7 === void 0 ? void 0 : _options$dependencies7.api) || new _api["default"]({
               config: config,
               auth: auth,
               http: http
@@ -323,12 +333,6 @@ var _default = {
               api: api,
               config: config,
               helper: helper
-            });
-            contractFactory = (options === null || options === void 0 ? void 0 : (_options$dependencies7 = options.dependencies) === null || _options$dependencies7 === void 0 ? void 0 : _options$dependencies7.contractFactory) || new _factory["default"]({
-              signer: signer,
-              ethers: ethers,
-              account: account,
-              Contract: _contract["default"]
             });
             loanFixedV1 = new _index2["default"]({
               config: config,
@@ -412,6 +416,18 @@ var _default = {
               contractFactory: contractFactory,
               account: account
             });
+            erc1155 = new _erc3["default"]({
+              config: config,
+              contractFactory: contractFactory,
+              account: account
+            });
+            cryptoPunks = new _cryptoPunks["default"]({
+              config: config,
+              utils: utils,
+              error: error,
+              result: result,
+              contractFactory: contractFactory
+            });
             immutables = new _immutables["default"]({
               config: config,
               account: account,
@@ -463,21 +479,19 @@ var _default = {
               og: rewardsOg,
               earn: rewardsEarn
             });
-            nftPunk = new _punk["default"]({
-              config: config,
-              utils: utils,
-              error: error,
-              result: result,
-              contractFactory: contractFactory
-            });
             nft = new _nft["default"]({
               config: config,
               result: result,
-              erc721: erc721,
               nft: {
-                punk: nftPunk
+                erc1155: erc1155,
+                cryptoPunks: cryptoPunks,
+                erc721: erc721
               },
-              ethers: _ethers.ethers
+              ethers: _ethers.ethers,
+              account: account,
+              contractFactory: contractFactory,
+              error: error,
+              utils: utils
             });
             nftfi = new _index7["default"]({
               config: config,
@@ -498,7 +512,7 @@ var _default = {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 95:
+          case 96:
           case "end":
             return _context.stop();
         }

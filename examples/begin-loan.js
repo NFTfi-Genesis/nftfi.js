@@ -26,7 +26,7 @@ async function run() {
     const offer = offers[0];
     // Set approval for NFT going into escrow
     console.log('[INFO] approving NFT for use with NFTfi contract');
-    await borrower.erc721.setApprovalForAll({
+    await borrower.nft.erc721.setApprovalForAll({
       token: {
         address: offer.nft.address
       },

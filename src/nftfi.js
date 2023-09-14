@@ -24,8 +24,9 @@ import Immutables from './nftfi/immutables.js';
 import LoansFixedCollectionV2 from './nftfi/loans/fixed/collection/v2/index.js';
 import Erc20 from './nftfi/erc20.js';
 import Erc721 from './nftfi/erc721.js';
+import Erc1155 from './nftfi/nft/erc1155.js';
+import CryptoPunks from './nftfi/nft/cryptoPunks.js';
 import Nft from './nftfi/nft.js';
-import NftPunk from './nftfi/nft/punk.js';
 import EOA from './nftfi/account/eoa.js';
 import Multisig from './nftfi/account/multisig.js';
 import MultisigGnosis from './nftfi/account/multisig/gnosis.js';
@@ -154,7 +155,10 @@ export default {
 
     const websocket = new Websocket({ config, io });
     const http = new Http({ axios });
-    const utils = options?.dependencies?.utils || new Utils({ ethers, BN, Date, Math, Number, web3 });
+    const contractFactory =
+      options?.dependencies?.contractFactory || new ContractFactory({ signer, ethers, account, Contract });
+    const utils =
+      options?.dependencies?.utils || new Utils({ ethers, BN, Date, Math, Number, web3, contractFactory, config });
     const storage = options?.dependencies?.storage || new Storage({ storage: localStorage, config });
     const auth = new Auth({ http, account, config, utils, storage });
     const api = options?.dependencies?.api || new Api({ config, auth, http });
@@ -162,8 +166,6 @@ export default {
     const result = new Result();
     const helper = new Helper({ config });
     const listings = new Listings({ api, config, helper });
-    const contractFactory =
-      options?.dependencies?.contractFactory || new ContractFactory({ signer, ethers, account, Contract });
 
     const loanFixedV1 = new LoansFixedV1({ config, contractFactory });
     const loanFixedV2 = new LoansFixedV2({ config, contractFactory });
@@ -195,6 +197,8 @@ export default {
       helper
     });
     const erc721 = new Erc721({ config, contractFactory, account });
+    const erc1155 = new Erc1155({ config, contractFactory, account });
+    const cryptoPunks = new CryptoPunks({ config, utils, error, result, contractFactory });
     const immutables = new Immutables({ config, account, error, result, contractFactory });
     const bundlesHelper = new BundlesHelper({ config, contractFactory, ethers });
     const bundles = new Bundles({ config, account, error, result, helper: bundlesHelper, contractFactory });
@@ -205,8 +209,16 @@ export default {
     const pointsEarn = new RewardsEarnPoints({ api, result, error });
     const rewardsEarn = new RewardsEarn({ allocations: allocationsEarn, points: pointsEarn });
     const rewards = new Rewards({ og: rewardsOg, earn: rewardsEarn });
-    const nftPunk = new NftPunk({ config, utils, error, result, contractFactory });
-    const nft = new Nft({ config, result, erc721, nft: { punk: nftPunk }, ethers: ethersjs });
+    const nft = new Nft({
+      config,
+      result,
+      nft: { erc1155, cryptoPunks, erc721 },
+      ethers: ethersjs,
+      account,
+      contractFactory,
+      error,
+      utils
+    });
 
     const nftfi = new NFTfi({
       config,

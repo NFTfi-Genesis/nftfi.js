@@ -1,8 +1,8 @@
 /**
  * @class
- * Class for working with ERC721 non-fungible tokens.
+ * Class for working with ERC1155 multi token standard.
  */
-class Erc721 {
+class Erc1155 {
   #config;
   #contractFactory;
   #account;
@@ -21,43 +21,9 @@ class Erc721 {
         return this.#config.loan.fixed.v2.address;
       case 'v2-1.loan.fixed':
         return this.#config.loan.fixed.v2_1.address;
-      case 'v1.bundler':
-        return this.#config.bundler.v1.address;
-      case 'v1-1.bundler':
-        return this.#config.bundler.v1_1.address;
       case 'v2.loan.fixed.collection':
         return this.#config.loan.fixed.collection.v2.address;
-      case 'v1.bundler.migrate':
-        return this.#config.bundler.migrate.v1.address;
     }
-  }
-
-  /**
-   * Returns the owner of the specified NFT.
-   *
-   * @param {object} options - Options
-   * @param {string} options.token.address - The ERC721 token address
-   * @param {string} options.token.id - The ERC721 token ID
-   * @returns {string} The NFT's owner address
-   *
-   * @example
-   * const address = await nftfi.nft.erc721.ownerOf({
-   *   token: {
-   *    address: '0x00000000',
-   *    id: '0'
-   *   }
-   * });
-   */
-  async ownerOf(options) {
-    const contract = this.#contractFactory.create({
-      address: options.token.address,
-      abi: this.#config.erc721.abi
-    });
-    const address = await contract.call({
-      function: 'ownerOf',
-      args: [options.token.id]
-    });
-    return address.toLowerCase();
   }
 
   /**
@@ -65,12 +31,12 @@ class Erc721 {
    * The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
    *
    * @param {object} options - Options
-   * @param {string} options.token.address - The ERC721 token address
+   * @param {string} options.token.address - The ERC1155 token address
    * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
    * @returns {boolean} Boolean value indicating whether the operation succeeded
    *
    * @example
-   * const address = await nftfi.nft.erc721.setApprovalForAll({
+   * const address = await nftfi.nft.erc1155.setApprovalForAll({
    *   token: {
    *    address: '0x00000000'
    *   },
@@ -83,7 +49,7 @@ class Erc721 {
     const contractAddress = this._getContractAddress(contractName);
     const contract = this.#contractFactory.create({
       address: options.token.address,
-      abi: this.#config.erc721.abi
+      abi: this.#config.erc1155.abi
     });
     const result = await contract.call({
       function: 'setApprovalForAll',
@@ -98,12 +64,12 @@ class Erc721 {
    * The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
    *
    * @param {object} options - Options
-   * @param {string} options.token.address - The ERC721 token address
+   * @param {string} options.token.address - The ERC1155 token address
    * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
    * @returns {boolean} Boolean value indicating whether permission has been granted or not
    *
    * @example
-   * const address = await nftfi.nft.erc721.isApprovalForAll({
+   * const address = await nftfi.nft.erc1155.isApprovalForAll({
    *   token: {
    *    address: '0x00000000'
    *   },
@@ -116,7 +82,7 @@ class Erc721 {
     const accountAddress = options?.account?.address || this.#account.getAddress();
     const contract = this.#contractFactory.create({
       address: options.token.address,
-      abi: this.#config.erc721.abi
+      abi: this.#config.erc1155.abi
     });
     const result = await contract.call({
       function: 'isApprovedForAll',
@@ -125,6 +91,48 @@ class Erc721 {
 
     return result;
   }
+
+  /**
+   * Returns the balance of a given ERC1155 token
+   *
+   * @param {object} options - Options
+   * @param {string} options.token.address - The ERC1155 token address
+   * @param {string} options.token.id - The ERC1155 token id
+   * @param {string} [options.account.address] - The address of the account (If not provided, the signer account address will be used.)
+   * @returns {number} The balance of tokens owned by account.
+   *
+   * @example
+   * const balance = await nftfi.nft.balanceOf({
+   *   token: {
+   *    address: '0x00000000',
+   *    id: '0'
+   *   }
+   * });
+   *
+   * @example
+   * const balance = await nftfi.nft.balanceOf({
+   *   token: {
+   *    address: '0x00000000',
+   *    id: '0'
+   *   },
+   *   account: {
+   *    address: "0x111111111"
+   *   }
+   * });
+   */
+  async balanceOf(options) {
+    const accountAddress = options?.account?.address || this.#account.getAddress();
+    const tokenId = options?.token?.id;
+    const contract = this.#contractFactory.create({
+      address: options.token.address,
+      abi: this.#config.erc1155.abi
+    });
+    const result = await contract.call({
+      function: 'balanceOf',
+      args: [accountAddress, tokenId]
+    });
+    return result;
+  }
 }
 
-export default Erc721;
+export default Erc1155;

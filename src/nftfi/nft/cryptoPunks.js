@@ -1,4 +1,4 @@
-export default class NftPunk {
+class CryptoPunks {
   #config;
   #contractFactory;
   #contract;
@@ -7,8 +7,8 @@ export default class NftPunk {
     this.#config = options?.config;
     this.#contractFactory = options?.contractFactory;
     this.#contract = this.#contractFactory.create({
-      address: this.#config.nft.punk.address,
-      abi: this.#config.nft.punk.abi
+      address: this.#config.nft.cryptoPunks.address,
+      abi: this.#config.nft.cryptoPunks.abi
     });
   }
 
@@ -51,6 +51,8 @@ export default class NftPunk {
       function: 'punkIndexToAddress',
       args: [punkIndex]
     });
-    return address.toLowerCase();
+    return address;
   }
 }
+
+export default CryptoPunks;

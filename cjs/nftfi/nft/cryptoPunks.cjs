@@ -16,9 +16,9 @@ function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollect
 var _config = /*#__PURE__*/new WeakMap();
 var _contractFactory = /*#__PURE__*/new WeakMap();
 var _contract = /*#__PURE__*/new WeakMap();
-var NftPunk = /*#__PURE__*/function () {
-  function NftPunk(options) {
-    (0, _classCallCheck2["default"])(this, NftPunk);
+var CryptoPunks = /*#__PURE__*/function () {
+  function CryptoPunks(options) {
+    (0, _classCallCheck2["default"])(this, CryptoPunks);
     _classPrivateFieldInitSpec(this, _config, {
       writable: true,
       value: void 0
@@ -34,11 +34,11 @@ var NftPunk = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
     (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
-      address: (0, _classPrivateFieldGet2["default"])(this, _config).nft.punk.address,
-      abi: (0, _classPrivateFieldGet2["default"])(this, _config).nft.punk.abi
+      address: (0, _classPrivateFieldGet2["default"])(this, _config).nft.cryptoPunks.address,
+      abi: (0, _classPrivateFieldGet2["default"])(this, _config).nft.cryptoPunks.abi
     }));
   }
-  (0, _createClass2["default"])(NftPunk, [{
+  (0, _createClass2["default"])(CryptoPunks, [{
     key: "_getContractAddress",
     value: function _getContractAddress(contractName) {
       switch (contractName) {
@@ -127,7 +127,7 @@ var NftPunk = /*#__PURE__*/function () {
               });
             case 3:
               address = _context3.sent;
-              return _context3.abrupt("return", address.toLowerCase());
+              return _context3.abrupt("return", address);
             case 5:
             case "end":
               return _context3.stop();
@@ -140,6 +140,7 @@ var NftPunk = /*#__PURE__*/function () {
       return ownerOf;
     }()
   }]);
-  return NftPunk;
+  return CryptoPunks;
 }();
-exports["default"] = NftPunk;
+var _default = CryptoPunks;
+exports["default"] = _default;

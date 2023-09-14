@@ -9,6 +9,8 @@ class Utils {
   #Date;
   #Math;
   #Number;
+  #contractFactory;
+  #config;
 
   constructor(options = {}) {
     this.#ethers = options?.ethers;
@@ -17,6 +19,8 @@ class Utils {
     this.#Date = options?.Date;
     this.#Math = options?.Math;
     this.#Number = options?.Number;
+    this.#contractFactory = options?.contractFactory;
+    this.#config = options?.config;
   }
 
   /**
@@ -147,6 +151,41 @@ class Utils {
    */
   calcApr(principal, repayment, duration) {
     return ((repayment * 100) / principal - 100) * (365 / duration);
+  }
+
+  /**
+   * Checks if a token contract supports specific interfaces (ERC1155 and ERC721).
+   *
+   * @param {Object} options - The options for performing the contract interface checks.
+   * @param {address} options.token.address - The contract address to do interface checks against.
+   * @returns {Object} - The combined results for the various interface checks.
+   *
+   */
+  async getSupportedInterface(options) {
+    const contract = this.#contractFactory.create({
+      address: options.token.address,
+      abi: ['function supportsInterface(bytes4 interfaceId) view returns (bool)']
+    });
+    const supportsInterface = async (contract, interfaceName) => {
+      let result = null;
+      try {
+        result = await contract.call({
+          function: 'supportsInterface',
+          args: [this.#config[interfaceName].interfaceId]
+        });
+      } catch (e) {
+        result = false;
+      }
+      return result;
+    };
+    const [isERC721, isERC1155] = await Promise.all([
+      supportsInterface(contract, 'erc721'),
+      supportsInterface(contract, 'erc1155')
+    ]);
+    return {
+      isERC721,
+      isERC1155
+    };
   }
 }
 

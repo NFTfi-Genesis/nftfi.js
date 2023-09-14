@@ -27,7 +27,7 @@ async function run() {
     id: process.env.NFTFI_SDK_EXAMPLE_NFT_ID
   };
   // Get the owner of the NFT
-  const ownerAddress = await nftfi.erc721.ownerOf({
+  const ownerAddress = await nftfi.nft.erc721.ownerOf({
     token: {
       address: nft.address,
       id: nft.id

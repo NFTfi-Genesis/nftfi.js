@@ -38,7 +38,7 @@ async function run() {
     bundle = await borrower.bundles.mint();
 
     // Set approval for NFT to get transfered into the bundle
-    await borrower.erc721.setApprovalForAll({
+    await borrower.nft.erc721.setApprovalForAll({
       token: { address: nfts.address },
       nftfi: { contract: { name: 'v1-1.bundler' } }
     });

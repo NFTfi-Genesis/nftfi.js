@@ -22,6 +22,7 @@ Please note that this SDK is in **closed beta**, and is constantly under develop
   - [Utils](#utils)
   - [Erc20](#erc20)
   - [Erc721](#erc721)
+  - [Erc1155](#erc1155)
 - [Examples](#examples)
   - [SDK using an EOA](#sdk-using-an-eoa-externally-owned-account)
   - [SDK using a Multisig](#sdk-using-a-multisig-gnosis-safe)
@@ -480,7 +481,7 @@ Returns the owner of the specified NFT.
 
 **Example**  
 ```js
-const address = await nftfi.erc721.ownerOf({
+const address = await nftfi.nft.erc721.ownerOf({
   token: {
    address: '0x00000000',
    id: '0'
@@ -493,7 +494,7 @@ const address = await nftfi.erc721.ownerOf({
 <a name="Erc721+setApprovalForAll"></a>
 
 #### `erc721.setApprovalForAll(options)` ⇒ <code>boolean</code>
-Sets or unsets the approval of a given NFTfi contract.
+Sets the approval of a given NFTfi contract.
 The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
 
 **Kind**: instance method of [<code>Erc721</code>](#Erc721)  
@@ -507,7 +508,7 @@ The NFTfi contract is allowed to transfer all tokens of the sender on their beha
 
 **Example**  
 ```js
-const address = await nftfi.erc721.setApprovalForAll({
+const address = await nftfi.nft.erc721.setApprovalForAll({
   token: {
    address: '0x00000000'
   },
@@ -520,7 +521,7 @@ const address = await nftfi.erc721.setApprovalForAll({
 <a name="Erc721+isApprovedForAll"></a>
 
 #### `erc721.isApprovedForAll(options)` ⇒ <code>boolean</code>
-Retruns the approval of a given NFTfi contract.
+Returns the approval of a given NFTfi contract.
 The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
 
 **Kind**: instance method of [<code>Erc721</code>](#Erc721)  
@@ -534,7 +535,7 @@ The NFTfi contract is allowed to transfer all tokens of the sender on their beha
 
 **Example**  
 ```js
-const address = await nftfi.erc721.isApprovalForAll({
+const address = await nftfi.nft.erc721.isApprovalForAll({
   token: {
    address: '0x00000000'
   },
@@ -1300,6 +1301,7 @@ Class with utility methods.
     * [`.formatWei(value, unit)`](#Utils+formatWei) ⇒ <code>BigNumber</code>
     * [`.calcRepaymentAmount(principal, apr, duration)`](#Utils+calcRepaymentAmount) ⇒ <code>number</code>
     * [`.calcApr(principal, repayment, duration)`](#Utils+calcApr) ⇒ <code>number</code>
+    * [`.getSupportedInterface(options)`](#Utils+getSupportedInterface) ⇒ <code>Object</code>
 
 
 * * *
@@ -1457,6 +1459,130 @@ const principal = 1000000000000000000;
 const repayment = 1500000000000000000;
 const duration = 30;
 const apr = nftfi.utils.calcApr(principal, repayment, duration);
+```
+
+* * *
+
+<a name="Utils+getSupportedInterface"></a>
+
+#### `utils.getSupportedInterface(options)` ⇒ <code>Object</code>
+Checks if a token contract supports specific interfaces (ERC1155 and ERC721).
+
+**Kind**: instance method of [<code>Utils</code>](#Utils)  
+**Returns**: <code>Object</code> - - The combined results for the various interface checks.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | The options for performing the contract interface checks. |
+| options.token.address | <code>address</code> | The contract address to do interface checks against. |
+
+
+* * *
+
+<a name="Erc1155"></a>
+
+### Erc1155
+Class for working with ERC1155 multi token standard.
+
+**Kind**: global class  
+
+* [Erc1155](#Erc1155)
+    * [`.setApprovalForAll(options)`](#Erc1155+setApprovalForAll) ⇒ <code>boolean</code>
+    * [`.isApprovedForAll(options)`](#Erc1155+isApprovedForAll) ⇒ <code>boolean</code>
+    * [`.balanceOf(options)`](#Erc1155+balanceOf) ⇒ <code>number</code>
+
+
+* * *
+
+<a name="Erc1155+setApprovalForAll"></a>
+
+#### `erc1155.setApprovalForAll(options)` ⇒ <code>boolean</code>
+Sets the approval of a given NFTfi contract.
+The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
+
+**Kind**: instance method of [<code>Erc1155</code>](#Erc1155)  
+**Returns**: <code>boolean</code> - Boolean value indicating whether the operation succeeded  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options |
+| options.token.address | <code>string</code> | The ERC1155 token address |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+
+**Example**  
+```js
+const address = await nftfi.nft.erc1155.setApprovalForAll({
+  token: {
+   address: '0x00000000'
+  },
+  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+});
+```
+
+* * *
+
+<a name="Erc1155+isApprovedForAll"></a>
+
+#### `erc1155.isApprovedForAll(options)` ⇒ <code>boolean</code>
+Returns the approval of a given NFTfi contract.
+The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
+
+**Kind**: instance method of [<code>Erc1155</code>](#Erc1155)  
+**Returns**: <code>boolean</code> - Boolean value indicating whether permission has been granted or not  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options |
+| options.token.address | <code>string</code> | The ERC1155 token address |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+
+**Example**  
+```js
+const address = await nftfi.nft.erc1155.isApprovalForAll({
+  token: {
+   address: '0x00000000'
+  },
+  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+});
+```
+
+* * *
+
+<a name="Erc1155+balanceOf"></a>
+
+#### `erc1155.balanceOf(options)` ⇒ <code>number</code>
+Returns the balance of a given ERC1155 token
+
+**Kind**: instance method of [<code>Erc1155</code>](#Erc1155)  
+**Returns**: <code>number</code> - The balance of tokens owned by account.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options |
+| options.token.address | <code>string</code> | The ERC1155 token address |
+| options.token.id | <code>string</code> | The ERC1155 token id |
+| [options.account.address] | <code>string</code> | The address of the account (If not provided, the signer account address will be used.) |
+
+**Example**  
+```js
+const balance = await nftfi.nft.balanceOf({
+  token: {
+   address: '0x00000000',
+   id: '0'
+  }
+});
+```
+**Example**  
+```js
+const balance = await nftfi.nft.balanceOf({
+  token: {
+   address: '0x00000000',
+   id: '0'
+  },
+  account: {
+   address: "0x111111111"
+  }
+});
 ```
 
 * * *

@@ -83,6 +83,11 @@ const baseConfig = {
     }
   },
   erc721: {
+    interfaceId: '',
+    abi: []
+  },
+  erc1155: {
+    interfaceId: '',
     abi: []
   },
   erc20: {
@@ -104,7 +109,7 @@ const baseConfig = {
     }
   },
   nft: {
-    punk: {
+    cryptoPunks: {
       address: '',
       abi: [
         'function offerPunkForSaleToAddress(uint256 punkIndex, uint256 minSalePriceInWei, address toAddress)',
@@ -144,11 +149,18 @@ mainnetConfig.chainId = 1;
 mainnetConfig.website.baseURI = 'https://www.nftfi.com';
 mainnetConfig.api.baseURI = 'https://sdk-api.nftfi.com';
 mainnetConfig.websocket.baseURI = 'https://sdk-websocket.nftfi.com';
-mainnetConfig.nft.punk.address = '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB';
+mainnetConfig.nft.cryptoPunks.address = '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB';
+mainnetConfig.erc721.interfaceId = '0x80ac58cd';
 mainnetConfig.erc721.abi = [
   'function ownerOf(uint256 tokenId) public view returns (address)',
   'function setApprovalForAll(address to, bool approved) public returns()',
   'function isApprovedForAll(address owner, address operator) view returns (bool)'
+];
+mainnetConfig.erc1155.interfaceId = '0xd9b67a26';
+mainnetConfig.erc1155.abi = [
+  'function balanceOf(address _owner, uint256 _id) view returns (uint256)',
+  'function isApprovedForAll(address _owner, address _operator) view returns (bool isOperator)',
+  'function setApprovalForAll(address operator, bool approved)'
 ];
 mainnetConfig.erc20.abi = [
   'function balanceOf(address owner) view returns (uint256)',
@@ -315,7 +327,8 @@ goerliConfig.website.baseURI = 'https://goerli-integration.nftfi.com';
 goerliConfig.api.baseURI = 'https://goerli-integration-sdk-api.nftfi.com';
 goerliConfig.websocket.baseURI = 'https://goerli-integration-sdk-websocket.nftfi.com';
 goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.goerli.gnosis.io';
-goerliConfig.nft.punk.address = '0x7066d903DF9695a5a30B50C24582dA7d1269A09f';
+goerliConfig.nft.cryptoPunks.address = '0x7066d903DF9695a5a30B50C24582dA7d1269A09f';
+goerliConfig.erc721.interfaceId = '0x80ac58cd';
 goerliConfig.erc721.abi = [
   'function superOperators(address _operator, bool _status)',
   'function updateApprovedOperator(address _operator, bool _status)',
@@ -325,6 +338,12 @@ goerliConfig.erc721.abi = [
   'function ownerOf(uint256 tokenId) public view returns (address)',
   'function setApprovalForAll(address to, bool approved) public returns()',
   'function isApprovedForAll(address owner, address operator) view returns (bool)'
+];
+goerliConfig.erc1155.interfaceId = '0xd9b67a26';
+goerliConfig.erc1155.abi = [
+  'function balanceOf(address _owner, uint256 _id) view returns (uint256)',
+  'function isApprovedForAll(address _owner, address _operator) view returns (bool isOperator)',
+  'function setApprovalForAll(address operator, bool approved)'
 ];
 goerliConfig.erc20.abi = [
   'function mint(address account, uint256 amount)',
