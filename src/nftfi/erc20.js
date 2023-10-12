@@ -23,10 +23,14 @@ class Erc20 {
         return this.#config.loan.fixed.v2.address;
       case 'v2-1.loan.fixed':
         return this.#config.loan.fixed.v2_1.address;
+      case 'v2-3.loan.fixed':
+        return this.#config.loan.fixed.v2_3.address;
       case 'v1.bundler':
         return this.#config.bundler.v1.address;
       case 'v2.loan.fixed.collection':
         return this.#config.loan.fixed.collection.v2.address;
+      case 'v2-3.loan.fixed.collection':
+        return this.#config.loan.fixed.collection.v2_3.address;
     }
   }
 

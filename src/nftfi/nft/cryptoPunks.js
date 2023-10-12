@@ -16,8 +16,12 @@ class CryptoPunks {
     switch (contractName) {
       case 'v2-1.loan.fixed':
         return this.#config.loan.fixed.v2_1.address;
+      case 'v2-3.loan.fixed':
+        return this.#config.loan.fixed.v2_3.address;
       case 'v2.loan.fixed.collection':
         return this.#config.loan.fixed.collection.v2.address;
+      case 'v2-3.loan.fixed.collection':
+        return this.#config.loan.fixed.collection.v2_3.address;
     }
   }
 

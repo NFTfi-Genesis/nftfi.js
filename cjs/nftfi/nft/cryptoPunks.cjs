@@ -44,8 +44,12 @@ var CryptoPunks = /*#__PURE__*/function () {
       switch (contractName) {
         case 'v2-1.loan.fixed':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.address;
+        case 'v2-3.loan.fixed':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.address;
         case 'v2.loan.fixed.collection':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.address;
+        case 'v2-3.loan.fixed.collection':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.address;
       }
     }
   }, {

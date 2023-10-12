@@ -42,6 +42,11 @@ var baseConfig = {
           name: '',
           address: '',
           abi: []
+        },
+        v2_3: {
+          name: '',
+          address: '',
+          abi: []
         }
       },
       v1: {
@@ -55,6 +60,11 @@ var baseConfig = {
         abi: []
       },
       v2_1: {
+        name: '',
+        address: '',
+        abi: []
+      },
+      v2_3: {
         name: '',
         address: '',
         abi: []
@@ -147,6 +157,10 @@ var baseConfig = {
     v2: {
       address: '',
       abi: []
+    },
+    v2_3: {
+      address: '',
+      abi: []
     }
   },
   auth: {
@@ -186,16 +200,24 @@ mainnetConfig.loan.fixed.v1.abi = ['function cancelLoanCommitmentBeforeLoanHasBe
 mainnetConfig.loan.fixed.collection.v2.name = 'v2.loan.fixed.collection';
 mainnetConfig.loan.fixed.collection.v2.address = '0xE52Cec0E90115AbeB3304BaA36bc2655731f7934';
 mainnetConfig.loan.fixed.collection.v2.abi = ['function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)', 'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()', 'function payBackLoan(uint32 _loanId)', 'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)', 'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)', 'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'];
+mainnetConfig.loan.fixed.collection.v2_3.name = 'v2-3.loan.fixed.collection';
+mainnetConfig.loan.fixed.collection.v2_3.address = '0xD0C6e59B50C32530C627107F50Acc71958C4341F';
+mainnetConfig.loan.fixed.collection.v2_3.abi = ['function cancelLoanCommitmentBeforeLoanHasBegun(uint256 _nonce)', 'function liquidateOverdueLoan(uint32 _loanId)', 'function payBackLoan(uint32 _loanId)', 'function acceptCollectionOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)', 'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer), tuple(uint256 nonce, uint256 expiry, address signer, bytes signature), tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints)) returns (uint32)', 'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)', 'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'];
 mainnetConfig.loan.fixed.v2.name = 'v2.loan.fixed';
 mainnetConfig.loan.fixed.v2.address = '0xf896527c49b44aAb3Cf22aE356Fa3AF8E331F280';
 mainnetConfig.loan.fixed.v2.abi = ['function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)', 'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()', 'function payBackLoan(uint32 _loanId)', 'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)', 'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)', 'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'];
 mainnetConfig.loan.fixed.v2_1.name = 'v2-1.loan.fixed';
 mainnetConfig.loan.fixed.v2_1.address = '0x8252Df1d8b29057d1Afe3062bf5a64D503152BC8';
 mainnetConfig.loan.fixed.v2_1.abi = mainnetConfig.loan.fixed.v2.abi;
+mainnetConfig.loan.fixed.v2_3.name = 'v2-3.loan.fixed';
+mainnetConfig.loan.fixed.v2_3.address = '0xd0a40eB7FD94eE97102BA8e9342243A2b2E22207';
+mainnetConfig.loan.fixed.v2_3.abi = mainnetConfig.loan.fixed.v2.abi;
 mainnetConfig.loan.adminFeeInBasisPoints = '500';
 mainnetConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.gnosis.io/';
 mainnetConfig.signingUtils.v2.address = '0x5a42d72372858e10edc03b26bf449f78ff3c0e6f';
 mainnetConfig.signingUtils.v2.abi = ['function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, address _loanContract) public view returns (bool)'];
+mainnetConfig.signingUtils.v2_3.address = '0x43E5a2985897b4E0175Ed3A3f527A597cb29bbEe';
+mainnetConfig.signingUtils.v2_3.abi = mainnetConfig.signingUtils.v2.abi;
 mainnetConfig.bundler.v1.name = 'v1.bundler';
 mainnetConfig.bundler.v1.address = '0x16c583748faeD1C5A5bcd744b4892ee6B6290094';
 mainnetConfig.bundler.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId, address indexed personalBundler)', 'function decomposeBundle(uint256 tokenId, address receiver)', 'function addBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function removeBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function safeMint(address to) returns (uint256)', 'function safeTransferFrom(address from, address to, uint256 tokenId)', 'function totalChildContracts(uint256 tokenId) view returns (uint256)', 'function childContractByIndex(uint256 tokenId, uint256 index) view returns (address childContract)', 'function totalChildTokens(uint256 tokenId, address childContract) view returns (uint256)', 'function childTokenByIndex(uint256 tokenId, address childContract, uint256 index) view returns (uint256 childTokenId)'];
@@ -217,7 +239,7 @@ var rinkebyConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 rinkebyConfig.chainId = 4;
 rinkebyConfig.website.baseURI = 'https://integration.nftfi.com';
 rinkebyConfig.api.baseURI = 'https://development-sdk-api.nftfi.com';
-rinkebyConfig.erc721.abi = ['function ownerOf(uint256 tokenId) public view returns (address)', 'function setApprovalForAll(address to, bool approved) public returns()', 'function isApprovedForAll(address owner, address operator) view returns (bool)'];
+rinkebyConfig.erc721.abi = mainnetConfig.erc721.abi;
 rinkebyConfig.erc20.abi = ['function balanceOf(address owner) view returns (uint256)', 'function approve(address spender, uint256 value) returns (bool)', 'function allowance(address owner, address spender) public view returns (uint256)'];
 rinkebyConfig.erc20.weth.address = '0xc778417e063141139fce010982780140aa0cd5ab';
 rinkebyConfig.erc20.weth.symbol = 'wETH';
@@ -244,7 +266,7 @@ goerliConfig.websocket.baseURI = 'https://goerli-integration-sdk-websocket.nftfi
 goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.goerli.gnosis.io';
 goerliConfig.nft.cryptoPunks.address = '0x7066d903DF9695a5a30B50C24582dA7d1269A09f';
 goerliConfig.erc721.interfaceId = '0x80ac58cd';
-goerliConfig.erc721.abi = ['function superOperators(address _operator, bool _status)', 'function updateApprovedOperator(address _operator, bool _status)', 'function drip(address _recipient)', 'function approve(address to, uint256 tokenId)', 'function transferFrom(address from, address to, uint256 tokenId)', 'function ownerOf(uint256 tokenId) public view returns (address)', 'function setApprovalForAll(address to, bool approved) public returns()', 'function isApprovedForAll(address owner, address operator) view returns (bool)'];
+goerliConfig.erc721.abi = ['function approve(address to, uint256 tokenId)', 'function transferFrom(address from, address to, uint256 tokenId)', 'function ownerOf(uint256 tokenId) public view returns (address)', 'function setApprovalForAll(address to, bool approved) public returns()', 'function isApprovedForAll(address owner, address operator) view returns (bool)'];
 goerliConfig.erc1155.interfaceId = '0xd9b67a26';
 goerliConfig.erc1155.abi = ['function balanceOf(address _owner, uint256 _id) view returns (uint256)', 'function isApprovedForAll(address _owner, address _operator) view returns (bool isOperator)', 'function setApprovalForAll(address operator, bool approved)'];
 goerliConfig.erc20.abi = ['function mint(address account, uint256 amount)', 'function transferFrom(address sender, address recipient, uint256 amount) returns (bool)', 'function balanceOf(address owner) view returns (uint256)', 'function approve(address spender, uint256 value) returns (bool)', 'function allowance(address owner, address spender) public view returns (uint256)'];
@@ -268,13 +290,21 @@ goerliConfig.loan.fixed.v2.abi = ['function cancelLoanCommitmentBeforeLoanHasBeg
 goerliConfig.loan.fixed.v2_1.name = 'v2-1.loan.fixed';
 goerliConfig.loan.fixed.v2_1.address = '0x77097f421CEb2454eB5F77898d25159ff3C7381d';
 goerliConfig.loan.fixed.v2_1.abi = goerliConfig.loan.fixed.v2.abi;
+goerliConfig.loan.fixed.v2_3.name = 'v2-3.loan.fixed';
+goerliConfig.loan.fixed.v2_3.address = '0x2f42800C426237e535cA9eCccdC38F794f26F6e3';
+goerliConfig.loan.fixed.v2_3.abi = goerliConfig.loan.fixed.v2.abi;
 goerliConfig.loan.fixed.collection.v2.name = 'v2.loan.fixed.collection';
 goerliConfig.loan.fixed.collection.v2.address = '0x06aE278EaE3A87d06652843Ac90d03e3E0d2E3f5';
 goerliConfig.loan.fixed.collection.v2.abi = ['function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)', 'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()', 'function payBackLoan(uint32 _loanId)', 'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)', 'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)', 'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'];
+goerliConfig.loan.fixed.collection.v2_3.name = 'v2-3.loan.fixed.collection';
+goerliConfig.loan.fixed.collection.v2_3.address = '0xdA1FfB0Bf2cE637FF12CA31C841Ced04b6483CfD';
+goerliConfig.loan.fixed.collection.v2_3.abi = mainnetConfig.loan.fixed.collection.v2_3.abi;
 goerliConfig.loan.adminFeeInBasisPoints = '500';
 goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.goerli.gnosis.io';
 goerliConfig.signingUtils.v2.address = '0x7e4Dbdb623fBD48b01aF813aC324228575D04834';
 goerliConfig.signingUtils.v2.abi = ['function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, address _loanContract) public view returns (bool)'];
+goerliConfig.signingUtils.v2_3.address = '0x4Fb9Ab3d2Ec9e95b0faf36D67E4DEae9A6549244';
+goerliConfig.signingUtils.v2_3.abi = goerliConfig.signingUtils.v2.abi;
 goerliConfig.bundler.v1.name = 'v1.bundler';
 goerliConfig.bundler.v1.address = '0x17672f745C6c1F8aFF713Ac0EA97B865d97CCf24';
 goerliConfig.bundler.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId, address indexed personalBundler)', 'function decomposeBundle(uint256 tokenId, address receiver)', 'function addBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function removeBundleElements(uint256 tokenId, tuple(address tokenContract, uint256[] ids, bool safeTransferable)[] _bundleElements)', 'function safeMint(address to) returns (uint256)', 'function safeTransferFrom(address from, address to, uint256 tokenId)', 'function totalChildContracts(uint256 tokenId) view returns (uint256)', 'function childContractByIndex(uint256 tokenId, uint256 index) view returns (address childContract)', 'function totalChildTokens(uint256 tokenId, address childContract) view returns (uint256)', 'function childTokenByIndex(uint256 tokenId, address childContract, uint256 index) view returns (uint256 childTokenId)'];
@@ -286,7 +316,7 @@ goerliConfig.bundler.migrate.v1.address = '0xFc33A489A8082e9F6F48cbD8ba7D93a6fD3
 goerliConfig.bundler.migrate.v1.abi = mainnetConfig.bundler.migrate.v1.abi;
 goerliConfig.immutable.v1.name = 'v1.immutable.bundle';
 goerliConfig.immutable.v1.address = '0x69a0D346df2659dbb4BcE4b9276DD76B059e8EFc';
-goerliConfig.immutable.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function bundleOfImmutable(uint256) view returns (uint256)', 'function withdraw(uint256 immutableId, address to)', 'function withdrawAndDecompose(uint256 immutableId, address to)'];
+goerliConfig.immutable.v1.abi = ['event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)', 'function bundleOfImmutable(uint256) view returns (uint256)', 'function immutableOfBundle(uint256) view returns (uint256)', 'function withdraw(uint256 immutableId, address to)', 'function withdrawAndDecompose(uint256 immutableId, address to)'];
 goerliConfig.immutable.v1_1.name = 'v1-1.immutable.bundle';
 goerliConfig.immutable.v1_1.address = '0xE78097873C44f45ea06A5A36669a8866f6dC61E2';
 goerliConfig.immutable.v1_1.abi = goerliConfig.immutable.v1.abi;

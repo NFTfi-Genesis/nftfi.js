@@ -1,5 +1,6 @@
 import NFTfi from '@nftfi/js';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 async function run() {
@@ -13,6 +14,7 @@ async function run() {
       provider: { url: process.env.NFTFI_SDK_ETHEREUM_PROVIDER_URL }
     }
   });
+
   // Define collection to make offer on
   const nft = {
     address: process.env.NFTFI_SDK_EXAMPLE_NFT_ADDRESS
@@ -24,7 +26,7 @@ async function run() {
     token: { address: currency }
   });
   // Construct the loan terms
-  const contractName = nftfi.config.loan.fixed.collection.v2.name;
+  const contractName = nftfi.config.loan.fixed.collection.v2_3.name;
   const principal = balance / 3;
   const apr = 31.42;
   const days = 30;

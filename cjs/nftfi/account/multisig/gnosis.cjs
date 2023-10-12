@@ -108,7 +108,9 @@ var MultisigGnosis = /*#__PURE__*/function () {
               baseSafeSDK = safeSDKs[0];
               otherSafeSDKs = safeSDKs.slice(1); // Create a safe transaction using the base safe sdk
               _context3.next = 8;
-              return baseSafeSDK.createTransaction(tx);
+              return baseSafeSDK.createTransaction({
+                safeTransactionData: tx
+              });
             case 8:
               safeTransaction = _context3.sent;
               _context3.next = 11;

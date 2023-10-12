@@ -86,6 +86,7 @@ Class for working with bundles.
     * [`.empty(options)`](#Bundles+empty) ⇒ <code>Object</code>
     * [`.elements(options)`](#Bundles+elements) ⇒ <code>Object</code>
     * [`.migrate(options)`](#Bundles+migrate) ⇒ <code>Object</code>
+    * [`.getImmutable(options)`](#Bundles+getImmutable) ⇒ <code>Object</code>
 
 
 * * *
@@ -329,6 +330,36 @@ const migrateResult = await nftfi.bundles.migrate({
       contract: {
         name: 'v1-1.bundler'
       }
+    }
+  }
+});
+```
+
+* * *
+
+<a name="Bundles+getImmutable"></a>
+
+#### `bundles.getImmutable(options)` ⇒ <code>Object</code>
+Retrieves an immutable of a bundle.
+
+**Kind**: instance method of [<code>Bundles</code>](#Bundles)  
+**Returns**: <code>Object</code> - An object containing information about a bundle.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | An object containing options for the getImmutable operation. |
+| options.bundle.id | <code>string</code> | The ID of the bundle object. |
+| options.nftfi.contract | <code>Object</code> | An object containing information about the contract used to facilitate the bundle. |
+| options.nftfi.contract.name | <code>string</code> | Name of the contract used to facilitate the bundle: `v1-1.bundler`. |
+
+**Example**  
+```js
+// Get an immutable of a v1-1 bundle.
+const bundle = await nftfi.bundles.getImmutable({
+  bundle: { id: '42' },
+  nftfi: {
+    contract: {
+      name: 'v1-1.bundler'
     }
   }
 });
@@ -838,7 +869,7 @@ Begin a loan. Called by the borrower when accepting a lender's offer.
 | options.offer.lender.nonce | <code>string</code> | Nonce used by the lender when they signed the offer |
 | options.offer.signature | <code>string</code> | ECDSA signature of the lender |
 | options.offer.nftfi.fee.bps | <code>number</code> | Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid |
-| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2.loan.fixed.collection` |
+| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
@@ -865,7 +896,7 @@ const result = await nftfi.loans.begin({
     signature: '0x000000000000000000000000000000000000000000000000000',
     nftfi: {
       fee: { bps: 500 },
-      contract: { name: 'v2-1.loan.fixed' }
+      contract: { name: 'v2-3.loan.fixed' }
     }
   }
 });
@@ -886,52 +917,28 @@ Can be called once a loan has finished its duration and the borrower still has n
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.loan.id | <code>string</code> | The ID of the loan being liquidated |
-| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the liquidation: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the liquidation: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Liquidate a v1 fixed loan
-const result = await nftfi.loans.liquidate({
-  loan: { id: 1 },
-  nftfi: {
-    contract: {
-      name: 'v1.loan.fixed'
-    }
-  }
-});
-```
-**Example**  
-```js
-// Liquidate a v2 fixed loan
-const result = await nftfi.loans.liquidate({
-  loan: { id: 2 },
-  nftfi: {
-    contract: {
-      name: 'v2.loan.fixed'
-    }
-  }
-});
-```
-**Example**  
-```js
-// Liquidate a v2 fixed collection loan
+// Liquidate a v2-3 fixed collection loan
 const result = await nftfi.loans.liquidate({
   loan: { id: 3 },
   nftfi: {
     contract: {
-      name: 'v2.loan.fixed.collection'
+      name: 'v2-3.loan.fixed.collection'
     }
   }
 });
 ```
 **Example**  
 ```js
-// Liquidate a v2.1 fixed loan
+// Liquidate a v2.3 fixed loan
 const result = await nftfi.loans.liquidate({
   loan: { id: 2 },
   nftfi: {
     contract: {
-      name: 'v2-1.loan.fixed'
+      name: 'v2-3.loan.fixed'
     }
   }
 });
@@ -951,52 +958,28 @@ Repay a loan. Can be called at any time after the loan has begun and before loan
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.loan.id | <code>string</code> | The ID of the loan being repaid |
-| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`, `v2.loan.fixed.collection` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the repayment: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Repay a v1 fixed loan
-const result = await nftfi.loans.repay({
-  loan: { id: 1 },
-  nftfi: {
-    contract: {
-      name: 'v1.loan.fixed'
-    }
-  }
-});
-```
-**Example**  
-```js
-// Repay a v2 fixed loan
+// Repay a v2.3 fixed loan
 const result = await nftfi.loans.repay({
   loan: { id: 2 },
   nftfi: {
     contract: {
-      name: 'v2.loan.fixed'
+      name: 'v2-3.loan.fixed'
     }
   }
 });
 ```
 **Example**  
 ```js
-// Repay a v2.1 fixed loan
-const result = await nftfi.loans.repay({
-  loan: { id: 2 },
-  nftfi: {
-    contract: {
-      name: 'v2-1.loan.fixed'
-    }
-  }
-});
-```
-**Example**  
-```js
-// Repay a v2 fixed collection loan
+// Repay a v2-3 fixed collection loan
 const result = await nftfi.loans.repay({
   loan: { id: 3 },
   nftfi: {
     contract: {
-      name: 'v2.loan.fixed.collection'
+      name: 'v2-3.loan.fixed.collection'
     }
   }
 });
@@ -1016,46 +999,18 @@ Revokes an active offer made by your account.
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.offer.nonce | <code>object</code> | The nonce of the offer to be deleted |
-| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Revoke a v1 fixed loan offer
+// Revoke a v2.3 fixed loan offer
 const revoked = await nftfi.loans.revoke({
   offer: {
     nonce: '42'
   },
   nftfi: {
     contract: {
-      name: 'v1.loan.fixed'
-    }
-  }
-});
-```
-**Example**  
-```js
-// Revoke a v2 fixed loan offer
-const revoked = await nftfi.loans.revoke({
-  offer: {
-    nonce: '42'
-  },
-  nftfi: {
-    contract: {
-      name: 'v2.loan.fixed'
-    }
-  }
-});
-```
-**Example**  
-```js
-// Revoke a v2.1 fixed loan offer
-const revoked = await nftfi.loans.revoke({
-  offer: {
-    nonce: '42'
-  },
-  nftfi: {
-    contract: {
-      name: 'v2-1.loan.fixed'
+      name: 'v2-3.loan.fixed'
     }
   }
 });
@@ -1154,7 +1109,7 @@ const offers = await nftfi.offers.get({
     },
     nftfi: {
       contract: {
-        name: "v2.loan.fixed.collection"
+        name: "v2-3.loan.fixed.collection"
       }
     }
   },
@@ -1212,7 +1167,7 @@ const offer = await nftfi.offers.create({
   },
   nftfi: {
     contract: {
-      name: "v2-1.loan.fixed"
+      name: "v2-3.loan.fixed"
     }
   }
 });
@@ -1260,11 +1215,11 @@ Revokes an active offer made by your account.
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.offer.nonce | <code>object</code> | The nonce of the offer to be deleted |
-| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed` |
+| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Get first avilable offer made by your account
+// Get first available offer made by your account
 const offers = await nftfi.offers.get();
 const nonce = offers[0]['lender']['nonce'];
 const contractName = offers[0]['nftfi']['contract']['name']

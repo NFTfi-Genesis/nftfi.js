@@ -31,7 +31,7 @@ async function run() {
     token: { address: currency }
   });
   // Construct the loan terms
-  const contractName = nftfi.config.loan.fixed.v2_1.name;
+  const contractName = nftfi.config.loan.fixed.v2_3.name;
 
   // Convert 1 USDC amount into wei
   const principal = nftfi.utils.formatWei(1, nftfi.config.erc20.usdc.unit).toString();

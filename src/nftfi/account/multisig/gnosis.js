@@ -42,7 +42,7 @@ class MultisigGnosis {
     const baseSafeSDK = safeSDKs[0];
     const otherSafeSDKs = safeSDKs.slice(1);
     // Create a safe transaction using the base safe sdk
-    const safeTransaction = await baseSafeSDK.createTransaction(tx);
+    const safeTransaction = await baseSafeSDK.createTransaction({ safeTransactionData: tx });
     // Approve the safe transaction using other safe sdks
     await Promise.all(
       otherSafeSDKs.map(async safeSDK => {

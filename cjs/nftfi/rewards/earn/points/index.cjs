@@ -58,7 +58,7 @@ var RewardsEarnPoints = /*#__PURE__*/function () {
    *   },
    *   nftfi: {
    *     contract: {
-   *        name: "v2.loan.fixed"
+   *        name: "v2-3.loan.fixed"
    *     }
    *   }
    * });

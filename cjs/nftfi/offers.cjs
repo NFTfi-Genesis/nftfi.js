@@ -153,7 +153,7 @@ var Offers = /*#__PURE__*/function () {
    *     },
    *     nftfi: {
    *       contract: {
-   *         name: "v2.loan.fixed.collection"
+   *         name: "v2-3.loan.fixed.collection"
    *       }
    *     }
    *   },
@@ -287,7 +287,7 @@ var Offers = /*#__PURE__*/function () {
      *   },
      *   nftfi: {
      *     contract: {
-     *       name: "v2-1.loan.fixed"
+     *       name: "v2-3.loan.fixed"
      *     }
      *   }
      * });
@@ -296,14 +296,14 @@ var Offers = /*#__PURE__*/function () {
     key: "create",
     value: function () {
       var _create = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
-        var errors, response, contractName, payload, _payload;
+        var errors, response, contractName, payload, _payload, _payload2, _payload3;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               options = _objectSpread(_objectSpread({}, options.listing), options); // copying options.listing fields onto the root, for backwards compatibility.
               contractName = options.nftfi.contract.name;
               _context3.t0 = contractName;
-              _context3.next = _context3.t0 === 'v2-1.loan.fixed' ? 5 : _context3.t0 === 'v2.loan.fixed.collection' ? 12 : 19;
+              _context3.next = _context3.t0 === 'v2-1.loan.fixed' ? 5 : _context3.t0 === 'v2-3.loan.fixed' ? 12 : _context3.t0 === 'v2.loan.fixed.collection' ? 19 : _context3.t0 === 'v2-3.loan.fixed.collection' ? 26 : 33;
               break;
             case 5:
               _context3.next = 7;
@@ -317,10 +317,10 @@ var Offers = /*#__PURE__*/function () {
               });
             case 10:
               response = _context3.sent;
-              return _context3.abrupt("break", 22);
+              return _context3.abrupt("break", 36);
             case 12:
               _context3.next = 14;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2FixedCollectionOffer(options);
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3Offer(options);
             case 14:
               _payload = _context3.sent;
               _context3.next = 17;
@@ -330,18 +330,44 @@ var Offers = /*#__PURE__*/function () {
               });
             case 17:
               response = _context3.sent;
-              return _context3.abrupt("break", 22);
+              return _context3.abrupt("break", 36);
             case 19:
+              _context3.next = 21;
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2FixedCollectionOffer(options);
+            case 21:
+              _payload2 = _context3.sent;
+              _context3.next = 24;
+              return (0, _classPrivateFieldGet2["default"])(this, _api).post({
+                uri: 'offers',
+                payload: _payload2
+              });
+            case 24:
+              response = _context3.sent;
+              return _context3.abrupt("break", 36);
+            case 26:
+              _context3.next = 28;
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3FixedCollectionOffer(options);
+            case 28:
+              _payload3 = _context3.sent;
+              _context3.next = 31;
+              return (0, _classPrivateFieldGet2["default"])(this, _api).post({
+                uri: 'offers',
+                payload: _payload3
+              });
+            case 31:
+              response = _context3.sent;
+              return _context3.abrupt("break", 36);
+            case 33:
               errors = {
                 'nftfi.contract.name': ["".concat(contractName, " not supported")]
               };
               response = {
                 errors: errors
               };
-              return _context3.abrupt("break", 22);
-            case 22:
+              return _context3.abrupt("break", 36);
+            case 36:
               return _context3.abrupt("return", response);
-            case 23:
+            case 37:
             case "end":
               return _context3.stop();
           }
@@ -402,11 +428,11 @@ var Offers = /*#__PURE__*/function () {
      *
      * @param {object} options - Hashmap of config options for this method
      * @param {object} options.offer.nonce - The nonce of the offer to be deleted
-     * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`
+     * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
      * @returns {object} Response object
      *
      * @example
-     * // Get first avilable offer made by your account
+     * // Get first available offer made by your account
      * const offers = await nftfi.offers.get();
      * const nonce = offers[0]['lender']['nonce'];
      * const contractName = offers[0]['nftfi']['contract']['name']

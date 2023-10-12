@@ -67,7 +67,7 @@ var OffersRequests = /*#__PURE__*/function () {
    * @param {string} [options.desiredTerms.principal] - Desired term principal (optional)
    * @param {number} [options.desiredTerms.repayment] - Desired term repayment (optional)
    * @param {string} [options.desiredTerms.duration] - Desired term duration (optional)
-   * @param {string} [options.desiredTerms.contract.name] - Name of contract which the offer was created for: `v2-1.loan.fixed`
+   * @param {string} [options.desiredTerms.contract.name] - Name of contract which the offer was created for: `v2-3.loan.fixed`
    * @returns {object} Offer request
    *
    * @example
@@ -79,7 +79,7 @@ var OffersRequests = /*#__PURE__*/function () {
    *    repayment: '2000000000',
    *    duration: 86400 * 7, // 7 days (in seconds)
    *    contract: {
-   *      name: 'v2-1.loan.fixed'
+   *      name: 'v2-3.loan.fixed'
    *    }
    *  },
    *  nft: {

@@ -1,4 +1,4 @@
-class LoansFixedCollectionV2 {
+class LoansFixedV2_3 {
   #config;
   #contractFactory;
   #contract;
@@ -7,8 +7,8 @@ class LoansFixedCollectionV2 {
     this.#config = options?.config;
     this.#contractFactory = options?.contractFactory;
     this.#contract = this.#contractFactory.create({
-      address: this.#config.loan.fixed.collection.v2.address,
-      abi: this.#config.loan.fixed.collection.v2.abi
+      address: this.#config.loan.fixed.v2_3.address,
+      abi: this.#config.loan.fixed.v2_3.abi
     });
   }
 
@@ -89,4 +89,4 @@ class LoansFixedCollectionV2 {
   }
 }
 
-export default LoansFixedCollectionV2;
+export default LoansFixedV2_3;

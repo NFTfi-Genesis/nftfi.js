@@ -49,12 +49,16 @@ var Erc721 = /*#__PURE__*/function () {
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2.address;
         case 'v2-1.loan.fixed':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.address;
+        case 'v2-3.loan.fixed':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.address;
         case 'v1.bundler':
           return (0, _classPrivateFieldGet2["default"])(this, _config).bundler.v1.address;
         case 'v1-1.bundler':
           return (0, _classPrivateFieldGet2["default"])(this, _config).bundler.v1_1.address;
         case 'v2.loan.fixed.collection':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.address;
+        case 'v2-3.loan.fixed.collection':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.address;
         case 'v1.bundler.migrate':
           return (0, _classPrivateFieldGet2["default"])(this, _config).bundler.migrate.v1.address;
       }

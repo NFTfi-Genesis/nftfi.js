@@ -76,7 +76,7 @@ var MultisigGnosisOwner = /*#__PURE__*/function () {
       var signer = new ((0, _classPrivateFieldGet2["default"])(this, _ethers).Wallet)(this.getPrivateKey(), (0, _classPrivateFieldGet2["default"])(this, _provider));
       var ethAdapter = new ((0, _classPrivateFieldGet2["default"])(this, _EthersAdapter)["default"])({
         ethers: (0, _classPrivateFieldGet2["default"])(this, _ethers),
-        signer: signer
+        signerOrProvider: signer
       });
       var safeSDK = (0, _classPrivateFieldGet2["default"])(this, _Safe)["default"].create({
         ethAdapter: ethAdapter,

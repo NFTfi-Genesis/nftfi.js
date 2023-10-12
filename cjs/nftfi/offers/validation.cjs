@@ -51,10 +51,38 @@ var OffersValidator = /*#__PURE__*/function () {
             address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.address,
             abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.abi
           };
+        case 'v2-3.loan.fixed':
+          return {
+            address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.address,
+            abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.abi
+          };
         case 'v2.loan.fixed.collection':
           return {
             address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.address,
             abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.abi
+          };
+        case 'v2-3.loan.fixed.collection':
+          return {
+            address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.address,
+            abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.abi
+          };
+      }
+    }
+  }, {
+    key: "_getSigningUtilsContractAddressAndAbi",
+    value: function _getSigningUtilsContractAddressAndAbi(contractName) {
+      switch (contractName) {
+        case 'v2.loan.fixed.collection':
+        case 'v2-1.loan.fixed':
+          return {
+            address: (0, _classPrivateFieldGet2["default"])(this, _config).signingUtils.v2.address,
+            abi: (0, _classPrivateFieldGet2["default"])(this, _config).signingUtils.v2.abi
+          };
+        case 'v2-3.loan.fixed':
+        case 'v2-3.loan.fixed.collection':
+          return {
+            address: (0, _classPrivateFieldGet2["default"])(this, _config).signingUtils.v2_3.address,
+            abi: (0, _classPrivateFieldGet2["default"])(this, _config).signingUtils.v2_3.abi
           };
       }
     }
@@ -120,15 +148,16 @@ var OffersValidator = /*#__PURE__*/function () {
     key: "_isValidSignature",
     value: function () {
       var _isValidSignature2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(offer) {
-        var _this$_getContractAdd, loanContract, contract, offerTerms, signature;
+        var _this$_getContractAdd, loanContract, _this$_getSigningUtil, signingUtilsContract, signingUtilsContractAbi, contract, offerTerms, signature;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
               _this$_getContractAdd = this._getContractAddressAndAbi(offer.nftfi.contract.name), loanContract = _this$_getContractAdd.address;
+              _this$_getSigningUtil = this._getSigningUtilsContractAddressAndAbi(offer.nftfi.contract.name), signingUtilsContract = _this$_getSigningUtil.address, signingUtilsContractAbi = _this$_getSigningUtil.abi;
               contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
-                address: (0, _classPrivateFieldGet2["default"])(this, _config).signingUtils.v2.address,
-                abi: (0, _classPrivateFieldGet2["default"])(this, _config).signingUtils.v2.abi
+                address: signingUtilsContract,
+                abi: signingUtilsContractAbi
               });
               offerTerms = {
                 loanPrincipalAmount: offer.terms.loan.principal.toLocaleString('fullwide', {
@@ -150,22 +179,22 @@ var OffersValidator = /*#__PURE__*/function () {
                 signer: offer.lender.address,
                 signature: offer.signature
               };
-              _context3.next = 7;
+              _context3.next = 8;
               return contract.call({
                 "function": 'isValidLenderSignature',
                 args: [offerTerms, signature, loanContract]
               });
-            case 7:
+            case 8:
               return _context3.abrupt("return", _context3.sent);
-            case 10:
-              _context3.prev = 10;
+            case 11:
+              _context3.prev = 11;
               _context3.t0 = _context3["catch"](0);
               return _context3.abrupt("return", _context3.t0);
-            case 13:
+            case 14:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[0, 10]]);
+        }, _callee3, this, [[0, 11]]);
       }));
       function _isValidSignature(_x3) {
         return _isValidSignature2.apply(this, arguments);

@@ -17,11 +17,13 @@ import LoansFixed from './nftfi/loans/fixed/index.js';
 import LoansFixedV1 from './nftfi/loans/fixed/v1/index.js';
 import LoansFixedV2 from './nftfi/loans/fixed/v2/index.js';
 import LoansFixedV2_1 from './nftfi/loans/fixed/v2_1/index.js';
+import LoansFixedV2_3 from './nftfi/loans/fixed/v2_3/index.js';
 import Bundles from './nftfi/bundles.js';
 import BundlesHelper from './nftfi/bundles/helper.js';
 import LoansFixedCollection from './nftfi/loans/fixed/collection/index.js';
 import Immutables from './nftfi/immutables.js';
 import LoansFixedCollectionV2 from './nftfi/loans/fixed/collection/v2/index.js';
+import LoansFixedCollectionV2_3 from './nftfi/loans/fixed/collection/v2_3/index.js';
 import Erc20 from './nftfi/erc20.js';
 import Erc721 from './nftfi/erc721.js';
 import Erc1155 from './nftfi/nft/erc1155.js';
@@ -170,12 +172,15 @@ export default {
     const loanFixedV1 = new LoansFixedV1({ config, contractFactory });
     const loanFixedV2 = new LoansFixedV2({ config, contractFactory });
     const loanFixedV2_1 = new LoansFixedV2_1({ config, contractFactory });
+    const loanFixedV2_3 = new LoansFixedV2_3({ config, contractFactory });
     const loanFixedCollectionV2 = new LoansFixedCollectionV2({ config, contractFactory });
-    const loanFixedCollection = new LoansFixedCollection({ v2: loanFixedCollectionV2 });
+    const loanFixedCollectionV2_3 = new LoansFixedCollectionV2_3({ config, contractFactory });
+    const loanFixedCollection = new LoansFixedCollection({ v2: loanFixedCollectionV2, v2_3: loanFixedCollectionV2_3 });
     const loanFixed = new LoansFixed({
       v1: loanFixedV1,
       v2: loanFixedV2,
       v2_1: loanFixedV2_1,
+      v2_3: loanFixedV2_3,
       collection: loanFixedCollection
     });
     const loans = new Loans({ api, account, fixed: loanFixed, config, helper });

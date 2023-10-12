@@ -95,7 +95,7 @@ async function run() {
       repayment: '2000000000',
       duration: 86400 * 30,
       contract: {
-        name: borrowerSdk.config.loan.fixed.v2_1.name
+        name: borrowerSdk.config.loan.fixed.v2_3.name
       }
     },
     nft: {

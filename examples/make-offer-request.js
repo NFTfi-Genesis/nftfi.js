@@ -28,7 +28,7 @@ async function run() {
   const offerRequest1 = await nftfi.offers.requests.create({
     desiredTerms: {
       contract: {
-        name: nftfi.config.loan.fixed.v2_1.name
+        name: nftfi.config.loan.fixed.v2_3.name
       }
     },
     nft: {
@@ -46,7 +46,7 @@ async function run() {
       repayment: '2000000000',
       duration: 86400 * 30,
       contract: {
-        name: nftfi.config.loan.fixed.v2_1.name
+        name: nftfi.config.loan.fixed.v2_3.name
       }
     },
     nft: {
@@ -63,7 +63,7 @@ async function run() {
       principal: '1000000000',
       duration: 10000,
       contract: {
-        name: nftfi.config.loan.fixed.v2_1.name
+        name: nftfi.config.loan.fixed.v2_3.name
       }
     },
     nft: {

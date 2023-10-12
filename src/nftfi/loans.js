@@ -63,7 +63,7 @@ class Loans {
    * @param {string} options.offer.lender.nonce - Nonce used by the lender when they signed the offer
    * @param {string} options.offer.signature - ECDSA signature of the lender
    * @param {number} options.offer.nftfi.fee.bps - Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid
-   * @param {string} options.offer.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2.loan.fixed.collection`
+   * @param {string} options.offer.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
@@ -90,7 +90,7 @@ class Loans {
    *     signature: '0x000000000000000000000000000000000000000000000000000',
    *     nftfi: {
    *       fee: { bps: 500 },
-   *       contract: { name: 'v2-1.loan.fixed' }
+   *       contract: { name: 'v2-3.loan.fixed' }
    *     }
    *   }
    * });
@@ -105,8 +105,18 @@ class Loans {
         response = { success };
         break;
       }
+      case 'v2-3.loan.fixed': {
+        let success = await this.#fixed.v2_3.acceptOffer(options);
+        response = { success };
+        break;
+      }
       case 'v2.loan.fixed.collection': {
         let success = await this.#fixed.collection.v2.acceptOffer(options);
+        response = { success };
+        break;
+      }
+      case 'v2-3.loan.fixed.collection': {
+        let success = await this.#fixed.collection.v2_3.acceptOffer(options);
         response = { success };
         break;
       }
@@ -125,49 +135,27 @@ class Loans {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {string} options.loan.id - The ID of the loan being liquidated
-   * @param {string} options.nftfi.contract.name - Name of contract used to facilitate the liquidation: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`
+   * @param {string} options.nftfi.contract.name - Name of contract used to facilitate the liquidation: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Liquidate a v1 fixed loan
-   * const result = await nftfi.loans.liquidate({
-   *   loan: { id: 1 },
-   *   nftfi: {
-   *     contract: {
-   *       name: 'v1.loan.fixed'
-   *     }
-   *   }
-   * });
-   *
-   * @example
-   * // Liquidate a v2 fixed loan
-   * const result = await nftfi.loans.liquidate({
-   *   loan: { id: 2 },
-   *   nftfi: {
-   *     contract: {
-   *       name: 'v2.loan.fixed'
-   *     }
-   *   }
-   * });
-   *
-   * @example
-   * // Liquidate a v2 fixed collection loan
+   * // Liquidate a v2-3 fixed collection loan
    * const result = await nftfi.loans.liquidate({
    *   loan: { id: 3 },
    *   nftfi: {
    *     contract: {
-   *       name: 'v2.loan.fixed.collection'
+   *       name: 'v2-3.loan.fixed.collection'
    *     }
    *   }
    * });
    *
    * @example
-   * // Liquidate a v2.1 fixed loan
+   * // Liquidate a v2.3 fixed loan
    * const result = await nftfi.loans.liquidate({
    *   loan: { id: 2 },
    *   nftfi: {
    *     contract: {
-   *       name: 'v2-1.loan.fixed'
+   *       name: 'v2-3.loan.fixed'
    *     }
    *   }
    * });
@@ -190,8 +178,18 @@ class Loans {
           loan: { id: options.loan.id }
         });
         break;
+      case 'v2-3.loan.fixed.collection':
+        success = await this.#fixed.collection.v2_3.liquidateOverdueLoan({
+          loan: { id: options.loan.id }
+        });
+        break;
       case 'v2-1.loan.fixed':
         success = await this.#fixed.v2_1.liquidateOverdueLoan({
+          loan: { id: options.loan.id }
+        });
+        break;
+      case 'v2-3.loan.fixed':
+        success = await this.#fixed.v2_3.liquidateOverdueLoan({
           loan: { id: options.loan.id }
         });
         break;
@@ -206,49 +204,27 @@ class Loans {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {string} options.loan.id - The ID of the loan being repaid
-   * @param {string} options.nftfi.contract.name - Name of contract used to facilitate the repayment: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`, `v2.loan.fixed.collection`
+   * @param {string} options.nftfi.contract.name - Name of contract used to facilitate the repayment: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Repay a v1 fixed loan
-   * const result = await nftfi.loans.repay({
-   *   loan: { id: 1 },
-   *   nftfi: {
-   *     contract: {
-   *       name: 'v1.loan.fixed'
-   *     }
-   *   }
-   * });
-   *
-   * @example
-   * // Repay a v2 fixed loan
+   * // Repay a v2.3 fixed loan
    * const result = await nftfi.loans.repay({
    *   loan: { id: 2 },
    *   nftfi: {
    *     contract: {
-   *       name: 'v2.loan.fixed'
+   *       name: 'v2-3.loan.fixed'
    *     }
    *   }
    * });
    *
    * @example
-   * // Repay a v2.1 fixed loan
-   * const result = await nftfi.loans.repay({
-   *   loan: { id: 2 },
-   *   nftfi: {
-   *     contract: {
-   *       name: 'v2-1.loan.fixed'
-   *     }
-   *   }
-   * });
-   *
-   * @example
-   * // Repay a v2 fixed collection loan
+   * // Repay a v2-3 fixed collection loan
    * const result = await nftfi.loans.repay({
    *   loan: { id: 3 },
    *   nftfi: {
    *     contract: {
-   *       name: 'v2.loan.fixed.collection'
+   *       name: 'v2-3.loan.fixed.collection'
    *     }
    *   }
    * });
@@ -271,8 +247,18 @@ class Loans {
           loan: { id: options.loan.id }
         });
         break;
+      case 'v2-3.loan.fixed':
+        success = await this.#fixed.v2_3.payBackLoan({
+          loan: { id: options.loan.id }
+        });
+        break;
       case 'v2.loan.fixed.collection':
         success = await this.#fixed.collection.v2.payBackLoan({
+          loan: { id: options.loan.id }
+        });
+        break;
+      case 'v2-3.loan.fixed.collection':
+        success = await this.#fixed.collection.v2_3.payBackLoan({
           loan: { id: options.loan.id }
         });
         break;
@@ -287,44 +273,18 @@ class Loans {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {object} options.offer.nonce - The nonce of the offer to be deleted
-   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`
+   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Revoke a v1 fixed loan offer
+   * // Revoke a v2.3 fixed loan offer
    * const revoked = await nftfi.loans.revoke({
    *   offer: {
    *     nonce: '42'
    *   },
    *   nftfi: {
    *     contract: {
-   *       name: 'v1.loan.fixed'
-   *     }
-   *   }
-   * });
-   *
-   * @example
-   * // Revoke a v2 fixed loan offer
-   * const revoked = await nftfi.loans.revoke({
-   *   offer: {
-   *     nonce: '42'
-   *   },
-   *   nftfi: {
-   *     contract: {
-   *       name: 'v2.loan.fixed'
-   *     }
-   *   }
-   * });
-   *
-   * @example
-   * // Revoke a v2.1 fixed loan offer
-   * const revoked = await nftfi.loans.revoke({
-   *   offer: {
-   *     nonce: '42'
-   *   },
-   *   nftfi: {
-   *     contract: {
-   *       name: 'v2-1.loan.fixed'
+   *       name: 'v2-3.loan.fixed'
    *     }
    *   }
    * });
@@ -347,8 +307,18 @@ class Loans {
           offer: { nonce: options.offer.nonce }
         });
         break;
+      case 'v2-3.loan.fixed':
+        success = await this.#fixed.v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
+          offer: { nonce: options.offer.nonce }
+        });
+        break;
       case 'v2.loan.fixed.collection':
         success = await this.#fixed.collection.v2.cancelLoanCommitmentBeforeLoanHasBegun({
+          offer: { nonce: options.offer.nonce }
+        });
+        break;
+      case 'v2-3.loan.fixed.collection':
+        success = await this.#fixed.collection.v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
           offer: { nonce: options.offer.nonce }
         });
         break;

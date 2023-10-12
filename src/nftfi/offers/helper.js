@@ -159,6 +159,57 @@ class OffersHelper {
     return offer;
   }
 
+  async constructV2_3Offer(options) {
+    const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
+    const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
+    const loanInterestRateForDurationInBasisPoints = 0;
+    const lenderNonce = this.#utils.getNonce();
+    const expiry = this.#utils.getExpiry(options?.terms?.expiry);
+    let offer = {
+      nft: {
+        id: options.nft.id,
+        address: options.nft.address
+      },
+      lender: {
+        address: this.#account.getAddress(),
+        nonce: lenderNonce
+      },
+      borrower: {
+        address: options.borrower.address
+      },
+      referrer: {
+        address: '0x0000000000000000000000000000000000000000'
+      },
+      terms: {
+        loan: {
+          duration: options.terms.duration,
+          repayment: repayment,
+          principal: principal,
+          currency: options.terms.currency,
+          expiry: expiry,
+          interest: {
+            prorated: false,
+            bps: loanInterestRateForDurationInBasisPoints
+          }
+        }
+      },
+      nftfi: {
+        contract: {
+          name: options.nftfi.contract.name
+        },
+        fee: {
+          bps: this.#config.loan.adminFeeInBasisPoints
+        }
+      },
+      metadata: options.metadata
+    };
+    offer['signature'] = await this.#signatures.getV2_3OfferSignature({
+      ...options,
+      offer
+    });
+    return offer;
+  }
+
   async constructV2FixedCollectionOffer(options) {
     const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
     const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
@@ -202,6 +253,55 @@ class OffersHelper {
       metadata: options.metadata
     };
     offer.signature = await this.#signatures.getV2FixedCollectionOfferSignature({
+      ...options,
+      offer
+    });
+    return offer;
+  }
+
+  async constructV2_3FixedCollectionOffer(options) {
+    const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
+    const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
+    const loanInterestRateForDurationInBasisPoints = 0;
+    const lenderNonce = this.#utils.getNonce();
+    const expiry = this.#utils.getExpiry(options?.terms?.expiry?.seconds);
+    const nftId = 0;
+    let offer = {
+      nft: {
+        id: nftId,
+        address: options.nft.address
+      },
+      lender: {
+        address: this.#account.getAddress(),
+        nonce: lenderNonce
+      },
+      referrer: {
+        address: '0x0000000000000000000000000000000000000000'
+      },
+      terms: {
+        loan: {
+          duration: options.terms.duration,
+          repayment: repayment,
+          principal: principal,
+          currency: options.terms.currency,
+          expiry: expiry,
+          interest: {
+            prorated: false,
+            bps: loanInterestRateForDurationInBasisPoints
+          }
+        }
+      },
+      nftfi: {
+        contract: {
+          name: options.nftfi.contract.name
+        },
+        fee: {
+          bps: this.#config.loan.adminFeeInBasisPoints
+        }
+      },
+      metadata: options.metadata
+    };
+    offer.signature = await this.#signatures.getV2_3FixedCollectionOfferSignature({
       ...options,
       offer
     });

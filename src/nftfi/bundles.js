@@ -44,7 +44,8 @@ class Bundles {
             },
             immutable: {
               address: this.#config.immutable.v1.address,
-              name: this.#config.immutable.v1.name
+              name: this.#config.immutable.v1.name,
+              abi: this.#config.immutable.v1.abi
             },
             migrate: {
               address: this.#config.bundler.migrate.v1.address,
@@ -61,7 +62,8 @@ class Bundles {
             },
             immutable: {
               address: this.#config.immutable.v1_1.address,
-              name: this.#config.immutable.v1_1.name
+              name: this.#config.immutable.v1_1.name,
+              abi: this.#config.immutable.v1_1.abi
             }
           };
       }
@@ -588,6 +590,51 @@ class Bundles {
         return this.#error.handle({
           nftfi: { contract: { name: e.message } }
         });
+      }
+    }
+  }
+
+  /**
+   * Retrieves an immutable of a bundle.
+   *
+   * @param {Object} options - An object containing options for the getImmutable operation.
+   * @param {string} options.bundle.id - The ID of the bundle object.
+   * @param {Object} options.nftfi.contract - An object containing information about the contract used to facilitate the bundle.
+   * @param {string} options.nftfi.contract.name - Name of the contract used to facilitate the bundle: `v1-1.bundler`.
+   *
+   * @returns {Object} An object containing information about a bundle.
+   *
+   * @example
+   * // Get an immutable of a v1-1 bundle.
+   * const bundle = await nftfi.bundles.getImmutable({
+   *   bundle: { id: '42' },
+   *   nftfi: {
+   *     contract: {
+   *       name: 'v1-1.bundler'
+   *     }
+   *   }
+   * });
+   */
+  async getImmutable(options) {
+    try {
+      const contractName = options?.nftfi?.contract?.name;
+      const contractFactoryParams = this._getContractParams(contractName);
+      const immutableContract = this.#contractFactory.create(contractFactoryParams.immutable);
+      const immutableId = await immutableContract.call({
+        function: 'immutableOfBundle',
+        args: [options.bundle.id]
+      });
+      return this.#result.handle({
+        immutable: { id: immutableId.toString() },
+        nftfi: { contract: { name: contractFactoryParams.immutable.name } }
+      });
+    } catch (e) {
+      if (e instanceof ContractNameNotSupportedError) {
+        return this.#error.handle({
+          nftfi: { contract: { name: e.message } }
+        });
+      } else {
+        return this.#error.handle(e);
       }
     }
   }

@@ -30,7 +30,7 @@ class MultisigGnosisOwner {
     const signer = new this.#ethers.Wallet(this.getPrivateKey(), this.#provider);
     const ethAdapter = new this.#EthersAdapter.default({
       ethers: this.#ethers,
-      signer
+      signerOrProvider: signer
     });
     const safeSDK = this.#Safe.default.create({
       ethAdapter,

@@ -94,7 +94,7 @@ class Offers {
    *     },
    *     nftfi: {
    *       contract: {
-   *         name: "v2.loan.fixed.collection"
+   *         name: "v2-3.loan.fixed.collection"
    *       }
    *     }
    *   },
@@ -167,7 +167,7 @@ class Offers {
    *   },
    *   nftfi: {
    *     contract: {
-   *       name: "v2-1.loan.fixed"
+   *       name: "v2-3.loan.fixed"
    *     }
    *   }
    * });
@@ -186,6 +186,14 @@ class Offers {
         });
         break;
       }
+      case 'v2-3.loan.fixed': {
+        let payload = await this.#offersHelper.constructV2_3Offer(options);
+        response = await this.#api.post({
+          uri: 'offers',
+          payload
+        });
+        break;
+      }
       case 'v2.loan.fixed.collection': {
         let payload = await this.#offersHelper.constructV2FixedCollectionOffer(options);
         response = await this.#api.post({
@@ -194,6 +202,15 @@ class Offers {
         });
         break;
       }
+      case 'v2-3.loan.fixed.collection': {
+        let payload = await this.#offersHelper.constructV2_3FixedCollectionOffer(options);
+        response = await this.#api.post({
+          uri: 'offers',
+          payload
+        });
+        break;
+      }
+
       default: {
         errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
         response = { errors };
@@ -232,11 +249,11 @@ class Offers {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {object} options.offer.nonce - The nonce of the offer to be deleted
-   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`
+   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Get first avilable offer made by your account
+   * // Get first available offer made by your account
    * const offers = await nftfi.offers.get();
    * const nonce = offers[0]['lender']['nonce'];
    * const contractName = offers[0]['nftfi']['contract']['name']

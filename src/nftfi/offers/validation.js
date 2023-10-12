@@ -15,10 +15,31 @@ class OffersValidator {
     switch (contractName) {
       case 'v2-1.loan.fixed':
         return { address: this.#config.loan.fixed.v2_1.address, abi: this.#config.loan.fixed.v2_1.abi };
+      case 'v2-3.loan.fixed':
+        return { address: this.#config.loan.fixed.v2_3.address, abi: this.#config.loan.fixed.v2_3.abi };
       case 'v2.loan.fixed.collection':
         return {
           address: this.#config.loan.fixed.collection.v2.address,
           abi: this.#config.loan.fixed.collection.v2.abi
+        };
+      case 'v2-3.loan.fixed.collection':
+        return {
+          address: this.#config.loan.fixed.collection.v2_3.address,
+          abi: this.#config.loan.fixed.collection.v2_3.abi
+        };
+    }
+  }
+
+  _getSigningUtilsContractAddressAndAbi(contractName) {
+    switch (contractName) {
+      case 'v2.loan.fixed.collection':
+      case 'v2-1.loan.fixed':
+        return { address: this.#config.signingUtils.v2.address, abi: this.#config.signingUtils.v2.abi };
+      case 'v2-3.loan.fixed':
+      case 'v2-3.loan.fixed.collection':
+        return {
+          address: this.#config.signingUtils.v2_3.address,
+          abi: this.#config.signingUtils.v2_3.abi
         };
     }
   }
@@ -44,10 +65,12 @@ class OffersValidator {
   async _isValidSignature(offer) {
     try {
       const { address: loanContract } = this._getContractAddressAndAbi(offer.nftfi.contract.name);
+      const { address: signingUtilsContract, abi: signingUtilsContractAbi } =
+        this._getSigningUtilsContractAddressAndAbi(offer.nftfi.contract.name);
 
       const contract = this.#contractFactory.create({
-        address: this.#config.signingUtils.v2.address,
-        abi: this.#config.signingUtils.v2.abi
+        address: signingUtilsContract,
+        abi: signingUtilsContractAbi
       });
 
       const offerTerms = {

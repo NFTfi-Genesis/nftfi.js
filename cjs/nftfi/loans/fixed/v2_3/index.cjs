@@ -16,9 +16,9 @@ function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollect
 var _config = /*#__PURE__*/new WeakMap();
 var _contractFactory = /*#__PURE__*/new WeakMap();
 var _contract = /*#__PURE__*/new WeakMap();
-var LoansFixedCollectionV2 = /*#__PURE__*/function () {
-  function LoansFixedCollectionV2(options) {
-    (0, _classCallCheck2["default"])(this, LoansFixedCollectionV2);
+var LoansFixedV2_3 = /*#__PURE__*/function () {
+  function LoansFixedV2_3(options) {
+    (0, _classCallCheck2["default"])(this, LoansFixedV2_3);
     _classPrivateFieldInitSpec(this, _config, {
       writable: true,
       value: void 0
@@ -34,11 +34,11 @@ var LoansFixedCollectionV2 = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
     (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
-      address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.address,
-      abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.abi
+      address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.address,
+      abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.abi
     }));
   }
-  (0, _createClass2["default"])(LoansFixedCollectionV2, [{
+  (0, _createClass2["default"])(LoansFixedV2_3, [{
     key: "acceptOffer",
     value: function () {
       var _acceptOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
@@ -203,7 +203,7 @@ var LoansFixedCollectionV2 = /*#__PURE__*/function () {
       return cancelLoanCommitmentBeforeLoanHasBegun;
     }()
   }]);
-  return LoansFixedCollectionV2;
+  return LoansFixedV2_3;
 }();
-var _default = LoansFixedCollectionV2;
+var _default = LoansFixedV2_3;
 exports["default"] = _default;

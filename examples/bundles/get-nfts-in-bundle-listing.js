@@ -75,7 +75,7 @@ async function run() {
       },
       nftfi: {
         contract: {
-          name: borrower.config.loan.fixed.v2_1.name
+          name: borrower.config.loan.fixed.v2_3.name
         }
       }
     };

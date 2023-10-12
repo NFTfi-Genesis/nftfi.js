@@ -27,11 +27,13 @@ var _index = _interopRequireDefault(require("./nftfi/loans/fixed/index.cjs"));
 var _index2 = _interopRequireDefault(require("./nftfi/loans/fixed/v1/index.cjs"));
 var _index3 = _interopRequireDefault(require("./nftfi/loans/fixed/v2/index.cjs"));
 var _index4 = _interopRequireDefault(require("./nftfi/loans/fixed/v2_1/index.cjs"));
+var _index5 = _interopRequireDefault(require("./nftfi/loans/fixed/v2_3/index.cjs"));
 var _bundles = _interopRequireDefault(require("./nftfi/bundles.cjs"));
 var _helper2 = _interopRequireDefault(require("./nftfi/bundles/helper.cjs"));
-var _index5 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/index.cjs"));
+var _index6 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/index.cjs"));
 var _immutables = _interopRequireDefault(require("./nftfi/immutables.cjs"));
-var _index6 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/v2/index.cjs"));
+var _index7 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/v2/index.cjs"));
+var _index8 = _interopRequireDefault(require("./nftfi/loans/fixed/collection/v2_3/index.cjs"));
 var _erc = _interopRequireDefault(require("./nftfi/erc20.cjs"));
 var _erc2 = _interopRequireDefault(require("./nftfi/erc721.cjs"));
 var _erc3 = _interopRequireDefault(require("./nftfi/nft/erc1155.cjs"));
@@ -46,7 +48,7 @@ var _contract = _interopRequireDefault(require("./nftfi/contract.cjs"));
 var _helper3 = _interopRequireDefault(require("./nftfi/shared/helper.cjs"));
 var _result = _interopRequireDefault(require("./nftfi/result.cjs"));
 var _error = _interopRequireDefault(require("./nftfi/error.cjs"));
-var _index7 = _interopRequireDefault(require("./nftfi/index.cjs"));
+var _index9 = _interopRequireDefault(require("./nftfi/index.cjs"));
 var _storage = _interopRequireDefault(require("./nftfi/storage.cjs"));
 var _safeEthersAdapters = require("@safe-global/safe-ethers-adapters");
 var _safeCoreSdk = _interopRequireDefault(require("@safe-global/safe-core-sdk"));
@@ -58,11 +60,11 @@ var _axios = _interopRequireDefault(require("axios"));
 var _lodash = _interopRequireDefault(require("lodash.merge"));
 var _lodash2 = _interopRequireDefault(require("lodash.set"));
 var _socket = _interopRequireDefault(require("socket.io-client"));
-var _index8 = _interopRequireDefault(require("./nftfi/rewards/og/index.cjs"));
-var _index9 = _interopRequireDefault(require("./nftfi/rewards/earn/index.cjs"));
-var _index10 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
-var _index11 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/index.cjs"));
-var _index12 = _interopRequireDefault(require("./nftfi/rewards/earn/points/index.cjs"));
+var _index10 = _interopRequireDefault(require("./nftfi/rewards/og/index.cjs"));
+var _index11 = _interopRequireDefault(require("./nftfi/rewards/earn/index.cjs"));
+var _index12 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
+var _index13 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/index.cjs"));
+var _index14 = _interopRequireDefault(require("./nftfi/rewards/earn/points/index.cjs"));
 var _rewards = _interopRequireDefault(require("./nftfi/rewards.cjs"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -125,7 +127,9 @@ var _default = {
         loanFixedV1,
         loanFixedV2,
         loanFixedV2_1,
+        loanFixedV2_3,
         loanFixedCollectionV2,
+        loanFixedCollectionV2_3,
         loanFixedCollection,
         loanFixed,
         loans,
@@ -346,17 +350,27 @@ var _default = {
               config: config,
               contractFactory: contractFactory
             });
-            loanFixedCollectionV2 = new _index6["default"]({
+            loanFixedV2_3 = new _index5["default"]({
               config: config,
               contractFactory: contractFactory
             });
-            loanFixedCollection = new _index5["default"]({
-              v2: loanFixedCollectionV2
+            loanFixedCollectionV2 = new _index7["default"]({
+              config: config,
+              contractFactory: contractFactory
+            });
+            loanFixedCollectionV2_3 = new _index8["default"]({
+              config: config,
+              contractFactory: contractFactory
+            });
+            loanFixedCollection = new _index6["default"]({
+              v2: loanFixedCollectionV2,
+              v2_3: loanFixedCollectionV2_3
             });
             loanFixed = new _index["default"]({
               v1: loanFixedV1,
               v2: loanFixedV2,
               v2_1: loanFixedV2_1,
+              v2_3: loanFixedV2_3,
               collection: loanFixedCollection
             });
             loans = new _loans["default"]({
@@ -451,27 +465,27 @@ var _default = {
             events = new _events["default"]({
               websocket: websocket
             });
-            allocationsOg = new _index10["default"]({
+            allocationsOg = new _index12["default"]({
               account: account,
               api: api,
               result: result,
               error: error
             });
-            rewardsOg = new _index8["default"]({
+            rewardsOg = new _index10["default"]({
               allocations: allocationsOg
             });
-            allocationsEarn = new _index11["default"]({
+            allocationsEarn = new _index13["default"]({
               account: account,
               api: api,
               result: result,
               error: error
             });
-            pointsEarn = new _index12["default"]({
+            pointsEarn = new _index14["default"]({
               api: api,
               result: result,
               error: error
             });
-            rewardsEarn = new _index9["default"]({
+            rewardsEarn = new _index11["default"]({
               allocations: allocationsEarn,
               points: pointsEarn
             });
@@ -493,7 +507,7 @@ var _default = {
               error: error,
               utils: utils
             });
-            nftfi = new _index7["default"]({
+            nftfi = new _index9["default"]({
               config: config,
               account: account,
               listings: listings,
@@ -512,7 +526,7 @@ var _default = {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 96:
+          case 98:
           case "end":
             return _context.stop();
         }

@@ -1,4 +1,4 @@
-class LoansFixedCollectionV2 {
+class LoansFixedCollectionV2_3 {
   #config;
   #contractFactory;
   #contract;
@@ -7,8 +7,8 @@ class LoansFixedCollectionV2 {
     this.#config = options?.config;
     this.#contractFactory = options?.contractFactory;
     this.#contract = this.#contractFactory.create({
-      address: this.#config.loan.fixed.collection.v2.address,
-      abi: this.#config.loan.fixed.collection.v2.abi
+      address: this.#config.loan.fixed.collection.v2_3.address,
+      abi: this.#config.loan.fixed.collection.v2_3.abi
     });
   }
 
@@ -36,7 +36,7 @@ class LoansFixedCollectionV2 {
         referralFeeInBasisPoints: 0
       };
       const result = await this.#contract.call({
-        function: 'acceptOffer',
+        function: 'acceptCollectionOffer',
         args: [offer, signature, borrowerSettings]
       });
       success = result?.status === 1;
@@ -67,7 +67,7 @@ class LoansFixedCollectionV2 {
         function: 'payBackLoan',
         args: [options.loan.id]
       });
-      success = result?.status === 1;
+      success = result?.status === 1 ? true : false;
     } catch (e) {
       success = false;
     }
@@ -89,4 +89,4 @@ class LoansFixedCollectionV2 {
   }
 }
 
-export default LoansFixedCollectionV2;
+export default LoansFixedCollectionV2_3;
