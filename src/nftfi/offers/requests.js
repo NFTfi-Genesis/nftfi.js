@@ -84,7 +84,7 @@ class OffersRequests {
     };
     try {
       const response = await this.#api.post({
-        uri: 'offer-requests',
+        uri: 'v0.1/offer-requests',
         payload
       });
       if (response?.errors) {

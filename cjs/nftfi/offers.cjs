@@ -86,8 +86,6 @@ var Offers = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
   }
 
-  // We will start using #result and #error to standardise responses from the sdk. Not all functions use this pattern yet, but this is the goal.
-
   /**
    * When called without filtering by an NFT address, lender address or borrower address, defaults to filtering by your account address as lender.
    * When provided with filters, gets all offers by specified filters.
@@ -193,7 +191,7 @@ var Offers = /*#__PURE__*/function () {
               _context2.prev = 2;
               _context2.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'offers',
+                uri: 'v0.1/offers',
                 params: params
               });
             case 5:
@@ -212,7 +210,9 @@ var Offers = /*#__PURE__*/function () {
                     while (1) switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return (0, _classPrivateFieldGet2["default"])(_this, _validator).validate(offer);
+                        return (0, _classPrivateFieldGet2["default"])(_this, _validator).validate({
+                          offer: offer
+                        });
                       case 2:
                         errors = _context.sent;
                         return _context.abrupt("return", _objectSpread(_objectSpread({}, offer), {}, {
@@ -312,7 +312,7 @@ var Offers = /*#__PURE__*/function () {
               payload = _context3.sent;
               _context3.next = 10;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
-                uri: 'offers',
+                uri: 'v0.1/offers',
                 payload: payload
               });
             case 10:
@@ -325,7 +325,7 @@ var Offers = /*#__PURE__*/function () {
               _payload = _context3.sent;
               _context3.next = 17;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
-                uri: 'offers',
+                uri: 'v0.1/offers',
                 payload: _payload
               });
             case 17:
@@ -338,7 +338,7 @@ var Offers = /*#__PURE__*/function () {
               _payload2 = _context3.sent;
               _context3.next = 24;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
-                uri: 'offers',
+                uri: 'v0.1/offers',
                 payload: _payload2
               });
             case 24:
@@ -351,7 +351,7 @@ var Offers = /*#__PURE__*/function () {
               _payload3 = _context3.sent;
               _context3.next = 31;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
-                uri: 'offers',
+                uri: 'v0.1/offers',
                 payload: _payload3
               });
             case 31:
@@ -404,7 +404,7 @@ var Offers = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              uri = "offers/".concat(options.offer.id);
+              uri = "v0.1/offers/".concat(options.offer.id);
               _context4.next = 3;
               return (0, _classPrivateFieldGet2["default"])(this, _api)["delete"]({
                 uri: uri
@@ -465,6 +465,89 @@ var Offers = /*#__PURE__*/function () {
         return _revoke.apply(this, arguments);
       }
       return revoke;
+    }()
+    /**
+     * Validates an offer based on specified checks.
+     *
+     * @param {object} options - Parameters for the validation.
+     * @param {object} options.offer - The offer object to validate.
+     * @param {string[]} [options.checks] - An array of checks to validate against. If not provided or empty, all supported checks are performed. (optional)
+     * @returns {object} Response object
+     *
+     * @example
+     * // Validate an offer based on specified checks
+     * const validation = await nftfi.offers.validate({
+     *   offer: {
+     *     terms: {
+     *       loan: {
+     *         principal: 2000000000000000000,
+     *         repayment: 1100000000000000000,
+     *         currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+     *         duration: 604800,
+     *         expiry: 1760696014,
+     *       }
+     *     },
+     *     nft: {
+     *       address: "0x123",
+     *       id: "00000"
+     *     },
+     *     lender: {
+     *       address: "0x1111111",
+     *       nonce: "123"
+     *     },
+     *     nftfi: {
+     *       contract: {
+     *         name: "v2.loan.fixed.collection"
+     *       },
+     *       fee: {
+     *         bps: "500"
+     *       }
+     *     },
+     *     referrer: {
+     *       address: "0x0000000"
+     *     },
+     *     signature: "0x0000000"
+     *   },
+     *   checks: [
+     *     "signature",
+     *     "terms.principal",
+     *     "lender.nonce"
+     *   ]
+     * });
+     */
+  }, {
+    key: "validate",
+    value: function () {
+      var _validate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(options) {
+        var warnings, result;
+        return _regenerator["default"].wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.prev = 0;
+              _context6.next = 3;
+              return (0, _classPrivateFieldGet2["default"])(this, _validator).validate(options);
+            case 3:
+              warnings = _context6.sent;
+              result = {};
+              result.valid = warnings === null;
+              if (warnings) {
+                result.warnings = warnings;
+              }
+              return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(_objectSpread({}, result)));
+            case 10:
+              _context6.prev = 10;
+              _context6.t0 = _context6["catch"](0);
+              return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context6.t0));
+            case 13:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6, this, [[0, 10]]);
+      }));
+      function validate(_x5) {
+        return _validate.apply(this, arguments);
+      }
+      return validate;
     }()
   }, {
     key: "requests",

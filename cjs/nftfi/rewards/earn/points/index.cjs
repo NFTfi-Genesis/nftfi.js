@@ -74,7 +74,7 @@ var RewardsEarnPoints = /*#__PURE__*/function () {
               _context.prev = 0;
               _context.next = 3;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'rewards/earn/points',
+                uri: 'v0.1/rewards/earn/points',
                 params: {
                   loanId: (_options$loan = options.loan) === null || _options$loan === void 0 ? void 0 : _options$loan.id,
                   loanNftfiContractName: (_options$nftfi = options.nftfi) === null || _options$nftfi === void 0 ? void 0 : (_options$nftfi$contra = _options$nftfi.contract) === null || _options$nftfi$contra === void 0 ? void 0 : _options$nftfi$contra.name

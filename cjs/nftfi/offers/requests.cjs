@@ -137,7 +137,7 @@ var OffersRequests = /*#__PURE__*/function () {
               _context.prev = 5;
               _context.next = 8;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
-                uri: 'offer-requests',
+                uri: 'v0.1/offer-requests',
                 payload: payload
               });
             case 8:

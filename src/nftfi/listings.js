@@ -43,7 +43,7 @@ class Listings {
     let page = options?.pagination?.page || this.#config.pagination.page;
     let nftAddresses = options?.filters?.nftAddresses || [];
     let response = await this.#api.get({
-      uri: 'listings',
+      uri: 'v0.1/listings',
       params: {
         nftAddresses: nftAddresses.join(),
         page: page,

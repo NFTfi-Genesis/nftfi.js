@@ -92,7 +92,7 @@ var Auth = /*#__PURE__*/function () {
                 _context.next = 20;
                 break;
               }
-              _uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/authorization/refresh-token");
+              _uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/v0.1/authorization/refresh-token");
               _headers = {
                 'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
               };
@@ -131,7 +131,7 @@ var Auth = /*#__PURE__*/function () {
                 signedMessage: signedMessage,
                 multisig: multisig
               };
-              uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/authorization/token");
+              uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/v0.1/authorization/token");
               headers = {
                 'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
               };

@@ -39,7 +39,7 @@ class RewardsEarnPoints {
     try {
       const response = await this.#api.get(
         {
-          uri: 'rewards/earn/points',
+          uri: 'v0.1/rewards/earn/points',
           params: {
             loanId: options.loan?.id,
             loanNftfiContractName: options.nftfi?.contract?.name

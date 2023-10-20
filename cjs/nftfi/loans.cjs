@@ -80,7 +80,7 @@ var Loans = /*#__PURE__*/function () {
             case 0:
               _context.next = 2;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'loans',
+                uri: 'v0.1/loans',
                 params: {
                   accountAddress: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
                   counterparty: options.filters.counterparty,

@@ -39,7 +39,7 @@ class Auth {
 
     const sdkRefreshToken = this.#storage.get(this.#config.auth.refreshToken.key);
     if (sdkRefreshToken) {
-      const uri = `${this.#config.api.baseURI}/authorization/refresh-token`;
+      const uri = `${this.#config.api.baseURI}/v0.1/authorization/refresh-token`;
       const headers = {
         'X-API-Key': this.#config.api.key
       };
@@ -67,7 +67,7 @@ class Auth {
       signedMessage,
       multisig
     };
-    const uri = `${this.#config.api.baseURI}/authorization/token`;
+    const uri = `${this.#config.api.baseURI}/v0.1/authorization/token`;
     const headers = {
       'X-API-Key': this.#config.api.key
     };

@@ -259,60 +259,79 @@ var OffersValidator = /*#__PURE__*/function () {
   }, {
     key: "validate",
     value: function () {
-      var _validate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(offer) {
-        var _this = this;
-        var errors, contract, currency, lender, principalBn, isValidSignature, isValidNonce, isValidAllowance, isValidBalance;
+      var _validate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
+        var _options$checks,
+          _options$checks2,
+          _options$checks3,
+          _options$checks4,
+          _this = this;
+        var offer, errors, contract, currency, lender, principalBn, isValidSignature, performAllChecks, isValidNonce, isValidAllowance, isValidBalance;
         return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
+              offer = options.offer;
               errors = {}; // Early return if offer is expired, no need to proceed with other async calls
               if (!(Date.now() > offer.terms.loan.expiry * 1000)) {
-                _context5.next = 4;
+                _context5.next = 5;
                 break;
               }
               this._addError('terms.expiry', 'invalid', 'expiry', 'offer expiry is in the past', errors);
               return _context5.abrupt("return", errors);
-            case 4:
+            case 5:
               contract = offer.nftfi.contract.name;
               currency = offer.terms.loan.currency;
               lender = offer.lender.address;
               principalBn = (0, _classPrivateFieldGet2["default"])(this, _ethers).BigNumber.from(offer.terms.loan.principal.toLocaleString('fullwide', {
                 useGrouping: false
               }));
-              isValidSignature = offer.signature ? this._isValidSignature(offer) : true;
-              isValidNonce = this._isValidNonce(offer);
-              isValidAllowance = this._isValidAllowance({
-                nftfi: {
-                  contract: {
-                    name: contract
+              performAllChecks = !(options !== null && options !== void 0 && (_options$checks = options.checks) !== null && _options$checks !== void 0 && _options$checks.length) > 0;
+              if (!performAllChecks && !(options !== null && options !== void 0 && (_options$checks2 = options.checks) !== null && _options$checks2 !== void 0 && _options$checks2.includes('signature')) || !offer.signature) {
+                isValidSignature = true;
+              } else {
+                isValidSignature = this._isValidSignature(offer);
+              }
+              if (!performAllChecks && !(options !== null && options !== void 0 && (_options$checks3 = options.checks) !== null && _options$checks3 !== void 0 && _options$checks3.includes('lender.nonce'))) {
+                isValidNonce = true;
+              } else {
+                isValidNonce = this._isValidNonce(offer);
+              }
+              if (!performAllChecks && !(options !== null && options !== void 0 && (_options$checks4 = options.checks) !== null && _options$checks4 !== void 0 && _options$checks4.includes('terms.principal'))) {
+                isValidAllowance = true;
+                isValidBalance = true;
+              } else {
+                isValidAllowance = this._isValidAllowance({
+                  nftfi: {
+                    contract: {
+                      name: contract
+                    }
+                  },
+                  account: {
+                    address: lender
+                  },
+                  token: {
+                    address: currency
+                  },
+                  gte: {
+                    amount: principalBn
                   }
-                },
-                account: {
-                  address: lender
-                },
-                token: {
-                  address: currency
-                },
-                gte: {
-                  amount: principalBn
-                }
-              });
-              isValidBalance = this._isValidBalance({
-                nftfi: {
-                  contract: {
-                    name: contract
+                });
+                isValidBalance = this._isValidBalance({
+                  nftfi: {
+                    contract: {
+                      name: contract
+                    }
+                  },
+                  account: {
+                    address: lender
+                  },
+                  token: {
+                    address: currency
+                  },
+                  gte: {
+                    amount: principalBn
                   }
-                },
-                account: {
-                  address: lender
-                },
-                token: {
-                  address: currency
-                },
-                gte: {
-                  amount: principalBn
-                }
-              });
+                });
+              }
               return _context5.abrupt("return", Promise.all([isValidAllowance, isValidBalance, isValidSignature, isValidNonce]).then(function (checks) {
                 var msg = '';
                 var status = '';
@@ -343,7 +362,7 @@ var OffersValidator = /*#__PURE__*/function () {
                 }
                 return Object.keys(errors).length > 0 ? errors : null;
               }));
-            case 13:
+            case 14:
             case "end":
               return _context5.stop();
           }

@@ -87,7 +87,7 @@ var Listings = /*#__PURE__*/function () {
               nftAddresses = (options === null || options === void 0 ? void 0 : (_options$filters = options.filters) === null || _options$filters === void 0 ? void 0 : _options$filters.nftAddresses) || [];
               _context.next = 6;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'listings',
+                uri: 'v0.1/listings',
                 params: {
                   nftAddresses: nftAddresses.join(),
                   page: page,

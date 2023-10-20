@@ -291,6 +291,7 @@ mainnetConfig.immutable.v1.address = '0x9a129032F01EB4dDD764c1777c81b771C34a2fbE
 mainnetConfig.immutable.v1.abi = [
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
   'function bundleOfImmutable(uint256) view returns (uint256)',
+  'function immutableOfBundle(uint256) view returns (uint256)',
   'function withdraw(uint256 immutableId, address to)',
   'function withdrawAndDecompose(uint256 immutableId, address to)'
 ];

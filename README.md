@@ -1030,6 +1030,7 @@ Class for working with offers.
     * [`.create(options)`](#Offers+create) ⇒ <code>object</code>
     * [`.delete(options)`](#Offers+delete) ⇒ <code>object</code>
     * [`.revoke(options)`](#Offers+revoke) ⇒ <code>object</code>
+    * [`.validate(options)`](#Offers+validate) ⇒ <code>object</code>
 
 
 * * *
@@ -1227,6 +1228,65 @@ const contractName = offers[0]['nftfi']['contract']['name']
 const revoked = await nftfi.offers.revoke({
   offer: { nonce },
   nftfi: { contract: { name: contractName } }
+});
+```
+
+* * *
+
+<a name="Offers+validate"></a>
+
+#### `offers.validate(options)` ⇒ <code>object</code>
+Validates an offer based on specified checks.
+
+**Kind**: instance method of [<code>Offers</code>](#Offers)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Parameters for the validation. |
+| options.offer | <code>object</code> | The offer object to validate. |
+| [options.checks] | <code>Array.&lt;string&gt;</code> | An array of checks to validate against. If not provided or empty, all supported checks are performed. (optional) |
+
+**Example**  
+```js
+// Validate an offer based on specified checks
+const validation = await nftfi.offers.validate({
+  offer: {
+    terms: {
+      loan: {
+        principal: 2000000000000000000,
+        repayment: 1100000000000000000,
+        currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        duration: 604800,
+        expiry: 1760696014,
+      }
+    },
+    nft: {
+      address: "0x123",
+      id: "00000"
+    },
+    lender: {
+      address: "0x1111111",
+      nonce: "123"
+    },
+    nftfi: {
+      contract: {
+        name: "v2.loan.fixed.collection"
+      },
+      fee: {
+        bps: "500"
+      }
+    },
+    referrer: {
+      address: "0x0000000"
+    },
+    signature: "0x0000000"
+  },
+  checks: [
+    "signature",
+    "terms.principal",
+    "lender.nonce"
+  ]
 });
 ```
 

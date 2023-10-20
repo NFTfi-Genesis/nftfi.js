@@ -126,7 +126,8 @@ class OffersValidator {
     return errors;
   }
 
-  async validate(offer) {
+  async validate(options) {
+    const offer = options.offer;
     let errors = {};
 
     // Early return if offer is expired, no need to proceed with other async calls
@@ -142,23 +143,41 @@ class OffersValidator {
       offer.terms.loan.principal.toLocaleString('fullwide', { useGrouping: false })
     );
 
-    const isValidSignature = offer.signature ? this._isValidSignature(offer) : true;
+    let isValidSignature;
+    let performAllChecks = !options?.checks?.length > 0;
 
-    const isValidNonce = this._isValidNonce(offer);
+    if ((!performAllChecks && !options?.checks?.includes('signature')) || !offer.signature) {
+      isValidSignature = true;
+    } else {
+      isValidSignature = this._isValidSignature(offer);
+    }
 
-    const isValidAllowance = this._isValidAllowance({
-      nftfi: { contract: { name: contract } },
-      account: { address: lender },
-      token: { address: currency },
-      gte: { amount: principalBn }
-    });
+    let isValidNonce;
+    if (!performAllChecks && !options?.checks?.includes('lender.nonce')) {
+      isValidNonce = true;
+    } else {
+      isValidNonce = this._isValidNonce(offer);
+    }
 
-    const isValidBalance = this._isValidBalance({
-      nftfi: { contract: { name: contract } },
-      account: { address: lender },
-      token: { address: currency },
-      gte: { amount: principalBn }
-    });
+    let isValidAllowance;
+    let isValidBalance;
+    if (!performAllChecks && !options?.checks?.includes('terms.principal')) {
+      isValidAllowance = true;
+      isValidBalance = true;
+    } else {
+      isValidAllowance = this._isValidAllowance({
+        nftfi: { contract: { name: contract } },
+        account: { address: lender },
+        token: { address: currency },
+        gte: { amount: principalBn }
+      });
+      isValidBalance = this._isValidBalance({
+        nftfi: { contract: { name: contract } },
+        account: { address: lender },
+        token: { address: currency },
+        gte: { amount: principalBn }
+      });
+    }
 
     return Promise.all([isValidAllowance, isValidBalance, isValidSignature, isValidNonce]).then(checks => {
       let msg = '';

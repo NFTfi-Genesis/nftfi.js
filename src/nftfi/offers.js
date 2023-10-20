@@ -27,8 +27,6 @@ class Offers {
     this.#helper = options?.helper;
   }
 
-  // We will start using #result and #error to standardise responses from the sdk. Not all functions use this pattern yet, but this is the goal.
-
   /**
    * When called without filtering by an NFT address, lender address or borrower address, defaults to filtering by your account address as lender.
    * When provided with filters, gets all offers by specified filters.
@@ -116,7 +114,7 @@ class Offers {
     const params = this.#offersHelper.getParams(options);
     try {
       const response = await this.#api.get({
-        uri: 'offers',
+        uri: 'v0.1/offers',
         params
       });
       let results = response?.results.map(this.#helper.addCurrencyUnit) || [];
@@ -124,7 +122,7 @@ class Offers {
       if (!shouldNotValidate && results?.length > 0) {
         results = await Promise.all(
           results.map(async offer => {
-            const errors = await this.#validator.validate(offer);
+            const errors = await this.#validator.validate({ offer });
             return { ...offer, errors: errors };
           })
         );
@@ -181,7 +179,7 @@ class Offers {
       case 'v2-1.loan.fixed': {
         let payload = await this.#offersHelper.constructV2Offer(options);
         response = await this.#api.post({
-          uri: 'offers',
+          uri: 'v0.1/offers',
           payload
         });
         break;
@@ -189,7 +187,7 @@ class Offers {
       case 'v2-3.loan.fixed': {
         let payload = await this.#offersHelper.constructV2_3Offer(options);
         response = await this.#api.post({
-          uri: 'offers',
+          uri: 'v0.1/offers',
           payload
         });
         break;
@@ -197,7 +195,7 @@ class Offers {
       case 'v2.loan.fixed.collection': {
         let payload = await this.#offersHelper.constructV2FixedCollectionOffer(options);
         response = await this.#api.post({
-          uri: 'offers',
+          uri: 'v0.1/offers',
           payload
         });
         break;
@@ -205,12 +203,11 @@ class Offers {
       case 'v2-3.loan.fixed.collection': {
         let payload = await this.#offersHelper.constructV2_3FixedCollectionOffer(options);
         response = await this.#api.post({
-          uri: 'offers',
+          uri: 'v0.1/offers',
           payload
         });
         break;
       }
-
       default: {
         errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
         response = { errors };
@@ -239,7 +236,7 @@ class Offers {
    * });
    */
   async delete(options) {
-    const uri = `offers/${options.offer.id}`;
+    const uri = `v0.1/offers/${options.offer.id}`;
     const result = await this.#api.delete({ uri });
     return result;
   }
@@ -266,6 +263,69 @@ class Offers {
   async revoke(options) {
     let result = await this.#loans.revokeOffer(options);
     return result;
+  }
+
+  /**
+   * Validates an offer based on specified checks.
+   *
+   * @param {object} options - Parameters for the validation.
+   * @param {object} options.offer - The offer object to validate.
+   * @param {string[]} [options.checks] - An array of checks to validate against. If not provided or empty, all supported checks are performed. (optional)
+   * @returns {object} Response object
+   *
+   * @example
+   * // Validate an offer based on specified checks
+   * const validation = await nftfi.offers.validate({
+   *   offer: {
+   *     terms: {
+   *       loan: {
+   *         principal: 2000000000000000000,
+   *         repayment: 1100000000000000000,
+   *         currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+   *         duration: 604800,
+   *         expiry: 1760696014,
+   *       }
+   *     },
+   *     nft: {
+   *       address: "0x123",
+   *       id: "00000"
+   *     },
+   *     lender: {
+   *       address: "0x1111111",
+   *       nonce: "123"
+   *     },
+   *     nftfi: {
+   *       contract: {
+   *         name: "v2.loan.fixed.collection"
+   *       },
+   *       fee: {
+   *         bps: "500"
+   *       }
+   *     },
+   *     referrer: {
+   *       address: "0x0000000"
+   *     },
+   *     signature: "0x0000000"
+   *   },
+   *   checks: [
+   *     "signature",
+   *     "terms.principal",
+   *     "lender.nonce"
+   *   ]
+   * });
+   */
+  async validate(options) {
+    try {
+      const warnings = await this.#validator.validate(options);
+      let result = {};
+      result.valid = warnings === null;
+      if (warnings) {
+        result.warnings = warnings;
+      }
+      return this.#result.handle({ ...result });
+    } catch (e) {
+      return this.#error.handle(e);
+    }
   }
 
   get requests() {

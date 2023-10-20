@@ -32,7 +32,7 @@ class RewardsOgAllocations {
     try {
       const accountAddress = options?.account?.address || this.#account.getAddress();
       const response = await this.#api.get({
-        uri: `rewards/og/allocations/${accountAddress}`
+        uri: `v0.1/rewards/og/allocations/${accountAddress}`
       });
       if (!response) {
         return this.#result.handle({ status: { id: 'not-eligible' } });

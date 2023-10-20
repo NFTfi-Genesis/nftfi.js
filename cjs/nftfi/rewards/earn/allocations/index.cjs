@@ -72,7 +72,7 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
               accountAddress = (options === null || options === void 0 ? void 0 : (_options$account = options.account) === null || _options$account === void 0 ? void 0 : _options$account.address) || (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
               _context.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: "rewards/earn/allocations/".concat(accountAddress)
+                uri: "v0.1/rewards/earn/allocations/".concat(accountAddress)
               });
             case 4:
               response = _context.sent;
@@ -111,7 +111,7 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
               _context2.prev = 0;
               _context2.next = 3;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'rewards/earn/allocations'
+                uri: 'v0.1/rewards/earn/allocations'
               });
             case 3:
               _list2 = _context2.sent;

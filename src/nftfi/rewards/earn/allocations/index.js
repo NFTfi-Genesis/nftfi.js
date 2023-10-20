@@ -32,7 +32,7 @@ class RewardsEarnAllocations {
     try {
       const accountAddress = options?.account?.address || this.#account.getAddress();
       const response = await this.#api.get({
-        uri: `rewards/earn/allocations/${accountAddress}`
+        uri: `v0.1/rewards/earn/allocations/${accountAddress}`
       });
       return this.#result.handle(response);
     } catch (e) {
@@ -51,7 +51,7 @@ class RewardsEarnAllocations {
   async list() {
     try {
       const list = await this.#api.get({
-        uri: 'rewards/earn/allocations'
+        uri: 'v0.1/rewards/earn/allocations'
       });
 
       return this.#result.handle(list);
