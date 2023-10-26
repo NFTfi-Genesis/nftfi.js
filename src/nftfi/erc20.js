@@ -40,13 +40,13 @@ class Erc20 {
    * @param {object} options - Hashmap of config options for this method
    * @param {object} [options.account.address] - The account address to get the allowance of (optional)
    * @param {string} options.token.address - The ERC20 token address
-   * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
+   * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`)
    * @returns {number} The user account's token allowance for that contract, in base units (eg. 1000000000000000000 wei)
    *
    * @example
    * const balance = await nftfi.erc20.allowance({
    *  token: { address: '0x00000000' },
-   *  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+   *  nftfi: { contract: { name: 'v2-3.loan.fixed' } }
    * });
    */
   async allowance(options) {
@@ -69,7 +69,7 @@ class Erc20 {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {string} options.token.address - The ERC20 token address
-   * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
+   * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`)
    * @param {number} options.amount - The token amount to approve, in base units (eg. 1000000000000000000 wei)
    * @returns {boolean} Boolean value indicating whether the operation succeeded
    *
@@ -77,7 +77,7 @@ class Erc20 {
    * const results = await nftfi.erc20.approve({
    *   amount: 1000000000000000000,
    *   token: { address: '0x00000000' },
-   *   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+   *   nftfi: { contract: { name: 'v2-3.loan.fixed' } }
    * });
    */
   async approve(options) {
@@ -110,13 +110,13 @@ class Erc20 {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {string} options.token.address - The ERC20 token address
-   * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
+   * @param {string} options.nftfi.contract.name - The name of the contract NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`)
    * @returns {boolean} Boolean value indicating whether the operation succeeded
    *
    * @example
    * const results = await nftfi.erc20.approveMax({
    *   token: { address: '0x00000000' },
-   *   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+   *   nftfi: { contract: { name: 'v2-3.loan.fixed' } }
    * });
    */
   async approveMax(options) {

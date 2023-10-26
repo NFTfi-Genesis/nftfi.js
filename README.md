@@ -396,13 +396,13 @@ Returns the ERC20 allowance, for v1 & v2 NFTfi contracts, for your account (by d
 | options | <code>object</code> | Hashmap of config options for this method |
 | [options.account.address] | <code>object</code> | The account address to get the allowance of (optional) |
 | options.token.address | <code>string</code> | The ERC20 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`) |
 
 **Example**  
 ```js
 const balance = await nftfi.erc20.allowance({
  token: { address: '0x00000000' },
- nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+ nftfi: { contract: { name: 'v2-3.loan.fixed' } }
 });
 ```
 
@@ -420,7 +420,7 @@ Approves your account's ERC20 spending amount, if not already approved, for v1 &
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.token.address | <code>string</code> | The ERC20 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`) |
 | options.amount | <code>number</code> | The token amount to approve, in base units (eg. 1000000000000000000 wei) |
 
 **Example**  
@@ -428,7 +428,7 @@ Approves your account's ERC20 spending amount, if not already approved, for v1 &
 const results = await nftfi.erc20.approve({
   amount: 1000000000000000000,
   token: { address: '0x00000000' },
-  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-3.loan.fixed' } }
 });
 ```
 
@@ -446,13 +446,13 @@ Approves your account's ERC20 maximum amount, if not already approved, for v1 & 
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.token.address | <code>string</code> | The ERC20 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the contract NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`) |
 
 **Example**  
 ```js
 const results = await nftfi.erc20.approveMax({
   token: { address: '0x00000000' },
-  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-3.loan.fixed' } }
 });
 ```
 
@@ -535,7 +535,7 @@ The NFTfi contract is allowed to transfer all tokens of the sender on their beha
 | --- | --- | --- |
 | options | <code>object</code> | Options |
 | options.token.address | <code>string</code> | The ERC721 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`) |
 
 **Example**  
 ```js
@@ -543,7 +543,7 @@ const address = await nftfi.nft.erc721.setApprovalForAll({
   token: {
    address: '0x00000000'
   },
-  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-3.loan.fixed' } }
 });
 ```
 
@@ -562,7 +562,7 @@ The NFTfi contract is allowed to transfer all tokens of the sender on their beha
 | --- | --- | --- |
 | options | <code>object</code> | Options |
 | options.token.address | <code>string</code> | The ERC721 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`) |
 
 **Example**  
 ```js
@@ -570,7 +570,7 @@ const address = await nftfi.nft.erc721.isApprovalForAll({
   token: {
    address: '0x00000000'
   },
-  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-3.loan.fixed' } }
 });
 ```
 
@@ -1522,7 +1522,7 @@ The NFTfi contract is allowed to transfer all tokens of the sender on their beha
 | --- | --- | --- |
 | options | <code>object</code> | Options |
 | options.token.address | <code>string</code> | The ERC1155 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`) |
 
 **Example**  
 ```js
@@ -1530,7 +1530,7 @@ const address = await nftfi.nft.erc1155.setApprovalForAll({
   token: {
    address: '0x00000000'
   },
-  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-3.loan.fixed' } }
 });
 ```
 
@@ -1549,7 +1549,7 @@ The NFTfi contract is allowed to transfer all tokens of the sender on their beha
 | --- | --- | --- |
 | options | <code>object</code> | Options |
 | options.token.address | <code>string</code> | The ERC1155 token address |
-| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`) |
+| options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`) |
 
 **Example**  
 ```js
@@ -1557,7 +1557,7 @@ const address = await nftfi.nft.erc1155.isApprovalForAll({
   token: {
    address: '0x00000000'
   },
-  nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+  nftfi: { contract: { name: 'v2-3.loan.fixed' } }
 });
 ```
 

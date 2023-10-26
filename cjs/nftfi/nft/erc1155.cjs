@@ -49,8 +49,12 @@ var Erc1155 = /*#__PURE__*/function () {
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2.address;
         case 'v2-1.loan.fixed':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.address;
+        case 'v2-3.loan.fixed':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.address;
         case 'v2.loan.fixed.collection':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.address;
+        case 'v2-3.loan.fixed.collection':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.address;
       }
     }
 
@@ -60,7 +64,7 @@ var Erc1155 = /*#__PURE__*/function () {
      *
      * @param {object} options - Options
      * @param {string} options.token.address - The ERC1155 token address
-     * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
+     * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`)
      * @returns {boolean} Boolean value indicating whether the operation succeeded
      *
      * @example
@@ -68,7 +72,7 @@ var Erc1155 = /*#__PURE__*/function () {
      *   token: {
      *    address: '0x00000000'
      *   },
-     *   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+     *   nftfi: { contract: { name: 'v2-3.loan.fixed' } }
      * });
      */
   }, {
@@ -111,7 +115,7 @@ var Erc1155 = /*#__PURE__*/function () {
      *
      * @param {object} options - Options
      * @param {string} options.token.address - The ERC1155 token address
-     * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
+     * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`)
      * @returns {boolean} Boolean value indicating whether permission has been granted or not
      *
      * @example
@@ -119,7 +123,7 @@ var Erc1155 = /*#__PURE__*/function () {
      *   token: {
      *    address: '0x00000000'
      *   },
-     *   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+     *   nftfi: { contract: { name: 'v2-3.loan.fixed' } }
      * });
      */
   }, {

@@ -70,7 +70,7 @@ class Erc721 {
    *
    * @param {object} options - Options
    * @param {string} options.token.address - The ERC721 token address
-   * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
+   * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`)
    * @returns {boolean} Boolean value indicating whether the operation succeeded
    *
    * @example
@@ -78,7 +78,7 @@ class Erc721 {
    *   token: {
    *    address: '0x00000000'
    *   },
-   *   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+   *   nftfi: { contract: { name: 'v2-3.loan.fixed' } }
    * });
    */
   async setApprovalForAll(options) {
@@ -103,7 +103,7 @@ class Erc721 {
    *
    * @param {object} options - Options
    * @param {string} options.token.address - The ERC721 token address
-   * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v1.loan.fixed`, `v2.loan.fixed`, `v2-1.loan.fixed`)
+   * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`)
    * @returns {boolean} Boolean value indicating whether permission has been granted or not
    *
    * @example
@@ -111,7 +111,7 @@ class Erc721 {
    *   token: {
    *    address: '0x00000000'
    *   },
-   *   nftfi: { contract: { name: 'v2-1.loan.fixed' } }
+   *   nftfi: { contract: { name: 'v2-3.loan.fixed' } }
    * });
    */
   async isApprovedForAll(options) {
