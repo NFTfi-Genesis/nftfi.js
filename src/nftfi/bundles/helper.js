@@ -8,10 +8,16 @@ class BundlesHelper {
     this.#ethers = options?.ethers;
     this.#config = options?.config;
     this.#contractFactory = options?.contractFactory;
-    this.#registryContract = this.#contractFactory.create({
-      address: this.#config.registry.address,
-      abi: this.#config.registry.abi
-    });
+  }
+
+  get _registryContract() {
+    if (!this.#registryContract) {
+      this.#registryContract = this.#contractFactory.create({
+        address: this.#config.registry.address,
+        abi: this.#config.registry.abi
+      });
+    }
+    return this.#registryContract;
   }
 
   // Check if the wrapper is supported
@@ -49,7 +55,7 @@ class BundlesHelper {
   }
 
   async getPermit(options) {
-    const permit = await this.#registryContract.call({
+    const permit = await this._registryContract.call({
       function: 'getNFTPermit',
       args: [options?.element?.token?.address]
     });

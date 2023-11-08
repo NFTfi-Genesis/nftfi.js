@@ -35,25 +35,25 @@ yarn install
 
 ## Getting Started
 
-To begin experimenting, please ensure that the following are available:
+Before starting, ensure you have an NFTfi API key. If you don't, please reach out to our team. This key is essential for initializing the SDK.
 
-- a NFTfi API key (contact the team)
-- an Ethereum RPC Provider URL
-- a Private Key of an Ethereum wallet (funded with some ETH, wETH, and DAI (optional))
+For beginners, we advise testing with the SDK on the Goerli network. This gives you an understanding of its functionalities. Once comfortable, switch to the Mainnet.
 
-You will need the values above when initialising the SDK. We recommend that you start by using the SDK on the Goerli network, to get a feeling for the various functionality. Then once you are ready, transitioning over to Mainnet.
+When the SDK is set to the Goerli network, it interacts with the dApp at https://goerli-integration.nftfi.com. For a Mainnet setup, the SDK will interact with https://app.nftfi.com.
 
-Please note that if the SDK is configured to use Goerli, it will use the dApp located at [https://goerli-integration.nftfi.com](https://goerli-integration.nftfi.com). If a Mainnet configuration is used, the SDK will use the dApp located at [https://app.nftfi.com](https://app.nftfi.com).
+When initializing, the NFTfi SDK links to the account interacting with the NFTfi protocol (if authenticated). The SDK can compute the account address from the private key, web3 provider, or the `ethereum.account.address` field.
 
-After you've set up and configured the environment, you need to initialise NFTfi.
+We recommend that you **don't hardcode your credentials** into `NFTfi.init(...)`, instead you could use environment vars, or a more secure mechanism.
+
+## Initialization Examples
+
+### 1) With a Private Key.
 
 ```javascript
-// Import SDK
 import NFTfi from '@nftfi/js';
 
-// Initialise
 const nftfi = await NFTfi.init({
-  config: { 
+  config: {
     api: { key: <nftfi-sdk-api-key> }
   },
   ethereum: {
@@ -63,9 +63,57 @@ const nftfi = await NFTfi.init({
 });
 ```
 
-Upon initialisation the NFTfi SDK is bound to the account that will be interacting with the NFTfi protocol. The account address is computed by using the private key specified.
+### 2) With a Web3 Provider.
 
-We recommend that you **don't hardcode your credentials** into `NFTfi.init(...)`, instead you could use environment vars, or a more secure mechanism.
+```javascript
+import NFTfi from '@nftfi/js';
+
+const nftfi = await NFTfi.init({
+  config: {
+    api: { key: <nftfi-sdk-api-key> }
+  },
+  ethereum: {
+    account: { address: <your-wallet-address> },
+    web3: { provider: <web3-ethereum-provider> }
+  }
+});
+```
+
+### 3) Without a Private Key or Web3 Provider.
+
+Note: This setup won't be able to make offers or initiate loans since they require signatures.
+
+```javascript
+import NFTfi from '@nftfi/js';
+
+const nftfi = await NFTfi.init({
+  config: {
+    api: { key: <nftfi-sdk-api-key> }
+  },
+  ethereum: {
+    account: { address: <your-wallet-address> },
+    provider: { url: <web3-ethereum-provider-url> }
+  }
+});
+```
+
+### 4) Without a Private Key, Web3 Provider, or Provider URL.
+
+Note: This setup restricts functionality needing blockchain interactions.
+
+```javascript
+import NFTfi from '@nftfi/js';
+
+const nftfi = await NFTfi.init({
+  config: {
+    api: { key: <nftfi-sdk-api-key> }
+  },
+  ethereum: {
+    account: { address: <your-wallet-address> },
+    chain: { id: <chain-id> }
+  }
+});
+```
 
 Once the SDK is initialised, you can use all the methods documented below.
 
@@ -561,12 +609,13 @@ The NFTfi contract is allowed to transfer all tokens of the sender on their beha
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>object</code> | Options |
+| options.account.address | <code>object</code> | The account address to get the approval of (optional) |
 | options.token.address | <code>string</code> | The ERC721 token address |
 | options.nftfi.contract.name | <code>string</code> | The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`) |
 
 **Example**  
 ```js
-const address = await nftfi.nft.erc721.isApprovalForAll({
+const address = await nftfi.nft.erc721.isApprovedForAll({
   token: {
    address: '0x00000000'
   },
@@ -1062,6 +1111,7 @@ When provided with filters, gets all offers by specified filters.
 | [options.pagination.sort] | <code>string</code> |  | Field to sort by (optional) |
 | [options.pagination.direction] | <code>&#x27;asc&#x27;</code> \| <code>&#x27;desc&#x27;</code> |  | Direction to sort by (optional) |
 | [options.validation.check] | <code>boolean</code> | <code>true</code> | Validate offers and append error info (optional) |
+| [options.auth.token] | <code>&#x27;required&#x27;</code> \| <code>&#x27;optional&#x27;</code> \| <code>&#x27;none&#x27;</code> |  | Specify if call to fetch offers should be authed, un-authed calls will always redact offers signature. By default, auth is optional. (optional) |
 
 **Example**  
 ```js

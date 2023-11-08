@@ -18,6 +18,8 @@ var _account = /*#__PURE__*/new WeakMap();
 var _fixed = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
 var _helper = /*#__PURE__*/new WeakMap();
+var _assertion = /*#__PURE__*/new WeakMap();
+var _error = /*#__PURE__*/new WeakMap();
 /**
  * @class
  * Class for working with loans.
@@ -46,11 +48,21 @@ var Loans = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _assertion, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _error, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _fixed, options === null || options === void 0 ? void 0 : options.fixed);
     (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
+    (0, _classPrivateFieldSet2["default"])(this, _assertion, options === null || options === void 0 ? void 0 : options.assertion);
+    (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
   }
 
   /**
@@ -78,7 +90,9 @@ var Loans = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
+              _context.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasAddress();
+              _context.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
                 uri: 'v0.1/loans',
                 params: {
@@ -87,16 +101,20 @@ var Loans = /*#__PURE__*/function () {
                   status: options.filters.status
                 }
               });
-            case 2:
+            case 4:
               response = _context.sent;
               loans = response['results'];
               loans = loans.map((0, _classPrivateFieldGet2["default"])(this, _helper).addCurrencyUnit);
               return _context.abrupt("return", loans);
-            case 6:
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](0);
+              return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context.t0));
+            case 13:
             case "end":
               return _context.stop();
           }
-        }, _callee, this);
+        }, _callee, this, [[0, 10]]);
       }));
       function get(_x) {
         return _get.apply(this, arguments);
@@ -158,61 +176,67 @@ var Loans = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
+              _context2.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               contractName = options.offer.nftfi.contract.name;
               _context2.t0 = contractName;
-              _context2.next = _context2.t0 === 'v2-1.loan.fixed' ? 4 : _context2.t0 === 'v2-3.loan.fixed' ? 9 : _context2.t0 === 'v2.loan.fixed.collection' ? 14 : _context2.t0 === 'v2-3.loan.fixed.collection' ? 19 : 24;
+              _context2.next = _context2.t0 === 'v2-1.loan.fixed' ? 6 : _context2.t0 === 'v2-3.loan.fixed' ? 11 : _context2.t0 === 'v2.loan.fixed.collection' ? 16 : _context2.t0 === 'v2-3.loan.fixed.collection' ? 21 : 26;
               break;
-            case 4:
-              _context2.next = 6;
-              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.acceptOffer(options);
             case 6:
+              _context2.next = 8;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.acceptOffer(options);
+            case 8:
               success = _context2.sent;
               response = {
                 success: success
               };
-              return _context2.abrupt("break", 27);
-            case 9:
-              _context2.next = 11;
-              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.acceptOffer(options);
+              return _context2.abrupt("break", 29);
             case 11:
+              _context2.next = 13;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.acceptOffer(options);
+            case 13:
               _success = _context2.sent;
               response = {
                 success: _success
               };
-              return _context2.abrupt("break", 27);
-            case 14:
-              _context2.next = 16;
-              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.acceptOffer(options);
+              return _context2.abrupt("break", 29);
             case 16:
+              _context2.next = 18;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.acceptOffer(options);
+            case 18:
               _success2 = _context2.sent;
               response = {
                 success: _success2
               };
-              return _context2.abrupt("break", 27);
-            case 19:
-              _context2.next = 21;
-              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.acceptOffer(options);
+              return _context2.abrupt("break", 29);
             case 21:
+              _context2.next = 23;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.acceptOffer(options);
+            case 23:
               _success3 = _context2.sent;
               response = {
                 success: _success3
               };
-              return _context2.abrupt("break", 27);
-            case 24:
+              return _context2.abrupt("break", 29);
+            case 26:
               errors = {
                 'nftfi.contract.name': ["".concat(contractName, " not supported")]
               };
               response = {
                 errors: errors
               };
-              return _context2.abrupt("break", 27);
-            case 27:
+              return _context2.abrupt("break", 29);
+            case 29:
               return _context2.abrupt("return", response);
-            case 28:
+            case 32:
+              _context2.prev = 32;
+              _context2.t1 = _context2["catch"](0);
+              return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context2.t1));
+            case 35:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this);
+        }, _callee2, this, [[0, 32]]);
       }));
       function begin(_x2) {
         return _begin.apply(this, arguments);
@@ -258,79 +282,85 @@ var Loans = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
+              _context3.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               success = false;
               _context3.t0 = options.nftfi.contract.name;
-              _context3.next = _context3.t0 === 'v1.loan.fixed' ? 4 : _context3.t0 === 'v2.loan.fixed' ? 8 : _context3.t0 === 'v2.loan.fixed.collection' ? 12 : _context3.t0 === 'v2-3.loan.fixed.collection' ? 16 : _context3.t0 === 'v2-1.loan.fixed' ? 20 : _context3.t0 === 'v2-3.loan.fixed' ? 24 : 28;
+              _context3.next = _context3.t0 === 'v1.loan.fixed' ? 6 : _context3.t0 === 'v2.loan.fixed' ? 10 : _context3.t0 === 'v2.loan.fixed.collection' ? 14 : _context3.t0 === 'v2-3.loan.fixed.collection' ? 18 : _context3.t0 === 'v2-1.loan.fixed' ? 22 : _context3.t0 === 'v2-3.loan.fixed' ? 26 : 30;
               break;
-            case 4:
-              _context3.next = 6;
+            case 6:
+              _context3.next = 8;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v1.liquidateOverdueLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 6:
-              success = _context3.sent;
-              return _context3.abrupt("break", 28);
             case 8:
-              _context3.next = 10;
+              success = _context3.sent;
+              return _context3.abrupt("break", 30);
+            case 10:
+              _context3.next = 12;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2.liquidateOverdueLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 10:
-              success = _context3.sent;
-              return _context3.abrupt("break", 28);
             case 12:
-              _context3.next = 14;
+              success = _context3.sent;
+              return _context3.abrupt("break", 30);
+            case 14:
+              _context3.next = 16;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.liquidateOverdueLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 14:
-              success = _context3.sent;
-              return _context3.abrupt("break", 28);
             case 16:
-              _context3.next = 18;
+              success = _context3.sent;
+              return _context3.abrupt("break", 30);
+            case 18:
+              _context3.next = 20;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.liquidateOverdueLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 18:
-              success = _context3.sent;
-              return _context3.abrupt("break", 28);
             case 20:
-              _context3.next = 22;
+              success = _context3.sent;
+              return _context3.abrupt("break", 30);
+            case 22:
+              _context3.next = 24;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.liquidateOverdueLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 22:
-              success = _context3.sent;
-              return _context3.abrupt("break", 28);
             case 24:
-              _context3.next = 26;
+              success = _context3.sent;
+              return _context3.abrupt("break", 30);
+            case 26:
+              _context3.next = 28;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.liquidateOverdueLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 26:
-              success = _context3.sent;
-              return _context3.abrupt("break", 28);
             case 28:
+              success = _context3.sent;
+              return _context3.abrupt("break", 30);
+            case 30:
               return _context3.abrupt("return", {
                 success: success
               });
-            case 29:
+            case 33:
+              _context3.prev = 33;
+              _context3.t1 = _context3["catch"](0);
+              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t1));
+            case 36:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this);
+        }, _callee3, this, [[0, 33]]);
       }));
       function liquidate(_x3) {
         return _liquidate.apply(this, arguments);
@@ -375,79 +405,85 @@ var Loans = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
+              _context4.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               success = false;
               _context4.t0 = options.nftfi.contract.name;
-              _context4.next = _context4.t0 === 'v1.loan.fixed' ? 4 : _context4.t0 === 'v2.loan.fixed' ? 8 : _context4.t0 === 'v2-1.loan.fixed' ? 12 : _context4.t0 === 'v2-3.loan.fixed' ? 16 : _context4.t0 === 'v2.loan.fixed.collection' ? 20 : _context4.t0 === 'v2-3.loan.fixed.collection' ? 24 : 28;
+              _context4.next = _context4.t0 === 'v1.loan.fixed' ? 6 : _context4.t0 === 'v2.loan.fixed' ? 10 : _context4.t0 === 'v2-1.loan.fixed' ? 14 : _context4.t0 === 'v2-3.loan.fixed' ? 18 : _context4.t0 === 'v2.loan.fixed.collection' ? 22 : _context4.t0 === 'v2-3.loan.fixed.collection' ? 26 : 30;
               break;
-            case 4:
-              _context4.next = 6;
+            case 6:
+              _context4.next = 8;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v1.payBackLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 6:
-              success = _context4.sent;
-              return _context4.abrupt("break", 28);
             case 8:
-              _context4.next = 10;
+              success = _context4.sent;
+              return _context4.abrupt("break", 30);
+            case 10:
+              _context4.next = 12;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2.payBackLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 10:
-              success = _context4.sent;
-              return _context4.abrupt("break", 28);
             case 12:
-              _context4.next = 14;
+              success = _context4.sent;
+              return _context4.abrupt("break", 30);
+            case 14:
+              _context4.next = 16;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.payBackLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 14:
-              success = _context4.sent;
-              return _context4.abrupt("break", 28);
             case 16:
-              _context4.next = 18;
+              success = _context4.sent;
+              return _context4.abrupt("break", 30);
+            case 18:
+              _context4.next = 20;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.payBackLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 18:
-              success = _context4.sent;
-              return _context4.abrupt("break", 28);
             case 20:
-              _context4.next = 22;
+              success = _context4.sent;
+              return _context4.abrupt("break", 30);
+            case 22:
+              _context4.next = 24;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.payBackLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 22:
-              success = _context4.sent;
-              return _context4.abrupt("break", 28);
             case 24:
-              _context4.next = 26;
+              success = _context4.sent;
+              return _context4.abrupt("break", 30);
+            case 26:
+              _context4.next = 28;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.payBackLoan({
                 loan: {
                   id: options.loan.id
                 }
               });
-            case 26:
-              success = _context4.sent;
-              return _context4.abrupt("break", 28);
             case 28:
+              success = _context4.sent;
+              return _context4.abrupt("break", 30);
+            case 30:
               return _context4.abrupt("return", {
                 success: success
               });
-            case 29:
+            case 33:
+              _context4.prev = 33;
+              _context4.t1 = _context4["catch"](0);
+              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context4.t1));
+            case 36:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, this);
+        }, _callee4, this, [[0, 33]]);
       }));
       function repay(_x4) {
         return _repay.apply(this, arguments);
@@ -483,79 +519,85 @@ var Loans = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
+              _context5.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               success = false;
               _context5.t0 = options.nftfi.contract.name;
-              _context5.next = _context5.t0 === 'v1.loan.fixed' ? 4 : _context5.t0 === 'v2.loan.fixed' ? 8 : _context5.t0 === 'v2-1.loan.fixed' ? 12 : _context5.t0 === 'v2-3.loan.fixed' ? 16 : _context5.t0 === 'v2.loan.fixed.collection' ? 20 : _context5.t0 === 'v2-3.loan.fixed.collection' ? 24 : 28;
+              _context5.next = _context5.t0 === 'v1.loan.fixed' ? 6 : _context5.t0 === 'v2.loan.fixed' ? 10 : _context5.t0 === 'v2-1.loan.fixed' ? 14 : _context5.t0 === 'v2-3.loan.fixed' ? 18 : _context5.t0 === 'v2.loan.fixed.collection' ? 22 : _context5.t0 === 'v2-3.loan.fixed.collection' ? 26 : 30;
               break;
-            case 4:
-              _context5.next = 6;
+            case 6:
+              _context5.next = 8;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v1.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
-            case 6:
-              success = _context5.sent;
-              return _context5.abrupt("break", 28);
             case 8:
-              _context5.next = 10;
+              success = _context5.sent;
+              return _context5.abrupt("break", 30);
+            case 10:
+              _context5.next = 12;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
-            case 10:
-              success = _context5.sent;
-              return _context5.abrupt("break", 28);
             case 12:
-              _context5.next = 14;
+              success = _context5.sent;
+              return _context5.abrupt("break", 30);
+            case 14:
+              _context5.next = 16;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
-            case 14:
-              success = _context5.sent;
-              return _context5.abrupt("break", 28);
             case 16:
-              _context5.next = 18;
+              success = _context5.sent;
+              return _context5.abrupt("break", 30);
+            case 18:
+              _context5.next = 20;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
-            case 18:
-              success = _context5.sent;
-              return _context5.abrupt("break", 28);
             case 20:
-              _context5.next = 22;
+              success = _context5.sent;
+              return _context5.abrupt("break", 30);
+            case 22:
+              _context5.next = 24;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
-            case 22:
-              success = _context5.sent;
-              return _context5.abrupt("break", 28);
             case 24:
-              _context5.next = 26;
+              success = _context5.sent;
+              return _context5.abrupt("break", 30);
+            case 26:
+              _context5.next = 28;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
-            case 26:
-              success = _context5.sent;
-              return _context5.abrupt("break", 28);
             case 28:
+              success = _context5.sent;
+              return _context5.abrupt("break", 30);
+            case 30:
               return _context5.abrupt("return", {
                 success: success
               });
-            case 29:
+            case 33:
+              _context5.prev = 33;
+              _context5.t1 = _context5["catch"](0);
+              return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context5.t1));
+            case 36:
             case "end":
               return _context5.stop();
           }
-        }, _callee5, this);
+        }, _callee5, this, [[0, 33]]);
       }));
       function revokeOffer(_x5) {
         return _revokeOffer.apply(this, arguments);

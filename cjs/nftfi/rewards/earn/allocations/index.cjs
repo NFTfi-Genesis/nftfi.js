@@ -17,6 +17,7 @@ var _account = /*#__PURE__*/new WeakMap();
 var _api = /*#__PURE__*/new WeakMap();
 var _result = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
+var _assertion = /*#__PURE__*/new WeakMap();
 /**
  * @class
  * Class for working with Earn allocations.
@@ -41,10 +42,15 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _assertion, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
     (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
     (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
+    (0, _classPrivateFieldSet2["default"])(this, _assertion, options === null || options === void 0 ? void 0 : options.assertion);
   }
 
   /**
@@ -64,28 +70,31 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
     key: "get",
     value: function () {
       var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var _options$account, accountAddress, response;
+        var _options$account, _options$account2, accountAddress, response;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              accountAddress = (options === null || options === void 0 ? void 0 : (_options$account = options.account) === null || _options$account === void 0 ? void 0 : _options$account.address) || (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
-              _context.next = 4;
+              if (!(options !== null && options !== void 0 && (_options$account = options.account) !== null && _options$account !== void 0 && _options$account.address)) {
+                (0, _classPrivateFieldGet2["default"])(this, _assertion).hasAddress('Account address required, please provide a value in options.account.address or on sdk initialization.');
+              }
+              accountAddress = (options === null || options === void 0 ? void 0 : (_options$account2 = options.account) === null || _options$account2 === void 0 ? void 0 : _options$account2.address) || (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
+              _context.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
                 uri: "v0.1/rewards/earn/allocations/".concat(accountAddress)
               });
-            case 4:
+            case 5:
               response = _context.sent;
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(response));
-            case 8:
-              _context.prev = 8;
+            case 9:
+              _context.prev = 9;
               _context.t0 = _context["catch"](0);
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context.t0));
-            case 11:
+            case 12:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[0, 8]]);
+        }, _callee, this, [[0, 9]]);
       }));
       function get(_x) {
         return _get.apply(this, arguments);

@@ -54,32 +54,38 @@ class Auth {
       }
     }
 
-    const nonce = this.#utils.getNonce();
-    const accountAddress = this.#account.getAuthAddress();
-    const message = `This message proves you own this wallet address : ${this.#account.getAuthAddress()}`;
-    const messageToSign = `${message}\r\n\r\nChainId : ${this.#config.chainId}\r\nNonce : ${nonce})`;
-    const signedMessage = await this.#account.authSign(messageToSign);
-    const multisig = this.#account.isMultisig();
-    const body = {
-      message,
-      nonce,
-      accountAddress,
-      signedMessage,
-      multisig
-    };
-    const uri = `${this.#config.api.baseURI}/v0.1/authorization/token`;
-    const headers = {
-      'X-API-Key': this.#config.api.key
-    };
-    const result = await this.#http.post(uri, body, { headers });
-    const token = result?.data?.result?.token;
-    const refreshToken = result?.data?.result?.refreshToken;
-    if (token && refreshToken) {
-      this.#storage.set(this.#config.auth.token.key, token);
-      this.#storage.set(this.#config.auth.refreshToken.key, refreshToken);
-      this.#token = token;
-    } else {
-      throw result?.data?.message;
+    try {
+      if (this.#account.getSigner()) {
+        const nonce = this.#utils.getNonce();
+        const accountAddress = this.#account.getAuthAddress();
+        const message = `This message proves you own this wallet address : ${this.#account.getAuthAddress()}`;
+        const messageToSign = `${message}\r\n\r\nChainId : ${this.#config.chainId}\r\nNonce : ${nonce})`;
+        const signedMessage = await this.#account.authSign(messageToSign);
+        const multisig = this.#account.isMultisig();
+        const body = {
+          message,
+          nonce,
+          accountAddress,
+          signedMessage,
+          multisig
+        };
+        const uri = `${this.#config.api.baseURI}/v0.1/authorization/token`;
+        const headers = {
+          'X-API-Key': this.#config.api.key
+        };
+        const result = await this.#http.post(uri, body, { headers });
+        const token = result?.data?.result?.token;
+        const refreshToken = result?.data?.result?.refreshToken;
+        if (token && refreshToken) {
+          this.#storage.set(this.#config.auth.token.key, token);
+          this.#storage.set(this.#config.auth.refreshToken.key, refreshToken);
+          this.#token = token;
+        }
+      }
+    } catch (e) {
+      const error = { error: e, date: new Date() };
+      this.#storage.set(this.#config.auth.tokenError.key, JSON.stringify(error));
+      return this.#token;
     }
     return this.#token;
   }

@@ -33,12 +33,19 @@ var LoansFixedV2_3 = /*#__PURE__*/function () {
     });
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
-    (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
-      address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.address,
-      abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.abi
-    }));
   }
   (0, _createClass2["default"])(LoansFixedV2_3, [{
+    key: "_contract",
+    get: function get() {
+      if (!(0, _classPrivateFieldGet2["default"])(this, _contract)) {
+        (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+          address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.address,
+          abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.abi
+        }));
+      }
+      return (0, _classPrivateFieldGet2["default"])(this, _contract);
+    }
+  }, {
     key: "acceptOffer",
     value: function () {
       var _acceptOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
@@ -68,7 +75,7 @@ var LoansFixedV2_3 = /*#__PURE__*/function () {
                 referralFeeInBasisPoints: 0
               };
               _context.next = 6;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'acceptOffer',
                 args: [offer, signature, borrowerSettings]
               });
@@ -104,7 +111,7 @@ var LoansFixedV2_3 = /*#__PURE__*/function () {
             case 0:
               _context2.prev = 0;
               _context2.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'liquidateOverdueLoan',
                 args: [options.loan.id]
               });
@@ -140,7 +147,7 @@ var LoansFixedV2_3 = /*#__PURE__*/function () {
             case 0:
               _context3.prev = 0;
               _context3.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'payBackLoan',
                 args: [options.loan.id]
               });
@@ -176,7 +183,7 @@ var LoansFixedV2_3 = /*#__PURE__*/function () {
             case 0:
               _context4.prev = 0;
               _context4.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'cancelLoanCommitmentBeforeLoanHasBegun',
                 args: [options.offer.nonce]
               });

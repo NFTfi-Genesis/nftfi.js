@@ -6,10 +6,16 @@ class CryptoPunks {
   constructor(options) {
     this.#config = options?.config;
     this.#contractFactory = options?.contractFactory;
-    this.#contract = this.#contractFactory.create({
-      address: this.#config.nft.cryptoPunks.address,
-      abi: this.#config.nft.cryptoPunks.abi
-    });
+  }
+
+  get _contract() {
+    if (!this.#contract) {
+      this.#contract = this.#contractFactory.create({
+        address: this.#config.nft.cryptoPunks.address,
+        abi: this.#config.nft.cryptoPunks.abi
+      });
+    }
+    return this.#contract;
   }
 
   _getContractAddress(contractName) {
@@ -29,7 +35,7 @@ class CryptoPunks {
     const punkIndex = options.token.id;
     const minSalePriceInWei = 0;
     const toAddress = this._getContractAddress(options.nftfi.contract.name);
-    const result = await this.#contract.call({
+    const result = await this._contract.call({
       function: 'offerPunkForSaleToAddress',
       args: [punkIndex, minSalePriceInWei, toAddress]
     });
@@ -39,7 +45,7 @@ class CryptoPunks {
 
   async isApproved(options) {
     const buyer = this._getContractAddress(options.nftfi.contract.name).toLowerCase();
-    const result = await this.#contract.call({
+    const result = await this._contract.call({
       function: 'punksOfferedForSale',
       args: [options?.token?.id]
     });
@@ -51,7 +57,7 @@ class CryptoPunks {
 
   async ownerOf(options) {
     const punkIndex = options.token.id;
-    const address = await this.#contract.call({
+    const address = await this._contract.call({
       function: 'punkIndexToAddress',
       args: [punkIndex]
     });

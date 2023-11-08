@@ -100,7 +100,7 @@ var EOA = /*#__PURE__*/function () {
     key: "execTransaction",
     value: function () {
       var _execTransaction = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(tx) {
-        var receipt, response;
+        var receipt;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
@@ -108,9 +108,8 @@ var EOA = /*#__PURE__*/function () {
               return (0, _classPrivateFieldGet2["default"])(this, _signer).sendTransaction(tx);
             case 2:
               receipt = _context3.sent;
-              response = (0, _classPrivateFieldGet2["default"])(this, _provider).waitForTransaction(receipt.hash);
-              return _context3.abrupt("return", response);
-            case 5:
+              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _provider).waitForTransaction(receipt.hash));
+            case 4:
             case "end":
               return _context3.stop();
           }

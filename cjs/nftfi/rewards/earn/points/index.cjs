@@ -67,7 +67,7 @@ var RewardsEarnPoints = /*#__PURE__*/function () {
     key: "get",
     value: function () {
       var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var _options$loan, _options$nftfi, _options$nftfi$contra, response, _e$response, _e$response$data;
+        var _options$loan, _options$nftfi, _options$nftfi$contra, response;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -90,7 +90,7 @@ var RewardsEarnPoints = /*#__PURE__*/function () {
             case 7:
               _context.prev = 7;
               _context.t0 = _context["catch"](0);
-              return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle((_e$response = _context.t0.response) === null || _e$response === void 0 ? void 0 : (_e$response$data = _e$response.data) === null || _e$response$data === void 0 ? void 0 : _e$response$data.errors));
+              return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context.t0));
             case 10:
             case "end":
               return _context.stop();

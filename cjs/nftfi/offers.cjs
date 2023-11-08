@@ -26,6 +26,7 @@ var _requests = /*#__PURE__*/new WeakMap();
 var _result = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
 var _helper = /*#__PURE__*/new WeakMap();
+var _assertion = /*#__PURE__*/new WeakMap();
 /**
  * @class
  * Class for working with offers.
@@ -74,6 +75,10 @@ var Offers = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _assertion, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
     (0, _classPrivateFieldSet2["default"])(this, _offersHelper, options === null || options === void 0 ? void 0 : options.offersHelper);
@@ -84,6 +89,7 @@ var Offers = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
     (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
     (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
+    (0, _classPrivateFieldSet2["default"])(this, _assertion, options === null || options === void 0 ? void 0 : options.assertion);
   }
 
   /**
@@ -106,6 +112,7 @@ var Offers = /*#__PURE__*/function () {
    * @param {string} [options.pagination.sort] - Field to sort by (optional)
    * @param {'asc' | 'desc'} [options.pagination.direction] - Direction to sort by (optional)
    * @param {boolean} [options.validation.check=true] - Validate offers and append error info (optional)
+   * @param {'required' | 'optional' | 'none'} [options.auth.token] - Specify if call to fetch offers should be authed, un-authed calls will always redact offers signature. By default, auth is optional. (optional)
    * @returns {Array<object>} Array of offers
    *
    * @example
@@ -175,9 +182,10 @@ var Offers = /*#__PURE__*/function () {
       var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
         var _this = this;
         var options,
-          params,
+          _options$auth,
           _options$validation,
           _results,
+          params,
           response,
           results,
           shouldNotValidate,
@@ -187,11 +195,14 @@ var Offers = /*#__PURE__*/function () {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               options = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : {};
+              _context2.prev = 1;
               params = (0, _classPrivateFieldGet2["default"])(this, _offersHelper).getParams(options);
-              _context2.prev = 2;
               _context2.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
                 uri: 'v0.1/offers',
+                auth: {
+                  token: (options === null || options === void 0 ? void 0 : (_options$auth = options.auth) === null || _options$auth === void 0 ? void 0 : _options$auth.token) || 'optional'
+                },
                 params: params
               });
             case 5:
@@ -245,13 +256,13 @@ var Offers = /*#__PURE__*/function () {
               return _context2.abrupt("return", results);
             case 17:
               _context2.prev = 17;
-              _context2.t0 = _context2["catch"](2);
+              _context2.t0 = _context2["catch"](1);
               return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context2.t0));
             case 20:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[2, 17]]);
+        }, _callee2, this, [[1, 17]]);
       }));
       function get() {
         return _get.apply(this, arguments);
@@ -300,78 +311,84 @@ var Offers = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
+              _context3.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               options = _objectSpread(_objectSpread({}, options.listing), options); // copying options.listing fields onto the root, for backwards compatibility.
               contractName = options.nftfi.contract.name;
               _context3.t0 = contractName;
-              _context3.next = _context3.t0 === 'v2-1.loan.fixed' ? 5 : _context3.t0 === 'v2-3.loan.fixed' ? 12 : _context3.t0 === 'v2.loan.fixed.collection' ? 19 : _context3.t0 === 'v2-3.loan.fixed.collection' ? 26 : 33;
+              _context3.next = _context3.t0 === 'v2-1.loan.fixed' ? 7 : _context3.t0 === 'v2-3.loan.fixed' ? 14 : _context3.t0 === 'v2.loan.fixed.collection' ? 21 : _context3.t0 === 'v2-3.loan.fixed.collection' ? 28 : 35;
               break;
-            case 5:
-              _context3.next = 7;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2Offer(options);
             case 7:
+              _context3.next = 9;
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2Offer(options);
+            case 9:
               payload = _context3.sent;
-              _context3.next = 10;
+              _context3.next = 12;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
                 uri: 'v0.1/offers',
                 payload: payload
               });
-            case 10:
-              response = _context3.sent;
-              return _context3.abrupt("break", 36);
             case 12:
-              _context3.next = 14;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3Offer(options);
+              response = _context3.sent;
+              return _context3.abrupt("break", 38);
             case 14:
+              _context3.next = 16;
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3Offer(options);
+            case 16:
               _payload = _context3.sent;
-              _context3.next = 17;
+              _context3.next = 19;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
                 uri: 'v0.1/offers',
                 payload: _payload
               });
-            case 17:
-              response = _context3.sent;
-              return _context3.abrupt("break", 36);
             case 19:
-              _context3.next = 21;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2FixedCollectionOffer(options);
+              response = _context3.sent;
+              return _context3.abrupt("break", 38);
             case 21:
+              _context3.next = 23;
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2FixedCollectionOffer(options);
+            case 23:
               _payload2 = _context3.sent;
-              _context3.next = 24;
+              _context3.next = 26;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
                 uri: 'v0.1/offers',
                 payload: _payload2
               });
-            case 24:
-              response = _context3.sent;
-              return _context3.abrupt("break", 36);
             case 26:
-              _context3.next = 28;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3FixedCollectionOffer(options);
+              response = _context3.sent;
+              return _context3.abrupt("break", 38);
             case 28:
+              _context3.next = 30;
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3FixedCollectionOffer(options);
+            case 30:
               _payload3 = _context3.sent;
-              _context3.next = 31;
+              _context3.next = 33;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
                 uri: 'v0.1/offers',
                 payload: _payload3
               });
-            case 31:
-              response = _context3.sent;
-              return _context3.abrupt("break", 36);
             case 33:
+              response = _context3.sent;
+              return _context3.abrupt("break", 38);
+            case 35:
               errors = {
                 'nftfi.contract.name': ["".concat(contractName, " not supported")]
               };
               response = {
                 errors: errors
               };
-              return _context3.abrupt("break", 36);
-            case 36:
+              return _context3.abrupt("break", 38);
+            case 38:
               return _context3.abrupt("return", response);
-            case 37:
+            case 41:
+              _context3.prev = 41;
+              _context3.t1 = _context3["catch"](0);
+              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t1));
+            case 44:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this);
+        }, _callee3, this, [[0, 41]]);
       }));
       function create(_x2) {
         return _create.apply(this, arguments);
@@ -400,23 +417,30 @@ var Offers = /*#__PURE__*/function () {
     key: "delete",
     value: function () {
       var _delete2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
-        var uri, result;
+        var uri;
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
+              _context4.prev = 0;
               uri = "v0.1/offers/".concat(options.offer.id);
-              _context4.next = 3;
+              _context4.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api)["delete"]({
-                uri: uri
+                uri: uri,
+                auth: {
+                  token: 'required'
+                }
               });
-            case 3:
-              result = _context4.sent;
-              return _context4.abrupt("return", result);
-            case 5:
+            case 4:
+              return _context4.abrupt("return", _context4.sent);
+            case 7:
+              _context4.prev = 7;
+              _context4.t0 = _context4["catch"](0);
+              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context4.t0));
+            case 10:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, this);
+        }, _callee4, this, [[0, 7]]);
       }));
       function _delete(_x3) {
         return _delete2.apply(this, arguments);
@@ -446,16 +470,14 @@ var Offers = /*#__PURE__*/function () {
     key: "revoke",
     value: function () {
       var _revoke = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
-        var result;
         return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
               _context5.next = 2;
               return (0, _classPrivateFieldGet2["default"])(this, _loans).revokeOffer(options);
             case 2:
-              result = _context5.sent;
-              return _context5.abrupt("return", result);
-            case 4:
+              return _context5.abrupt("return", _context5.sent);
+            case 3:
             case "end":
               return _context5.stop();
           }
@@ -524,9 +546,10 @@ var Offers = /*#__PURE__*/function () {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
               _context6.prev = 0;
-              _context6.next = 3;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasProvider();
+              _context6.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _validator).validate(options);
-            case 3:
+            case 4:
               warnings = _context6.sent;
               result = {};
               result.valid = warnings === null;
@@ -534,15 +557,15 @@ var Offers = /*#__PURE__*/function () {
                 result.warnings = warnings;
               }
               return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(_objectSpread({}, result)));
-            case 10:
-              _context6.prev = 10;
+            case 11:
+              _context6.prev = 11;
               _context6.t0 = _context6["catch"](0);
               return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context6.t0));
-            case 13:
+            case 14:
             case "end":
               return _context6.stop();
           }
-        }, _callee6, this, [[0, 10]]);
+        }, _callee6, this, [[0, 11]]);
       }));
       function validate(_x5) {
         return _validate.apply(this, arguments);

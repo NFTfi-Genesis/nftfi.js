@@ -7,12 +7,16 @@ class Erc20 {
   #contractFactory;
   #account;
   #BN;
+  #error;
+  #assertion;
 
   constructor(options) {
     this.#config = options?.config;
     this.#contractFactory = options?.contractFactory;
     this.#account = options?.account;
     this.#BN = options?.BN;
+    this.#error = options?.error;
+    this.#assertion = options?.assertion;
   }
 
   _getContractAddress(contractName) {
@@ -50,18 +54,27 @@ class Erc20 {
    * });
    */
   async allowance(options) {
-    const contractName = options.nftfi.contract.name;
-    const contractAddress = this._getContractAddress(contractName);
-    const accountAddress = options?.account?.address || this.#account.getAddress();
+    try {
+      if (!options?.account?.address) {
+        this.#assertion.hasAddress(
+          'Account address required, please provide a value in options.account.address or on sdk initialization.'
+        );
+      }
+      const contractName = options.nftfi.contract.name;
+      const contractAddress = this._getContractAddress(contractName);
+      const accountAddress = options?.account?.address || this.#account.getAddress();
 
-    const contract = this.#contractFactory.create({
-      address: options.token.address,
-      abi: this.#config.erc20.abi
-    });
-    return await contract.call({
-      function: 'allowance',
-      args: [accountAddress, contractAddress]
-    });
+      const contract = this.#contractFactory.create({
+        address: options.token.address,
+        abi: this.#config.erc20.abi
+      });
+      return await contract.call({
+        function: 'allowance',
+        args: [accountAddress, contractAddress]
+      });
+    } catch (e) {
+      return this.#error.handle(e);
+    }
   }
 
   /**
@@ -81,28 +94,34 @@ class Erc20 {
    * });
    */
   async approve(options) {
-    const contractName = options.nftfi.contract.name;
-    const contractAddress = this._getContractAddress(contractName);
-    let success;
+    try {
+      this.#assertion.hasAddress();
+      const contractName = options.nftfi.contract.name;
+      const contractAddress = this._getContractAddress(contractName);
+      let success;
 
-    const contract = this.#contractFactory.create({
-      address: options.token.address,
-      abi: this.#config.erc20.abi
-    });
-
-    const allowance = await this.allowance(options);
-    const amount = options.amount.toLocaleString('fullwide', { useGrouping: false });
-
-    if (allowance.lt(amount) || amount === '0') {
-      const result = await contract.call({
-        function: 'approve',
-        args: [contractAddress, amount]
+      const contract = this.#contractFactory.create({
+        address: options.token.address,
+        abi: this.#config.erc20.abi
       });
-      success = result?.status === 1;
-    } else {
-      success = true;
+
+      const allowance = await this.allowance(options);
+      const amount = options.amount.toLocaleString('fullwide', { useGrouping: false });
+
+      if (allowance.lt(amount) || amount === '0') {
+        this.#assertion.hasSigner();
+        const result = await contract.call({
+          function: 'approve',
+          args: [contractAddress, amount]
+        });
+        success = result?.status === 1;
+      } else {
+        success = true;
+      }
+      return success;
+    } catch (e) {
+      return this.#error.handle(e);
     }
-    return success;
   }
 
   /**
@@ -138,16 +157,22 @@ class Erc20 {
    * });
    */
   async balanceOf(options) {
-    const contract = this.#contractFactory.create({
-      address: options.token.address,
-      abi: this.#config.erc20.abi
-    });
-    const accountAddress = options?.account?.address || this.#account.getAddress();
-    const balance = await contract.call({
-      function: 'balanceOf',
-      args: [accountAddress]
-    });
-    return balance;
+    try {
+      if (!options?.account?.address) {
+        this.#assertion.hasAddress(
+          'Account address required, please provide a value in options.account.address or on sdk initialization.'
+        );
+      }
+      const contract = this.#contractFactory.create({
+        address: options.token.address,
+        abi: this.#config.erc20.abi
+      });
+      const accountAddress = options?.account?.address || this.#account.getAddress();
+      const balance = await contract.call({ function: 'balanceOf', args: [accountAddress] });
+      return balance;
+    } catch (e) {
+      return this.#error.handle(e);
+    }
   }
 }
 

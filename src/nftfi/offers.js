@@ -13,6 +13,7 @@ class Offers {
   #result;
   #error;
   #helper;
+  #assertion;
 
   constructor(options = {}) {
     this.#account = options?.account;
@@ -25,6 +26,7 @@ class Offers {
     this.#error = options?.error;
     this.#result = options?.result;
     this.#helper = options?.helper;
+    this.#assertion = options?.assertion;
   }
 
   /**
@@ -47,6 +49,7 @@ class Offers {
    * @param {string} [options.pagination.sort] - Field to sort by (optional)
    * @param {'asc' | 'desc'} [options.pagination.direction] - Direction to sort by (optional)
    * @param {boolean} [options.validation.check=true] - Validate offers and append error info (optional)
+   * @param {'required' | 'optional' | 'none'} [options.auth.token] - Specify if call to fetch offers should be authed, un-authed calls will always redact offers signature. By default, auth is optional. (optional)
    * @returns {Array<object>} Array of offers
    *
    * @example
@@ -111,10 +114,11 @@ class Offers {
    * });
    */
   async get(options = {}) {
-    const params = this.#offersHelper.getParams(options);
     try {
+      const params = this.#offersHelper.getParams(options);
       const response = await this.#api.get({
         uri: 'v0.1/offers',
+        auth: { token: options?.auth?.token || 'optional' },
         params
       });
       let results = response?.results.map(this.#helper.addCurrencyUnit) || [];
@@ -171,50 +175,55 @@ class Offers {
    * });
    */
   async create(options) {
-    options = { ...options.listing, ...options }; // copying options.listing fields onto the root, for backwards compatibility.
-    let errors;
-    let response;
-    const contractName = options.nftfi.contract.name;
-    switch (contractName) {
-      case 'v2-1.loan.fixed': {
-        let payload = await this.#offersHelper.constructV2Offer(options);
-        response = await this.#api.post({
-          uri: 'v0.1/offers',
-          payload
-        });
-        break;
+    try {
+      this.#assertion.hasSigner();
+      options = { ...options.listing, ...options }; // copying options.listing fields onto the root, for backwards compatibility.
+      let errors;
+      let response;
+      const contractName = options.nftfi.contract.name;
+      switch (contractName) {
+        case 'v2-1.loan.fixed': {
+          let payload = await this.#offersHelper.constructV2Offer(options);
+          response = await this.#api.post({
+            uri: 'v0.1/offers',
+            payload
+          });
+          break;
+        }
+        case 'v2-3.loan.fixed': {
+          let payload = await this.#offersHelper.constructV2_3Offer(options);
+          response = await this.#api.post({
+            uri: 'v0.1/offers',
+            payload
+          });
+          break;
+        }
+        case 'v2.loan.fixed.collection': {
+          let payload = await this.#offersHelper.constructV2FixedCollectionOffer(options);
+          response = await this.#api.post({
+            uri: 'v0.1/offers',
+            payload
+          });
+          break;
+        }
+        case 'v2-3.loan.fixed.collection': {
+          let payload = await this.#offersHelper.constructV2_3FixedCollectionOffer(options);
+          response = await this.#api.post({
+            uri: 'v0.1/offers',
+            payload
+          });
+          break;
+        }
+        default: {
+          errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
+          response = { errors };
+          break;
+        }
       }
-      case 'v2-3.loan.fixed': {
-        let payload = await this.#offersHelper.constructV2_3Offer(options);
-        response = await this.#api.post({
-          uri: 'v0.1/offers',
-          payload
-        });
-        break;
-      }
-      case 'v2.loan.fixed.collection': {
-        let payload = await this.#offersHelper.constructV2FixedCollectionOffer(options);
-        response = await this.#api.post({
-          uri: 'v0.1/offers',
-          payload
-        });
-        break;
-      }
-      case 'v2-3.loan.fixed.collection': {
-        let payload = await this.#offersHelper.constructV2_3FixedCollectionOffer(options);
-        response = await this.#api.post({
-          uri: 'v0.1/offers',
-          payload
-        });
-        break;
-      }
-      default: {
-        errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
-        response = { errors };
-        break;
-      }
+      return response;
+    } catch (e) {
+      return this.#error.handle(e);
     }
-    return response;
   }
 
   /**
@@ -236,9 +245,12 @@ class Offers {
    * });
    */
   async delete(options) {
-    const uri = `v0.1/offers/${options.offer.id}`;
-    const result = await this.#api.delete({ uri });
-    return result;
+    try {
+      const uri = `v0.1/offers/${options.offer.id}`;
+      return await this.#api.delete({ uri, auth: { token: 'required' } });
+    } catch (e) {
+      return this.#error.handle(e);
+    }
   }
 
   /**
@@ -261,8 +273,7 @@ class Offers {
    * });
    */
   async revoke(options) {
-    let result = await this.#loans.revokeOffer(options);
-    return result;
+    return await this.#loans.revokeOffer(options);
   }
 
   /**
@@ -316,6 +327,7 @@ class Offers {
    */
   async validate(options) {
     try {
+      this.#assertion.hasProvider();
       const warnings = await this.#validator.validate(options);
       let result = {};
       result.valid = warnings === null;

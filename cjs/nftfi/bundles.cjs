@@ -57,6 +57,7 @@ var _account = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
 var _result = /*#__PURE__*/new WeakMap();
 var _helper = /*#__PURE__*/new WeakMap();
+var _assertion = /*#__PURE__*/new WeakMap();
 var Bundles = /*#__PURE__*/function () {
   function Bundles(options) {
     (0, _classCallCheck2["default"])(this, Bundles);
@@ -84,12 +85,17 @@ var Bundles = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _assertion, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
     (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
     (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
+    (0, _classPrivateFieldSet2["default"])(this, _assertion, options === null || options === void 0 ? void 0 : options.assertion);
   }
   (0, _createClass2["default"])(Bundles, [{
     key: "_getContractParams",
@@ -178,15 +184,16 @@ var Bundles = /*#__PURE__*/function () {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               contractName = (0, _classPrivateFieldGet2["default"])(this, _config).bundler.v1_1.name;
               contractFactoryParams = this._getContractParams(contractName);
               bundlerContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(contractFactoryParams.bundler);
-              _context.next = 6;
+              _context.next = 7;
               return bundlerContract.call({
                 "function": 'safeMint',
                 args: [(0, _classPrivateFieldGet2["default"])(this, _account).getAddress()]
               });
-            case 6:
+            case 7:
               result = _context.sent;
               transfer = result.logs.filter(function (log) {
                 return log.name === 'Transfer';
@@ -202,15 +209,15 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 12:
-              _context.prev = 12;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](0);
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context.t0));
-            case 15:
+            case 16:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[0, 12]]);
+        }, _callee, this, [[0, 13]]);
       }));
       function mint() {
         return _mint.apply(this, arguments);
@@ -255,11 +262,12 @@ var Bundles = /*#__PURE__*/function () {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               _context4.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               contractName = options === null || options === void 0 ? void 0 : (_options$nftfi = options.nftfi) === null || _options$nftfi === void 0 ? void 0 : (_options$nftfi$contra = _options$nftfi.contract) === null || _options$nftfi$contra === void 0 ? void 0 : _options$nftfi$contra.name;
               unsupportedContractNames = ['v1.bundler'];
               contractFactoryParams = this._getContractParams(contractName, unsupportedContractNames);
               bundlerContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(contractFactoryParams.bundler); // Add permit info to each element
-              _context4.next = 7;
+              _context4.next = 8;
               return Promise.all(options === null || options === void 0 ? void 0 : options.elements.map( /*#__PURE__*/function () {
                 var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(element) {
                   var permit;
@@ -285,7 +293,7 @@ var Bundles = /*#__PURE__*/function () {
                   return _ref.apply(this, arguments);
                 };
               }(), this));
-            case 7:
+            case 8:
               elements = _context4.sent;
               // Check for token.address errors
               addressErrors = elements.reduce(function (acc, el) {
@@ -300,7 +308,7 @@ var Bundles = /*#__PURE__*/function () {
                 return acc;
               }, []); // Handle any errors
               if (!addressErrors.length) {
-                _context4.next = 11;
+                _context4.next = 12;
                 break;
               }
               return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle({
@@ -308,8 +316,8 @@ var Bundles = /*#__PURE__*/function () {
                   'token.address': addressErrors
                 }
               }));
-            case 11:
-              _context4.next = 13;
+            case 12:
+              _context4.next = 14;
               return Promise.all(elements.map( /*#__PURE__*/function () {
                 var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(element) {
                   return _regenerator["default"].wrap(function _callee3$(_context3) {
@@ -330,14 +338,14 @@ var Bundles = /*#__PURE__*/function () {
                   return _ref2.apply(this, arguments);
                 };
               }()));
-            case 13:
+            case 14:
               elements = _context4.sent;
-              _context4.next = 16;
+              _context4.next = 17;
               return bundlerContract.call({
                 "function": 'addBundleElements',
                 args: [options.bundle.id, elements]
               });
-            case 16:
+            case 17:
               return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 bundle: {
                   id: options.bundle.id
@@ -351,11 +359,11 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 19:
-              _context4.prev = 19;
+            case 20:
+              _context4.prev = 20;
               _context4.t0 = _context4["catch"](0);
               if (!(_context4.t0 instanceof ContractNameNotSupportedError)) {
-                _context4.next = 25;
+                _context4.next = 26;
                 break;
               }
               return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle({
@@ -365,13 +373,13 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 25:
-              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context4.t0));
             case 26:
+              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context4.t0));
+            case 27:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, this, [[0, 19]]);
+        }, _callee4, this, [[0, 20]]);
       }));
       function add(_x) {
         return _add.apply(this, arguments);
@@ -419,10 +427,11 @@ var Bundles = /*#__PURE__*/function () {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
               _context6.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               contractName = options === null || options === void 0 ? void 0 : (_options$nftfi2 = options.nftfi) === null || _options$nftfi2 === void 0 ? void 0 : (_options$nftfi2$contr = _options$nftfi2.contract) === null || _options$nftfi2$contr === void 0 ? void 0 : _options$nftfi2$contr.name;
               contractFactoryParams = this._getContractParams(contractName);
               bundlerContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(contractFactoryParams.bundler); // Add permit info to each element
-              _context6.next = 6;
+              _context6.next = 7;
               return Promise.all(options === null || options === void 0 ? void 0 : options.elements.map( /*#__PURE__*/function () {
                 var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(element) {
                   var permit;
@@ -448,7 +457,7 @@ var Bundles = /*#__PURE__*/function () {
                   return _ref3.apply(this, arguments);
                 };
               }(), this));
-            case 6:
+            case 7:
               elements = _context6.sent;
               // Parse the inputs for the contract call
               elements = elements.map(function (element) {
@@ -459,12 +468,12 @@ var Bundles = /*#__PURE__*/function () {
                 };
               }, this);
               // Call the contract
-              _context6.next = 10;
+              _context6.next = 11;
               return bundlerContract.call({
                 "function": 'removeBundleElements',
                 args: [options.bundle.id, elements]
               });
-            case 10:
+            case 11:
               return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 bundle: {
                   id: options.bundle.id
@@ -478,11 +487,11 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 13:
-              _context6.prev = 13;
+            case 14:
+              _context6.prev = 14;
               _context6.t0 = _context6["catch"](0);
               if (!(_context6.t0 instanceof ContractNameNotSupportedError)) {
-                _context6.next = 19;
+                _context6.next = 20;
                 break;
               }
               return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle({
@@ -492,13 +501,13 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 19:
-              return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context6.t0));
             case 20:
+              return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context6.t0));
+            case 21:
             case "end":
               return _context6.stop();
           }
-        }, _callee6, this, [[0, 13]]);
+        }, _callee6, this, [[0, 14]]);
       }));
       function remove(_x4) {
         return _remove.apply(this, arguments);
@@ -535,16 +544,17 @@ var Bundles = /*#__PURE__*/function () {
           while (1) switch (_context7.prev = _context7.next) {
             case 0:
               _context7.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               contractName = options === null || options === void 0 ? void 0 : (_options$nftfi3 = options.nftfi) === null || _options$nftfi3 === void 0 ? void 0 : (_options$nftfi3$contr = _options$nftfi3.contract) === null || _options$nftfi3$contr === void 0 ? void 0 : _options$nftfi3$contr.name;
               unsupportedContractNames = ['v1.bundler'];
               bundlerContractFactoryParams = this._getContractParams(contractName, unsupportedContractNames);
               bundlerContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(bundlerContractFactoryParams.bundler);
-              _context7.next = 7;
+              _context7.next = 8;
               return bundlerContract.call({
                 "function": 'safeTransferFrom(address,address,uint256)',
                 args: [(0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), bundlerContractFactoryParams.immutable.address, options.bundle.id]
               });
-            case 7:
+            case 8:
               transferred = _context7.sent;
               log = transferred.logs.find(function (log) {
                 return log.name === 'ImmutableMinted';
@@ -559,11 +569,11 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 12:
-              _context7.prev = 12;
+            case 13:
+              _context7.prev = 13;
               _context7.t0 = _context7["catch"](0);
               if (!(_context7.t0 instanceof ContractNameNotSupportedError)) {
-                _context7.next = 18;
+                _context7.next = 19;
                 break;
               }
               return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle({
@@ -573,13 +583,13 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 18:
-              return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context7.t0));
             case 19:
+              return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context7.t0));
+            case 20:
             case "end":
               return _context7.stop();
           }
-        }, _callee7, this, [[0, 12]]);
+        }, _callee7, this, [[0, 13]]);
       }));
       function seal(_x6) {
         return _seal.apply(this, arguments);
@@ -632,41 +642,42 @@ var Bundles = /*#__PURE__*/function () {
           while (1) switch (_context8.prev = _context8.next) {
             case 0:
               _context8.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               contractName = options === null || options === void 0 ? void 0 : (_options$nftfi4 = options.nftfi) === null || _options$nftfi4 === void 0 ? void 0 : (_options$nftfi4$contr = _options$nftfi4.contract) === null || _options$nftfi4$contr === void 0 ? void 0 : _options$nftfi4$contr.name;
               contractFactoryParams = this._getContractParams(contractName);
               _context8.t0 = contractName;
-              _context8.next = _context8.t0 === 'v1.bundler' ? 6 : _context8.t0 === 'v1-1.bundler' ? 11 : 16;
+              _context8.next = _context8.t0 === 'v1.bundler' ? 7 : _context8.t0 === 'v1-1.bundler' ? 12 : 17;
               break;
-            case 6:
+            case 7:
               contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(contractFactoryParams.migrate);
-              _context8.next = 9;
+              _context8.next = 10;
               return contract.call({
                 "function": contractFactoryParams.migrate.empty["function"],
                 args: [contractFactoryParams.bundler.address, options.bundle.id, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()]
               });
-            case 9:
+            case 10:
               response = _context8.sent;
-              return _context8.abrupt("break", 16);
-            case 11:
+              return _context8.abrupt("break", 17);
+            case 12:
               _contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(contractFactoryParams.bundler);
-              _context8.next = 14;
+              _context8.next = 15;
               return _contract.call({
                 "function": contractFactoryParams.bundler.empty["function"],
                 args: [options.bundle.id, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()]
               });
-            case 14:
+            case 15:
               response = _context8.sent;
-              return _context8.abrupt("break", 16);
-            case 16:
+              return _context8.abrupt("break", 17);
+            case 17:
               result = {
                 success: ((_response = response) === null || _response === void 0 ? void 0 : _response.status) === 1 || false
               };
               return _context8.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(result));
-            case 20:
-              _context8.prev = 20;
+            case 21:
+              _context8.prev = 21;
               _context8.t1 = _context8["catch"](0);
               if (!(_context8.t1 instanceof ContractNameNotSupportedError)) {
-                _context8.next = 26;
+                _context8.next = 27;
                 break;
               }
               return _context8.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle({
@@ -676,13 +687,13 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 26:
-              return _context8.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context8.t1));
             case 27:
+              return _context8.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context8.t1));
+            case 28:
             case "end":
               return _context8.stop();
           }
-        }, _callee8, this, [[0, 20]]);
+        }, _callee8, this, [[0, 21]]);
       }));
       function empty(_x7) {
         return _empty.apply(this, arguments);
@@ -847,6 +858,7 @@ var Bundles = /*#__PURE__*/function () {
           while (1) switch (_context9.prev = _context9.next) {
             case 0:
               _context9.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               bundleId = options === null || options === void 0 ? void 0 : (_options$bundle = options.bundle) === null || _options$bundle === void 0 ? void 0 : _options$bundle.id;
               migrateContractParams = this._getMigrateContractParams(options);
               migrateContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(migrateContractParams.migrate);
@@ -872,11 +884,11 @@ var Bundles = /*#__PURE__*/function () {
               })["catch"](function (e) {
                 return (0, _classPrivateFieldGet2["default"])(_this4, _error).handle(e);
               }));
-            case 7:
-              _context9.prev = 7;
+            case 8:
+              _context9.prev = 8;
               _context9.t0 = _context9["catch"](0);
               if (!(_context9.t0 instanceof MigrationNotSupportedError)) {
-                _context9.next = 11;
+                _context9.next = 14;
                 break;
               }
               return _context9.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle({
@@ -886,11 +898,13 @@ var Bundles = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 11:
+            case 14:
+              return _context9.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context9.t0));
+            case 15:
             case "end":
               return _context9.stop();
           }
-        }, _callee9, this, [[0, 7]]);
+        }, _callee9, this, [[0, 8]]);
       }));
       function migrate(_x8) {
         return _migrate.apply(this, arguments);

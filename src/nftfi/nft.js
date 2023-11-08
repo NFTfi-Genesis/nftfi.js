@@ -5,9 +5,10 @@ export default class Nft {
   #config;
   #result;
   #ethers;
-  #error;
   #utils;
   #account;
+  #error;
+  #assertion;
 
   constructor(options) {
     this.#config = options?.config;
@@ -19,12 +20,15 @@ export default class Nft {
     this.#error = options?.error;
     this.#utils = options?.utils;
     this.#account = options?.account;
+    this.#error = options?.error;
+    this.#assertion = options?.assertion;
   }
 
   async approve(options) {
-    let success = false;
-    const tokenAddress = this.#ethers.utils.getAddress(options?.token?.address);
     try {
+      this.#assertion.hasSigner();
+      let success = false;
+      const tokenAddress = this.#ethers.utils.getAddress(options?.token?.address);
       switch (tokenAddress) {
         case this.#config.nft.cryptoPunks.address:
           success = await this.cryptoPunks.approve(options);
@@ -36,7 +40,7 @@ export default class Nft {
               success = await this.erc1155.setApprovalForAll(options);
               break;
             case supportedInterface.isERC721:
-              success = await this.erc721.setApprovalForAll(options);
+              success = await this.erc721.setApprovalForAll({ ...options, rethrow: true });
               break;
             default:
               throw 'specified contract is not supported';
@@ -50,9 +54,14 @@ export default class Nft {
   }
 
   async isApproved(options) {
-    let approved = false;
-    const tokenAddress = this.#ethers.utils.getAddress(options?.token?.address);
     try {
+      if (!options?.account?.address) {
+        this.#assertion.hasAddress(
+          'Account address required, please provide a value in options.account.address or on sdk initialization.'
+        );
+      }
+      let approved = false;
+      const tokenAddress = this.#ethers.utils.getAddress(options?.token?.address);
       switch (tokenAddress) {
         case this.#config.nft.cryptoPunks.address:
           approved = await this.cryptoPunks.isApproved(options);
@@ -64,7 +73,7 @@ export default class Nft {
               approved = await this.erc1155.isApprovedForAll(options);
               break;
             case supportedInterface.isERC721:
-              approved = await this.erc721.isApprovedForAll(options);
+              approved = await this.erc721.isApprovedForAll({ ...options, rethrow: true });
               break;
             default:
               throw 'specified contract is not supported';
@@ -78,10 +87,10 @@ export default class Nft {
   }
 
   async owner(options) {
-    let ownerAddress;
-    const { token } = options;
-    const tokenAddress = this.#ethers.utils.getAddress(token?.address);
     try {
+      let ownerAddress;
+      const { token } = options;
+      const tokenAddress = this.#ethers.utils.getAddress(token?.address);
       switch (tokenAddress) {
         case this.#config.nft.cryptoPunks.address:
           ownerAddress = await this.cryptoPunks.ownerOf({ token });
@@ -90,7 +99,7 @@ export default class Nft {
           const supportedInterface = await this.#utils.getSupportedInterface(options);
           switch (true) {
             case supportedInterface.isERC721:
-              ownerAddress = await this.erc721.ownerOf({ token });
+              ownerAddress = await this.erc721.ownerOf({ ...options, rethrow: true });
               break;
             default:
               throw 'specified contract is not supported';
@@ -104,15 +113,20 @@ export default class Nft {
   }
 
   async isOwner(options) {
-    let balance;
-    let ownerAddress;
-    let result;
-    const tokenAddress = this.#ethers.utils.getAddress(options?.token?.address);
-    const accountAddress = options?.account?.address
-      ? this.#ethers.utils.getAddress(options.account.address)
-      : this.#account.getAddress();
-
     try {
+      if (!options?.account?.address) {
+        this.#assertion.hasAddress(
+          'Account address required, please provide a value in options.account.address or on sdk initialization.'
+        );
+      }
+      let balance;
+      let ownerAddress;
+      let result;
+      const tokenAddress = this.#ethers.utils.getAddress(options?.token?.address);
+      const accountAddress = options?.account?.address
+        ? this.#ethers.utils.getAddress(options.account.address)
+        : this.#account.getAddress();
+
       switch (tokenAddress) {
         case this.#config.nft.cryptoPunks.address:
           ownerAddress = await this.cryptoPunks.ownerOf(options);
@@ -126,7 +140,7 @@ export default class Nft {
               result = balance > 0;
               break;
             case supportedInterface.isERC721:
-              ownerAddress = await this.erc721.ownerOf(options);
+              ownerAddress = await this.erc721.ownerOf({ ...options, rethrow: true });
               result = this.#ethers.utils.getAddress(ownerAddress) === accountAddress;
               break;
             default:

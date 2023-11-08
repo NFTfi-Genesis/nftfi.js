@@ -6,11 +6,15 @@ class Erc721 {
   #config;
   #contractFactory;
   #account;
+  #assertion;
+  #error;
 
   constructor(options) {
     this.#config = options?.config;
     this.#contractFactory = options?.contractFactory;
     this.#account = options?.account;
+    this.#assertion = options?.assertion;
+    this.#error = options?.error;
   }
 
   _getContractAddress(contractName) {
@@ -53,15 +57,20 @@ class Erc721 {
    * });
    */
   async ownerOf(options) {
-    const contract = this.#contractFactory.create({
-      address: options.token.address,
-      abi: this.#config.erc721.abi
-    });
-    const address = await contract.call({
-      function: 'ownerOf',
-      args: [options.token.id]
-    });
-    return address.toLowerCase();
+    try {
+      const contract = this.#contractFactory.create({
+        address: options.token.address,
+        abi: this.#config.erc721.abi
+      });
+      const address = await contract.call({
+        function: 'ownerOf',
+        args: [options.token.id]
+      });
+      return address.toLowerCase();
+    } catch (e) {
+      if (options?.rethrow) throw e;
+      return this.#error.handle(e);
+    }
   }
 
   /**
@@ -82,19 +91,25 @@ class Erc721 {
    * });
    */
   async setApprovalForAll(options) {
-    let success;
-    const contractName = options.nftfi.contract.name;
-    const contractAddress = this._getContractAddress(contractName);
-    const contract = this.#contractFactory.create({
-      address: options.token.address,
-      abi: this.#config.erc721.abi
-    });
-    const result = await contract.call({
-      function: 'setApprovalForAll',
-      args: [contractAddress, true]
-    });
-    success = result?.status === 1;
-    return success;
+    try {
+      this.#assertion.hasSigner();
+      let success;
+      const contractName = options.nftfi.contract.name;
+      const contractAddress = this._getContractAddress(contractName);
+      const contract = this.#contractFactory.create({
+        address: options.token.address,
+        abi: this.#config.erc721.abi
+      });
+      const result = await contract.call({
+        function: 'setApprovalForAll',
+        args: [contractAddress, true]
+      });
+      success = result?.status === 1;
+      return success;
+    } catch (e) {
+      if (options?.rethrow) throw e;
+      return this.#error.handle(e);
+    }
   }
 
   /**
@@ -102,12 +117,13 @@ class Erc721 {
    * The NFTfi contract is allowed to transfer all tokens of the sender on their behalf.
    *
    * @param {object} options - Options
+   * @param {object} options.account.address - The account address to get the approval of (optional)
    * @param {string} options.token.address - The ERC721 token address
    * @param {string} options.nftfi.contract.name - The name of the NFTfi contract (eg. `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`)
    * @returns {boolean} Boolean value indicating whether permission has been granted or not
    *
    * @example
-   * const address = await nftfi.nft.erc721.isApprovalForAll({
+   * const address = await nftfi.nft.erc721.isApprovedForAll({
    *   token: {
    *    address: '0x00000000'
    *   },
@@ -115,19 +131,29 @@ class Erc721 {
    * });
    */
   async isApprovedForAll(options) {
-    const contractName = options.nftfi.contract.name;
-    const contractAddress = this._getContractAddress(contractName);
-    const accountAddress = options?.account?.address || this.#account.getAddress();
-    const contract = this.#contractFactory.create({
-      address: options.token.address,
-      abi: this.#config.erc721.abi
-    });
-    const result = await contract.call({
-      function: 'isApprovedForAll',
-      args: [accountAddress, contractAddress]
-    });
+    try {
+      if (!options?.account?.address) {
+        this.#assertion.hasAddress(
+          'Account address required, please provide a value in options.account.address or on sdk initialization.'
+        );
+      }
+      const contractName = options.nftfi.contract.name;
+      const contractAddress = this._getContractAddress(contractName);
+      const accountAddress = options?.account?.address || this.#account.getAddress();
+      const contract = this.#contractFactory.create({
+        address: options.token.address,
+        abi: this.#config.erc721.abi
+      });
+      const result = await contract.call({
+        function: 'isApprovedForAll',
+        args: [accountAddress, contractAddress]
+      });
 
-    return result;
+      return result;
+    } catch (e) {
+      if (options?.rethrow) throw e;
+      return this.#error.handle(e);
+    }
   }
 }
 

@@ -7,12 +7,14 @@ class RewardsOgAllocations {
   #api;
   #result;
   #error;
+  #assertion;
 
   constructor(options = {}) {
     this.#account = options?.account;
     this.#api = options?.api;
     this.#result = options?.result;
     this.#error = options?.error;
+    this.#assertion = options?.assertion;
   }
 
   /**
@@ -30,6 +32,11 @@ class RewardsOgAllocations {
    */
   async get(options) {
     try {
+      if (!options?.account?.address) {
+        this.#assertion.hasAddress(
+          'Account address required, please provide a value in options.account.address or on sdk initialization.'
+        );
+      }
       const accountAddress = options?.account?.address || this.#account.getAddress();
       const response = await this.#api.get({
         uri: `v0.1/rewards/og/allocations/${accountAddress}`

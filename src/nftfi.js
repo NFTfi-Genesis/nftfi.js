@@ -1,5 +1,6 @@
 import Config from './nftfi/config.js';
 import Account from './nftfi/account.js';
+import Assertion from './nftfi/assertion.js';
 import Http from './nftfi/http.js';
 import Utils from './nftfi/utils.js';
 import Websocket from './nftfi/websocket.js';
@@ -51,6 +52,7 @@ import axios from 'axios';
 import merge from 'lodash.merge';
 import set from 'lodash.set';
 import io from 'socket.io-client';
+import { Mutex } from 'async-mutex';
 import RewardsOg from './nftfi/rewards/og/index.js';
 import RewardsEarn from './nftfi/rewards/earn/index.js';
 import RewardsOgAllocations from './nftfi/rewards/og/allocations/index.js';
@@ -69,23 +71,15 @@ export default {
     const hasGnosisSafePks = options?.ethereum?.account?.multisig?.gnosis?.safe?.owners?.privateKeys;
     const hasGnosisSafeAddress = options?.ethereum?.account?.multisig?.gnosis?.safe?.address;
     const hasAccountPk = options?.ethereum?.account?.privateKey;
-    const hasAccountAddress = options?.ethereum?.account?.address;
     const hasWeb3Provider = options?.ethereum?.web3?.provider;
-    const hasProviderUrl = options?.ethereum?.provider?.url;
     const localStorage =
       typeof window !== 'undefined' && typeof window?.localStorage !== 'undefined' ? window.localStorage : null;
 
-    if (!hasWeb3Provider && !hasProviderUrl) {
-      throw 'Please provide a value for the ethereum.provider.url field in the options parameter.';
-    }
-    if (!hasWeb3Provider && !hasGnosisSafePks && !hasAccountPk) {
-      throw 'Please provide a value for the ethereum.account.privateKey field in the options parameter.';
-    }
     if (!hasApiKey) {
       throw 'Please provide a value for the api.key field in the options parameter.';
     }
-    if (!hasGnosisSafeAddress && !hasAccountPk && !hasAccountAddress) {
-      throw 'Please provide a value for the ethereum.account.address field in the options parameter.';
+    if (hasGnosisSafePks && !hasGnosisSafeAddress) {
+      throw 'Please provide a value for the ethereum.account.multisig.gnosis.safe.address field in the options parameter.';
     }
     if (
       (hasGnosisSafePks && (hasWeb3Provider || hasAccountPk)) ||
@@ -96,10 +90,18 @@ export default {
     }
 
     const ethers = options?.dependencies?.ethers || ethersjs;
-    const provider = options?.ethereum?.web3?.provider
-      ? new ethersjs.providers.Web3Provider(options?.ethereum?.web3?.provider)
-      : new ethersjs.providers.getDefaultProvider(options?.ethereum?.provider?.url);
-    const network = await provider.getNetwork();
+    let provider = null;
+    if (options?.ethereum?.provider?.url) {
+      provider = new ethersjs.providers.getDefaultProvider(options?.ethereum?.provider?.url);
+    }
+    if (options?.ethereum?.web3?.provider) {
+      provider = new ethersjs.providers.Web3Provider(options?.ethereum?.web3?.provider);
+    }
+    if (!provider && !options?.ethereum?.chain?.id) {
+      throw 'Please provide a value for either ethereum.provider.url, ethereum.web3.provider or ethereum.chain.id.';
+    }
+
+    const network = (await provider?.getNetwork()) || { chainId: options?.ethereum?.chain?.id };
     const config = new Config({
       merge,
       chainId: network?.chainId,
@@ -111,6 +113,7 @@ export default {
     // Create an account, which is either an EOA or Multisig (Gnosis)
     let account;
     let signer;
+    let address;
     if (options.ethereum?.account?.multisig?.gnosis) {
       const gnosisOptions = options.ethereum?.account?.multisig?.gnosis;
       const privateKeys = gnosisOptions?.safe?.owners.privateKeys;
@@ -149,25 +152,59 @@ export default {
       });
     } else {
       const pk = options?.ethereum?.account?.privateKey;
-      const address = options?.ethereum?.account?.address || ethersjs.utils.computeAddress(pk);
-      signer = !pk ? await provider.getSigner(address) : new ethersjs.Wallet(pk, provider);
+      if (pk && !ethersjs.utils.isHexString(pk, 32)) {
+        throw "Please provide a valid private key. It should start with '0x'.";
+      }
+      let providerAddresses = [];
+      // Address is first address managed by provider if possible
+      if (options?.ethereum?.web3?.provider) {
+        providerAddresses = await provider.listAccounts();
+        address = providerAddresses[0];
+      }
+      // Address is options.ethereum.account.address if it belongs to addresses managed by provider or provider doesn't manage any addresses
+      if (
+        options?.ethereum?.account?.address &&
+        ((providerAddresses.length > 0 && providerAddresses.includes(options?.ethereum?.account?.address)) ||
+          providerAddresses.length === 0)
+      ) {
+        address = options?.ethereum?.account?.address;
+      }
+
+      // Address is derived from private key if private key is provided
+      if (pk) address = ethersjs.utils.computeAddress(pk);
+      if (!pk && options?.ethereum?.web3?.provider && address) {
+        signer = await provider.getSigner(address);
+      }
+      if (pk) {
+        signer = new ethersjs.Wallet(pk, provider);
+      }
       const eoa = new EOA({ address, signer, provider });
       account = new Account({ account: options?.dependencies?.account || eoa });
     }
 
+    const mutex = new Mutex();
+    const assertion = new Assertion({ account, provider });
     const websocket = new Websocket({ config, io });
     const http = new Http({ axios });
     const contractFactory =
-      options?.dependencies?.contractFactory || new ContractFactory({ signer, ethers, account, Contract });
+      options?.dependencies?.contractFactory ||
+      new ContractFactory({
+        signer,
+        ethers,
+        account,
+        Contract,
+        provider,
+        assertion
+      });
     const utils =
       options?.dependencies?.utils || new Utils({ ethers, BN, Date, Math, Number, web3, contractFactory, config });
     const storage = options?.dependencies?.storage || new Storage({ storage: localStorage, config });
     const auth = new Auth({ http, account, config, utils, storage });
-    const api = options?.dependencies?.api || new Api({ config, auth, http });
+    const api = options?.dependencies?.api || new Api({ config, auth, http, assertion, mutex });
     const error = new Error();
     const result = new Result();
     const helper = new Helper({ config });
-    const listings = new Listings({ api, config, helper });
+    const listings = new Listings({ api, config, helper, error });
 
     const loanFixedV1 = new LoansFixedV1({ config, contractFactory });
     const loanFixedV2 = new LoansFixedV2({ config, contractFactory });
@@ -183,10 +220,10 @@ export default {
       v2_3: loanFixedV2_3,
       collection: loanFixedCollection
     });
-    const loans = new Loans({ api, account, fixed: loanFixed, config, helper });
+    const loans = new Loans({ api, account, fixed: loanFixed, config, helper, error, assertion });
     const offersSignatures = new OffersSignatures({ account, ethers, config });
-    const erc20 = new Erc20({ config, utils, account, contractFactory, BN });
-    const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account });
+    const erc20 = new Erc20({ config, utils, account, contractFactory, BN, error, assertion });
+    const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account, assertion });
     const offersValidator = new OffersValidator({ erc20, ethers, config, contractFactory });
     const offersRequests = new OffersRequests({ api, account, config, result, error });
     const offers = new Offers({
@@ -199,18 +236,19 @@ export default {
       config,
       result,
       error,
-      helper
+      helper,
+      assertion
     });
-    const erc721 = new Erc721({ config, contractFactory, account });
+    const erc721 = new Erc721({ config, contractFactory, account, error, assertion });
     const erc1155 = new Erc1155({ config, contractFactory, account });
     const cryptoPunks = new CryptoPunks({ config, utils, error, result, contractFactory });
-    const immutables = new Immutables({ config, account, error, result, contractFactory });
+    const immutables = new Immutables({ config, account, error, result, contractFactory, assertion });
     const bundlesHelper = new BundlesHelper({ config, contractFactory, ethers });
-    const bundles = new Bundles({ config, account, error, result, helper: bundlesHelper, contractFactory });
+    const bundles = new Bundles({ config, account, error, result, helper: bundlesHelper, contractFactory, assertion });
     const events = new Events({ websocket });
-    const allocationsOg = new RewardsOgAllocations({ account, api, result, error });
+    const allocationsOg = new RewardsOgAllocations({ account, api, result, error, assertion });
     const rewardsOg = new RewardsOg({ allocations: allocationsOg });
-    const allocationsEarn = new RewardsEarnAllocations({ account, api, result, error });
+    const allocationsEarn = new RewardsEarnAllocations({ account, api, result, error, assertion });
     const pointsEarn = new RewardsEarnPoints({ api, result, error });
     const rewardsEarn = new RewardsEarn({ allocations: allocationsEarn, points: pointsEarn });
     const rewards = new Rewards({ og: rewardsOg, earn: rewardsEarn });
@@ -221,8 +259,9 @@ export default {
       ethers: ethersjs,
       account,
       contractFactory,
+      utils,
       error,
-      utils
+      assertion
     });
 
     const nftfi = new NFTfi({
@@ -241,7 +280,7 @@ export default {
       utils
     });
 
-    if (options?.logging?.verbose === true) {
+    if (options?.logging?.verbose !== false) {
       console.log('NFTfi SDK initialised.');
     }
 

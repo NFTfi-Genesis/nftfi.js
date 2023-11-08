@@ -52,6 +52,7 @@ var _contractFactory = /*#__PURE__*/new WeakMap();
 var _account = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
 var _result = /*#__PURE__*/new WeakMap();
+var _assertion = /*#__PURE__*/new WeakMap();
 var Immutables = /*#__PURE__*/function () {
   function Immutables(options) {
     (0, _classCallCheck2["default"])(this, Immutables);
@@ -75,11 +76,16 @@ var Immutables = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _assertion, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
     (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
+    (0, _classPrivateFieldSet2["default"])(this, _assertion, options === null || options === void 0 ? void 0 : options.assertion);
   }
   (0, _createClass2["default"])(Immutables, [{
     key: "_getContractParams",
@@ -175,6 +181,7 @@ var Immutables = /*#__PURE__*/function () {
       var _this3 = this;
       try {
         var _options$nftfi, _options$nftfi$contra;
+        (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
         var contractName = options === null || options === void 0 ? void 0 : (_options$nftfi = options.nftfi) === null || _options$nftfi === void 0 ? void 0 : (_options$nftfi$contra = _options$nftfi.contract) === null || _options$nftfi$contra === void 0 ? void 0 : _options$nftfi$contra.name;
         var unsupportedConracts = {
           'v1.immutable.bundle': 'immutables.unseal() no longer supports v1.immutable.bundle. use immutables.empty() instead'
@@ -224,6 +231,8 @@ var Immutables = /*#__PURE__*/function () {
               }
             }
           });
+        } else {
+          return (0, _classPrivateFieldGet2["default"])(this, _error).handle(e);
         }
       }
     }
@@ -362,41 +371,42 @@ var Immutables = /*#__PURE__*/function () {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               contractName = options === null || options === void 0 ? void 0 : (_options$nftfi3 = options.nftfi) === null || _options$nftfi3 === void 0 ? void 0 : (_options$nftfi3$contr = _options$nftfi3.contract) === null || _options$nftfi3$contr === void 0 ? void 0 : _options$nftfi3$contr.name;
               contractFactoryParams = this._getContractParams(contractName);
               _context3.t0 = contractName;
-              _context3.next = _context3.t0 === 'v1.immutable.bundle' ? 6 : _context3.t0 === 'v1-1.immutable.bundle' ? 11 : 16;
+              _context3.next = _context3.t0 === 'v1.immutable.bundle' ? 7 : _context3.t0 === 'v1-1.immutable.bundle' ? 12 : 17;
               break;
-            case 6:
+            case 7:
               contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(contractFactoryParams.migrate);
-              _context3.next = 9;
+              _context3.next = 10;
               return contract.call({
                 "function": contractFactoryParams.migrate.empty["function"],
                 args: [contractFactoryParams.immutable.address, options.immutable.id, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()]
               });
-            case 9:
+            case 10:
               response = _context3.sent;
-              return _context3.abrupt("break", 16);
-            case 11:
+              return _context3.abrupt("break", 17);
+            case 12:
               _contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(contractFactoryParams.immutable);
-              _context3.next = 14;
+              _context3.next = 15;
               return _contract.call({
                 "function": contractFactoryParams.immutable.empty["function"],
                 args: [options.immutable.id, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()]
               });
-            case 14:
+            case 15:
               response = _context3.sent;
-              return _context3.abrupt("break", 16);
-            case 16:
+              return _context3.abrupt("break", 17);
+            case 17:
               result = {
                 success: ((_response = response) === null || _response === void 0 ? void 0 : _response.status) === 1 || false
               };
               return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(result));
-            case 20:
-              _context3.prev = 20;
+            case 21:
+              _context3.prev = 21;
               _context3.t1 = _context3["catch"](0);
               if (!(_context3.t1 instanceof ContractNameNotSupportedError)) {
-                _context3.next = 26;
+                _context3.next = 27;
                 break;
               }
               return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle({
@@ -406,13 +416,13 @@ var Immutables = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 26:
-              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t1));
             case 27:
+              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t1));
+            case 28:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[0, 20]]);
+        }, _callee3, this, [[0, 21]]);
       }));
       function empty(_x3) {
         return _empty.apply(this, arguments);
@@ -466,6 +476,7 @@ var Immutables = /*#__PURE__*/function () {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               _context4.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               immutableId = options === null || options === void 0 ? void 0 : (_options$immutable = options.immutable) === null || _options$immutable === void 0 ? void 0 : _options$immutable.id;
               migrateContractParams = this._getMigrateContractParams(options);
               migrateContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create(migrateContractParams.migrate);
@@ -491,11 +502,11 @@ var Immutables = /*#__PURE__*/function () {
               })["catch"](function (e) {
                 return (0, _classPrivateFieldGet2["default"])(_this4, _error).handle(e);
               }));
-            case 7:
-              _context4.prev = 7;
+            case 8:
+              _context4.prev = 8;
               _context4.t0 = _context4["catch"](0);
               if (!(_context4.t0 instanceof MigrationNotSupportedError)) {
-                _context4.next = 11;
+                _context4.next = 14;
                 break;
               }
               return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle({
@@ -505,11 +516,13 @@ var Immutables = /*#__PURE__*/function () {
                   }
                 }
               }));
-            case 11:
+            case 14:
+              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context4.t0));
+            case 15:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, this, [[0, 7]]);
+        }, _callee4, this, [[0, 8]]);
       }));
       function migrate(_x4) {
         return _migrate.apply(this, arguments);

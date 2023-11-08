@@ -22,6 +22,7 @@ var _utils = /*#__PURE__*/new WeakMap();
 var _signatures = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
 var _account = /*#__PURE__*/new WeakMap();
+var _assertion = /*#__PURE__*/new WeakMap();
 var OffersHelper = /*#__PURE__*/function () {
   function OffersHelper() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -50,12 +51,17 @@ var OffersHelper = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _assertion, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _BN, options === null || options === void 0 ? void 0 : options.BN);
     (0, _classPrivateFieldSet2["default"])(this, _Number, options === null || options === void 0 ? void 0 : options.Number);
     (0, _classPrivateFieldSet2["default"])(this, _utils, options === null || options === void 0 ? void 0 : options.utils);
     (0, _classPrivateFieldSet2["default"])(this, _signatures, options === null || options === void 0 ? void 0 : options.offersSignatures);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
+    (0, _classPrivateFieldSet2["default"])(this, _assertion, options === null || options === void 0 ? void 0 : options.assertion);
   }
   (0, _createClass2["default"])(OffersHelper, [{
     key: "_addCollectionAddress",
@@ -86,6 +92,7 @@ var OffersHelper = /*#__PURE__*/function () {
       var _options$filters4, _options$filters4$len, _options$filters4$len2, _options$filters5, _options$filters5$bor, _options$filters5$bor2, _options$filters6, _options$filters6$nft, _options$filters7, _options$filters7$len, _options$filters7$len2, _options$filters9, _options$filters9$len, _options$filters9$len2;
       // if no lender/borrower/collection address is provided, we default to the account address
       if (!(options !== null && options !== void 0 && (_options$filters4 = options.filters) !== null && _options$filters4 !== void 0 && (_options$filters4$len = _options$filters4.lender) !== null && _options$filters4$len !== void 0 && (_options$filters4$len2 = _options$filters4$len.address) !== null && _options$filters4$len2 !== void 0 && _options$filters4$len2.eq) && !(options !== null && options !== void 0 && (_options$filters5 = options.filters) !== null && _options$filters5 !== void 0 && (_options$filters5$bor = _options$filters5.borrower) !== null && _options$filters5$bor !== void 0 && (_options$filters5$bor2 = _options$filters5$bor.address) !== null && _options$filters5$bor2 !== void 0 && _options$filters5$bor2.eq) && !(options !== null && options !== void 0 && (_options$filters6 = options.filters) !== null && _options$filters6 !== void 0 && (_options$filters6$nft = _options$filters6.nft) !== null && _options$filters6$nft !== void 0 && _options$filters6$nft.address)) {
+        (0, _classPrivateFieldGet2["default"])(this, _assertion).hasAddress('Please provide at least a filter from filters.lender.address.eq, filters.borrower.address.eq or filters.nft.address.');
         params = {
           lenderAddress: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()
         };

@@ -5,6 +5,7 @@ class OffersHelper {
   #signatures;
   #config;
   #account;
+  #assertion;
 
   constructor(options = {}) {
     this.#BN = options?.BN;
@@ -13,6 +14,7 @@ class OffersHelper {
     this.#signatures = options?.offersSignatures;
     this.#config = options?.config;
     this.#account = options?.account;
+    this.#assertion = options?.assertion;
   }
 
   _addCollectionAddress(options, params) {
@@ -36,6 +38,9 @@ class OffersHelper {
       !options?.filters?.borrower?.address?.eq &&
       !options?.filters?.nft?.address
     ) {
+      this.#assertion.hasAddress(
+        'Please provide at least a filter from filters.lender.address.eq, filters.borrower.address.eq or filters.nft.address.'
+      );
       params = { lenderAddress: this.#account.getAddress() };
     }
     // you can eq or ne but not both, should we allow both ? not needed now let's not overthink ?

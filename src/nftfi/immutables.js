@@ -22,6 +22,7 @@ class Immutables {
   #account;
   #error;
   #result;
+  #assertion;
 
   constructor(options) {
     this.#config = options?.config;
@@ -29,6 +30,7 @@ class Immutables {
     this.#account = options?.account;
     this.#error = options?.error;
     this.#result = options?.result;
+    this.#assertion = options?.assertion;
   }
 
   _getContractParams(contractName, unsupportedContracts = []) {
@@ -113,6 +115,7 @@ class Immutables {
    */
   unseal(options) {
     try {
+      this.#assertion.hasSigner();
       const contractName = options?.nftfi?.contract?.name;
       const unsupportedConracts = {
         'v1.immutable.bundle':
@@ -146,6 +149,8 @@ class Immutables {
         return this.#error.handle({
           nftfi: { contract: { name: e.message } }
         });
+      } else {
+        return this.#error.handle(e);
       }
     }
   }
@@ -245,6 +250,7 @@ class Immutables {
    */
   async empty(options) {
     try {
+      this.#assertion.hasSigner();
       let response;
       const contractName = options?.nftfi?.contract?.name;
       const contractFactoryParams = this._getContractParams(contractName);
@@ -320,6 +326,7 @@ class Immutables {
    */
   async migrate(options) {
     try {
+      this.#assertion.hasSigner();
       const immutableId = options?.immutable?.id;
       const migrateContractParams = this._getMigrateContractParams(options);
       const migrateContract = this.#contractFactory.create(migrateContractParams.migrate);
@@ -344,6 +351,8 @@ class Immutables {
         return this.#error.handle({
           nftfi: { contract: { name: e.message } }
         });
+      } else {
+        return this.#error.handle(e);
       }
     }
   }

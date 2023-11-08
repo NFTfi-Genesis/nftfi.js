@@ -16,6 +16,8 @@ function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollect
 var _config = /*#__PURE__*/new WeakMap();
 var _auth = /*#__PURE__*/new WeakMap();
 var _http = /*#__PURE__*/new WeakMap();
+var _assertion = /*#__PURE__*/new WeakMap();
+var _mutex = /*#__PURE__*/new WeakMap();
 var API = /*#__PURE__*/function () {
   function API() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -32,50 +34,107 @@ var API = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _assertion, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _mutex, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _auth, options === null || options === void 0 ? void 0 : options.auth);
     (0, _classPrivateFieldSet2["default"])(this, _http, options === null || options === void 0 ? void 0 : options.http);
+    (0, _classPrivateFieldSet2["default"])(this, _assertion, options === null || options === void 0 ? void 0 : options.assertion);
+    (0, _classPrivateFieldSet2["default"])(this, _mutex, options === null || options === void 0 ? void 0 : options.mutex);
   }
   (0, _createClass2["default"])(API, [{
-    key: "get",
+    key: "getAuthHeader",
     value: function () {
-      var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var httpOptions,
-          uri,
-          params,
-          authToken,
-          headers,
-          result,
-          _args = arguments;
+      var _getAuthHeader = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
+        var _options$auth, _options$auth2;
+        var release, headers, authToken;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              httpOptions = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
-              uri = this.concatUri(options.uri);
-              params = options === null || options === void 0 ? void 0 : options.params;
-              _context.next = 5;
-              return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
-            case 5:
-              authToken = _context.sent;
+              release = function release() {};
               headers = {
-                'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key,
-                Authorization: "Bearer ".concat(authToken)
+                'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
               };
-              _context.next = 9;
-              return (0, _classPrivateFieldGet2["default"])(this, _http).get(uri, {
-                headers: headers,
-                params: params
-              }, httpOptions);
-            case 9:
-              result = _context.sent;
-              return _context.abrupt("return", result.data);
-            case 11:
+              if (!((options === null || options === void 0 ? void 0 : (_options$auth = options.auth) === null || _options$auth === void 0 ? void 0 : _options$auth.token) === 'required' || (options === null || options === void 0 ? void 0 : (_options$auth2 = options.auth) === null || _options$auth2 === void 0 ? void 0 : _options$auth2.token) === 'optional')) {
+                _context.next = 15;
+                break;
+              }
+              _context.prev = 3;
+              if (options.auth.token === 'required') {
+                (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
+              }
+              _context.next = 7;
+              return (0, _classPrivateFieldGet2["default"])(this, _mutex).acquire();
+            case 7:
+              release = _context.sent;
+              _context.next = 10;
+              return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
+            case 10:
+              authToken = _context.sent;
+              if (authToken) headers['Authorization'] = "Bearer ".concat(authToken);
+            case 12:
+              _context.prev = 12;
+              release();
+              return _context.finish(12);
+            case 15:
+              return _context.abrupt("return", headers);
+            case 16:
             case "end":
               return _context.stop();
           }
-        }, _callee, this);
+        }, _callee, this, [[3,, 12, 15]]);
       }));
-      function get(_x) {
+      function getAuthHeader(_x) {
+        return _getAuthHeader.apply(this, arguments);
+      }
+      return getAuthHeader;
+    }()
+  }, {
+    key: "get",
+    value: function () {
+      var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
+        var httpOptions,
+          uri,
+          params,
+          headers,
+          opts,
+          result,
+          _args2 = arguments;
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              httpOptions = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
+              uri = this.concatUri(options.uri);
+              params = options === null || options === void 0 ? void 0 : options.params;
+              _context2.next = 5;
+              return this.getAuthHeader(options);
+            case 5:
+              headers = _context2.sent;
+              opts = {
+                params: params
+              };
+              if (headers) opts = {
+                headers: headers,
+                params: params
+              };
+              _context2.next = 10;
+              return (0, _classPrivateFieldGet2["default"])(this, _http).get(uri, opts, httpOptions);
+            case 10:
+              result = _context2.sent;
+              return _context2.abrupt("return", result.data);
+            case 12:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, this);
+      }));
+      function get(_x2) {
         return _get.apply(this, arguments);
       }
       return get;
@@ -83,34 +142,30 @@ var API = /*#__PURE__*/function () {
   }, {
     key: "post",
     value: function () {
-      var _post = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
-        var uri, authToken, headers, result;
-        return _regenerator["default"].wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+      var _post = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
+        var uri, headers, result;
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
               uri = this.concatUri(options.uri);
-              _context2.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
+              _context3.next = 3;
+              return this.getAuthHeader(options);
             case 3:
-              authToken = _context2.sent;
-              headers = {
-                'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key,
-                Authorization: "Bearer ".concat(authToken)
-              };
-              _context2.next = 7;
+              headers = _context3.sent;
+              _context3.next = 6;
               return (0, _classPrivateFieldGet2["default"])(this, _http).post(uri, options.payload, {
                 headers: headers
               });
-            case 7:
-              result = _context2.sent;
-              return _context2.abrupt("return", result.data);
-            case 9:
+            case 6:
+              result = _context3.sent;
+              return _context3.abrupt("return", result.data);
+            case 8:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2, this);
+        }, _callee3, this);
       }));
-      function post(_x2) {
+      function post(_x3) {
         return _post.apply(this, arguments);
       }
       return post;
@@ -118,34 +173,30 @@ var API = /*#__PURE__*/function () {
   }, {
     key: "delete",
     value: function () {
-      var _delete2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
-        var uri, authToken, headers, result;
-        return _regenerator["default"].wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+      var _delete2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
+        var uri, headers, result;
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
             case 0:
               uri = this.concatUri(options.uri);
-              _context3.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
+              _context4.next = 3;
+              return this.getAuthHeader(options);
             case 3:
-              authToken = _context3.sent;
-              headers = {
-                'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key,
-                Authorization: "Bearer ".concat(authToken)
-              };
-              _context3.next = 7;
+              headers = _context4.sent;
+              _context4.next = 6;
               return (0, _classPrivateFieldGet2["default"])(this, _http)["delete"](uri, {
                 headers: headers
               });
-            case 7:
-              result = _context3.sent;
-              return _context3.abrupt("return", result.data);
-            case 9:
+            case 6:
+              result = _context4.sent;
+              return _context4.abrupt("return", result.data);
+            case 8:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
-        }, _callee3, this);
+        }, _callee4, this);
       }));
-      function _delete(_x3) {
+      function _delete(_x4) {
         return _delete2.apply(this, arguments);
       }
       return _delete;

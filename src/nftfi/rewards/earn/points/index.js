@@ -53,7 +53,7 @@ class RewardsEarnPoints {
       );
       return this.#result.handle(response.results);
     } catch (e) {
-      return this.#error.handle(e.response?.data?.errors);
+      return this.#error.handle(e);
     }
   }
 }

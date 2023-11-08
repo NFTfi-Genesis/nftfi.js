@@ -43,14 +43,21 @@ var BundlesHelper = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _ethers, options === null || options === void 0 ? void 0 : options.ethers);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
-    (0, _classPrivateFieldSet2["default"])(this, _registryContract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
-      address: (0, _classPrivateFieldGet2["default"])(this, _config).registry.address,
-      abi: (0, _classPrivateFieldGet2["default"])(this, _config).registry.abi
-    }));
   }
-
-  // Check if the wrapper is supported
   (0, _createClass2["default"])(BundlesHelper, [{
+    key: "_registryContract",
+    get: function get() {
+      if (!(0, _classPrivateFieldGet2["default"])(this, _registryContract)) {
+        (0, _classPrivateFieldSet2["default"])(this, _registryContract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+          address: (0, _classPrivateFieldGet2["default"])(this, _config).registry.address,
+          abi: (0, _classPrivateFieldGet2["default"])(this, _config).registry.abi
+        }));
+      }
+      return (0, _classPrivateFieldGet2["default"])(this, _registryContract);
+    }
+
+    // Check if the wrapper is supported
+  }, {
     key: "_isWrapperSupported",
     value: function _isWrapperSupported(options) {
       var result = false;
@@ -107,7 +114,7 @@ var BundlesHelper = /*#__PURE__*/function () {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return (0, _classPrivateFieldGet2["default"])(this, _registryContract).call({
+              return this._registryContract.call({
                 "function": 'getNFTPermit',
                 args: [options === null || options === void 0 ? void 0 : (_options$element = options.element) === null || _options$element === void 0 ? void 0 : (_options$element$toke = _options$element.token) === null || _options$element$toke === void 0 ? void 0 : _options$element$toke.address]
               });

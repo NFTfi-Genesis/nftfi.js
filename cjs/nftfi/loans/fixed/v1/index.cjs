@@ -33,12 +33,19 @@ var LoansFixedV1 = /*#__PURE__*/function () {
     });
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
-    (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
-      address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v1.address,
-      abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v1.abi
-    }));
   }
   (0, _createClass2["default"])(LoansFixedV1, [{
+    key: "_contract",
+    get: function get() {
+      if (!(0, _classPrivateFieldGet2["default"])(this, _contract)) {
+        (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+          address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v1.address,
+          abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v1.abi
+        }));
+      }
+      return (0, _classPrivateFieldGet2["default"])(this, _contract);
+    }
+  }, {
     key: "liquidateOverdueLoan",
     value: function () {
       var _liquidateOverdueLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
@@ -48,13 +55,13 @@ var LoansFixedV1 = /*#__PURE__*/function () {
             case 0:
               _context.prev = 0;
               _context.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'liquidateOverdueLoan',
                 args: [options.loan.id]
               });
             case 3:
               result = _context.sent;
-              success = (result === null || result === void 0 ? void 0 : result.status) === 1 ? true : false;
+              success = (result === null || result === void 0 ? void 0 : result.status) === 1;
               _context.next = 10;
               break;
             case 7:
@@ -84,13 +91,13 @@ var LoansFixedV1 = /*#__PURE__*/function () {
             case 0:
               _context2.prev = 0;
               _context2.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'payBackLoan',
                 args: [options.loan.id]
               });
             case 3:
               result = _context2.sent;
-              success = (result === null || result === void 0 ? void 0 : result.status) === 1 ? true : false;
+              success = (result === null || result === void 0 ? void 0 : result.status) === 1;
               _context2.next = 10;
               break;
             case 7:
@@ -120,13 +127,13 @@ var LoansFixedV1 = /*#__PURE__*/function () {
             case 0:
               _context3.prev = 0;
               _context3.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'cancelLoanCommitmentBeforeLoanHasBegun',
                 args: [options.offer.nonce]
               });
             case 3:
               result = _context3.sent;
-              success = (result === null || result === void 0 ? void 0 : result.status) === 1 ? true : false;
+              success = (result === null || result === void 0 ? void 0 : result.status) === 1;
               _context3.next = 10;
               break;
             case 7:

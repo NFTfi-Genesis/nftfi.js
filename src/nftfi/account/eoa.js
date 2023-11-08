@@ -36,8 +36,7 @@ class EOA {
 
   async execTransaction(tx) {
     const receipt = await this.#signer.sendTransaction(tx);
-    const response = this.#provider.waitForTransaction(receipt.hash);
-    return response;
+    return this.#provider.waitForTransaction(receipt.hash);
   }
 }
 

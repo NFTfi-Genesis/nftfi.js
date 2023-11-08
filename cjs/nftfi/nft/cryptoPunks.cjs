@@ -33,12 +33,19 @@ var CryptoPunks = /*#__PURE__*/function () {
     });
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
-    (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
-      address: (0, _classPrivateFieldGet2["default"])(this, _config).nft.cryptoPunks.address,
-      abi: (0, _classPrivateFieldGet2["default"])(this, _config).nft.cryptoPunks.abi
-    }));
   }
   (0, _createClass2["default"])(CryptoPunks, [{
+    key: "_contract",
+    get: function get() {
+      if (!(0, _classPrivateFieldGet2["default"])(this, _contract)) {
+        (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+          address: (0, _classPrivateFieldGet2["default"])(this, _config).nft.cryptoPunks.address,
+          abi: (0, _classPrivateFieldGet2["default"])(this, _config).nft.cryptoPunks.abi
+        }));
+      }
+      return (0, _classPrivateFieldGet2["default"])(this, _contract);
+    }
+  }, {
     key: "_getContractAddress",
     value: function _getContractAddress(contractName) {
       switch (contractName) {
@@ -64,7 +71,7 @@ var CryptoPunks = /*#__PURE__*/function () {
               minSalePriceInWei = 0;
               toAddress = this._getContractAddress(options.nftfi.contract.name);
               _context.next = 5;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'offerPunkForSaleToAddress',
                 args: [punkIndex, minSalePriceInWei, toAddress]
               });
@@ -94,7 +101,7 @@ var CryptoPunks = /*#__PURE__*/function () {
             case 0:
               buyer = this._getContractAddress(options.nftfi.contract.name).toLowerCase();
               _context2.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'punksOfferedForSale',
                 args: [options === null || options === void 0 ? void 0 : (_options$token = options.token) === null || _options$token === void 0 ? void 0 : _options$token.id]
               });
@@ -125,7 +132,7 @@ var CryptoPunks = /*#__PURE__*/function () {
             case 0:
               punkIndex = options.token.id;
               _context3.next = 3;
-              return (0, _classPrivateFieldGet2["default"])(this, _contract).call({
+              return this._contract.call({
                 "function": 'punkIndexToAddress',
                 args: [punkIndex]
               });

@@ -6,11 +6,13 @@ class Listings {
   #api;
   #config;
   #helper;
+  #error;
 
   constructor(options = {}) {
     this.#api = options?.api;
     this.#config = options?.config;
     this.#helper = options?.helper;
+    this.#error = options?.error;
   }
 
   /**
@@ -39,20 +41,24 @@ class Listings {
    * });
    */
   async get(options = {}) {
-    let limit = options?.pagination?.limit || this.#config.pagination.limit;
-    let page = options?.pagination?.page || this.#config.pagination.page;
-    let nftAddresses = options?.filters?.nftAddresses || [];
-    let response = await this.#api.get({
-      uri: 'v0.1/listings',
-      params: {
-        nftAddresses: nftAddresses.join(),
-        page: page,
-        limit: limit
-      }
-    });
-    let listings = response['results'];
-    listings = listings.map(this.#helper.addCurrencyUnit);
-    return listings;
+    try {
+      let limit = options?.pagination?.limit || this.#config.pagination.limit;
+      let page = options?.pagination?.page || this.#config.pagination.page;
+      let nftAddresses = options?.filters?.nftAddresses || [];
+      let response = await this.#api.get({
+        uri: 'v0.1/listings',
+        params: {
+          nftAddresses: nftAddresses.join(),
+          page: page,
+          limit: limit
+        }
+      });
+      let listings = response['results'];
+      listings = listings.map(this.#helper.addCurrencyUnit);
+      return listings;
+    } catch (e) {
+      return this.#error.handle(e);
+    }
   }
 }
 

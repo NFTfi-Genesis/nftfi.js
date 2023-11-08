@@ -23,6 +23,7 @@ class Bundles {
   #error;
   #result;
   #helper;
+  #assertion;
 
   constructor(options) {
     this.#config = options?.config;
@@ -31,6 +32,7 @@ class Bundles {
     this.#error = options?.error;
     this.#result = options?.result;
     this.#helper = options?.helper;
+    this.#assertion = options?.assertion;
   }
 
   _getContractParams(contractName, unsupportedContractNames = []) {
@@ -104,8 +106,9 @@ class Bundles {
    * const bundle = await nftfi.bundles.mint();
    */
   async mint() {
-    let result;
     try {
+      this.#assertion.hasSigner();
+      let result;
       const contractName = this.#config.bundler.v1_1.name;
       const contractFactoryParams = this._getContractParams(contractName);
       const bundlerContract = this.#contractFactory.create(contractFactoryParams.bundler);
@@ -158,6 +161,7 @@ class Bundles {
    */
   async add(options) {
     try {
+      this.#assertion.hasSigner();
       const contractName = options?.nftfi?.contract?.name;
       const unsupportedContractNames = ['v1.bundler'];
       const contractFactoryParams = this._getContractParams(contractName, unsupportedContractNames);
@@ -257,6 +261,7 @@ class Bundles {
    */
   async remove(options) {
     try {
+      this.#assertion.hasSigner();
       const contractName = options?.nftfi?.contract?.name;
       const contractFactoryParams = this._getContractParams(contractName);
       const bundlerContract = this.#contractFactory.create(contractFactoryParams.bundler);
@@ -324,6 +329,7 @@ class Bundles {
    */
   async seal(options) {
     try {
+      this.#assertion.hasSigner();
       const contractName = options?.nftfi?.contract?.name;
       const unsupportedContractNames = ['v1.bundler'];
       const bundlerContractFactoryParams = this._getContractParams(contractName, unsupportedContractNames);
@@ -387,6 +393,7 @@ class Bundles {
    */
   async empty(options) {
     try {
+      this.#assertion.hasSigner();
       let response;
       const contractName = options?.nftfi?.contract?.name;
       const contractFactoryParams = this._getContractParams(contractName);
@@ -566,6 +573,7 @@ class Bundles {
    */
   async migrate(options) {
     try {
+      this.#assertion.hasSigner();
       const bundleId = options?.bundle?.id;
       const migrateContractParams = this._getMigrateContractParams(options);
       const migrateContract = this.#contractFactory.create(migrateContractParams.migrate);
@@ -590,6 +598,8 @@ class Bundles {
         return this.#error.handle({
           nftfi: { contract: { name: e.message } }
         });
+      } else {
+        return this.#error.handle(e);
       }
     }
   }

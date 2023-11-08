@@ -68,8 +68,7 @@ var Auth = /*#__PURE__*/function () {
     key: "getToken",
     value: function () {
       var _getToken = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-        var _result$data3, _result$data3$result, _result$data4, _result$data4$result;
-        var sdkToken, sdkRefreshToken, _result$data, _result$data$result, _result$data2, _result$data2$result, _uri, _headers, _result, _token2, _refreshToken, nonce, accountAddress, message, messageToSign, signedMessage, multisig, body, uri, headers, result, token, refreshToken, _result$data5;
+        var sdkToken, sdkRefreshToken, _result$data, _result$data$result, _result$data2, _result$data2$result, uri, headers, result, token, refreshToken, _result$data3, _result$data3$result, _result$data4, _result$data4$result, nonce, accountAddress, message, messageToSign, signedMessage, multisig, body, _uri, _headers, _result, _token2, _refreshToken, error;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -92,36 +91,41 @@ var Auth = /*#__PURE__*/function () {
                 _context.next = 20;
                 break;
               }
-              _uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/v0.1/authorization/refresh-token");
-              _headers = {
+              uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/v0.1/authorization/refresh-token");
+              headers = {
                 'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
               };
               _context.next = 12;
-              return (0, _classPrivateFieldGet2["default"])(this, _http).post(_uri, {
+              return (0, _classPrivateFieldGet2["default"])(this, _http).post(uri, {
                 refreshToken: sdkRefreshToken
               }, {
-                headers: _headers
+                headers: headers
               });
             case 12:
-              _result = _context.sent;
-              _token2 = _result === null || _result === void 0 ? void 0 : (_result$data = _result.data) === null || _result$data === void 0 ? void 0 : (_result$data$result = _result$data.result) === null || _result$data$result === void 0 ? void 0 : _result$data$result.token;
-              _refreshToken = _result === null || _result === void 0 ? void 0 : (_result$data2 = _result.data) === null || _result$data2 === void 0 ? void 0 : (_result$data2$result = _result$data2.result) === null || _result$data2$result === void 0 ? void 0 : _result$data2$result.refreshToken;
-              if (!this._isTokenValid(_token2)) {
+              result = _context.sent;
+              token = result === null || result === void 0 ? void 0 : (_result$data = result.data) === null || _result$data === void 0 ? void 0 : (_result$data$result = _result$data.result) === null || _result$data$result === void 0 ? void 0 : _result$data$result.token;
+              refreshToken = result === null || result === void 0 ? void 0 : (_result$data2 = result.data) === null || _result$data2 === void 0 ? void 0 : (_result$data2$result = _result$data2.result) === null || _result$data2$result === void 0 ? void 0 : _result$data2$result.refreshToken;
+              if (!this._isTokenValid(token)) {
                 _context.next = 20;
                 break;
               }
-              (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.token.key, _token2);
-              (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.refreshToken.key, _refreshToken);
+              (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.token.key, token);
+              (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.refreshToken.key, refreshToken);
               (0, _classPrivateFieldSet2["default"])(this, _token, sdkToken);
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
             case 20:
+              _context.prev = 20;
+              if (!(0, _classPrivateFieldGet2["default"])(this, _account).getSigner()) {
+                _context.next = 39;
+                break;
+              }
               nonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
               accountAddress = (0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress();
               message = "This message proves you own this wallet address : ".concat((0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress());
               messageToSign = "".concat(message, "\r\n\r\nChainId : ").concat((0, _classPrivateFieldGet2["default"])(this, _config).chainId, "\r\nNonce : ").concat(nonce, ")");
-              _context.next = 26;
+              _context.next = 28;
               return (0, _classPrivateFieldGet2["default"])(this, _account).authSign(messageToSign);
-            case 26:
+            case 28:
               signedMessage = _context.sent;
               multisig = (0, _classPrivateFieldGet2["default"])(this, _account).isMultisig();
               body = {
@@ -131,36 +135,42 @@ var Auth = /*#__PURE__*/function () {
                 signedMessage: signedMessage,
                 multisig: multisig
               };
-              uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/v0.1/authorization/token");
-              headers = {
+              _uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/v0.1/authorization/token");
+              _headers = {
                 'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
               };
-              _context.next = 33;
-              return (0, _classPrivateFieldGet2["default"])(this, _http).post(uri, body, {
-                headers: headers
+              _context.next = 35;
+              return (0, _classPrivateFieldGet2["default"])(this, _http).post(_uri, body, {
+                headers: _headers
               });
-            case 33:
-              result = _context.sent;
-              token = result === null || result === void 0 ? void 0 : (_result$data3 = result.data) === null || _result$data3 === void 0 ? void 0 : (_result$data3$result = _result$data3.result) === null || _result$data3$result === void 0 ? void 0 : _result$data3$result.token;
-              refreshToken = result === null || result === void 0 ? void 0 : (_result$data4 = result.data) === null || _result$data4 === void 0 ? void 0 : (_result$data4$result = _result$data4.result) === null || _result$data4$result === void 0 ? void 0 : _result$data4$result.refreshToken;
-              if (!(token && refreshToken)) {
-                _context.next = 42;
-                break;
+            case 35:
+              _result = _context.sent;
+              _token2 = _result === null || _result === void 0 ? void 0 : (_result$data3 = _result.data) === null || _result$data3 === void 0 ? void 0 : (_result$data3$result = _result$data3.result) === null || _result$data3$result === void 0 ? void 0 : _result$data3$result.token;
+              _refreshToken = _result === null || _result === void 0 ? void 0 : (_result$data4 = _result.data) === null || _result$data4 === void 0 ? void 0 : (_result$data4$result = _result$data4.result) === null || _result$data4$result === void 0 ? void 0 : _result$data4$result.refreshToken;
+              if (_token2 && _refreshToken) {
+                (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.token.key, _token2);
+                (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.refreshToken.key, _refreshToken);
+                (0, _classPrivateFieldSet2["default"])(this, _token, _token2);
               }
-              (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.token.key, token);
-              (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.refreshToken.key, refreshToken);
-              (0, _classPrivateFieldSet2["default"])(this, _token, token);
-              _context.next = 43;
+            case 39:
+              _context.next = 46;
               break;
-            case 42:
-              throw result === null || result === void 0 ? void 0 : (_result$data5 = result.data) === null || _result$data5 === void 0 ? void 0 : _result$data5.message;
-            case 43:
+            case 41:
+              _context.prev = 41;
+              _context.t0 = _context["catch"](20);
+              error = {
+                error: _context.t0,
+                date: new Date()
+              };
+              (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.tokenError.key, JSON.stringify(error));
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
-            case 44:
+            case 46:
+              return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
+            case 47:
             case "end":
               return _context.stop();
           }
-        }, _callee, this);
+        }, _callee, this, [[20, 41]]);
       }));
       function getToken() {
         return _getToken.apply(this, arguments);

@@ -169,6 +169,9 @@ var baseConfig = {
     },
     refreshToken: {
       key: ''
+    },
+    tokenError: {
+      key: ''
     }
   }
 };
@@ -213,7 +216,7 @@ mainnetConfig.loan.fixed.v2_3.name = 'v2-3.loan.fixed';
 mainnetConfig.loan.fixed.v2_3.address = '0xd0a40eB7FD94eE97102BA8e9342243A2b2E22207';
 mainnetConfig.loan.fixed.v2_3.abi = mainnetConfig.loan.fixed.v2.abi;
 mainnetConfig.loan.adminFeeInBasisPoints = '500';
-mainnetConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.gnosis.io/';
+mainnetConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction-mainnet.safe.global';
 mainnetConfig.signingUtils.v2.address = '0x5a42d72372858e10edc03b26bf449f78ff3c0e6f';
 mainnetConfig.signingUtils.v2.abi = ['function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, address _loanContract) public view returns (bool)'];
 mainnetConfig.signingUtils.v2_3.address = '0x43E5a2985897b4E0175Ed3A3f527A597cb29bbEe';
@@ -235,6 +238,7 @@ mainnetConfig.immutable.v1_1.address = '0x46C9CFB32627B74F91e0B5ad575c247AEc7e78
 mainnetConfig.immutable.v1_1.abi = mainnetConfig.immutable.v1.abi;
 mainnetConfig.auth.token.key = 'nftfiSdkToken';
 mainnetConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
+mainnetConfig.auth.tokenError.key = 'nftfiSdkTokenError';
 var rinkebyConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 rinkebyConfig.chainId = 4;
 rinkebyConfig.website.baseURI = 'https://integration.nftfi.com';
@@ -263,7 +267,7 @@ goerliConfig.chainId = 5;
 goerliConfig.website.baseURI = 'https://goerli-integration.nftfi.com';
 goerliConfig.api.baseURI = 'https://goerli-integration-sdk-api.nftfi.com';
 goerliConfig.websocket.baseURI = 'https://goerli-integration-sdk-websocket.nftfi.com';
-goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.goerli.gnosis.io';
+goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction-goerli.safe.global';
 goerliConfig.nft.cryptoPunks.address = '0x7066d903DF9695a5a30B50C24582dA7d1269A09f';
 goerliConfig.erc721.interfaceId = '0x80ac58cd';
 goerliConfig.erc721.abi = ['function approve(address to, uint256 tokenId)', 'function transferFrom(address from, address to, uint256 tokenId)', 'function ownerOf(uint256 tokenId) public view returns (address)', 'function setApprovalForAll(address to, bool approved) public returns()', 'function isApprovedForAll(address owner, address operator) view returns (bool)'];
@@ -300,7 +304,6 @@ goerliConfig.loan.fixed.collection.v2_3.name = 'v2-3.loan.fixed.collection';
 goerliConfig.loan.fixed.collection.v2_3.address = '0xdA1FfB0Bf2cE637FF12CA31C841Ced04b6483CfD';
 goerliConfig.loan.fixed.collection.v2_3.abi = mainnetConfig.loan.fixed.collection.v2_3.abi;
 goerliConfig.loan.adminFeeInBasisPoints = '500';
-goerliConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.goerli.gnosis.io';
 goerliConfig.signingUtils.v2.address = '0x7e4Dbdb623fBD48b01aF813aC324228575D04834';
 goerliConfig.signingUtils.v2.abi = ['function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, address _loanContract) public view returns (bool)'];
 goerliConfig.signingUtils.v2_3.address = '0x4Fb9Ab3d2Ec9e95b0faf36D67E4DEae9A6549244';
@@ -322,6 +325,7 @@ goerliConfig.immutable.v1_1.address = '0xE78097873C44f45ea06A5A36669a8866f6dC61E
 goerliConfig.immutable.v1_1.abi = goerliConfig.immutable.v1.abi;
 goerliConfig.auth.token.key = 'nftfiSdkToken';
 goerliConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
+goerliConfig.auth.tokenError.key = 'nftfiSdkTokenError';
 var baseConfigs = (_baseConfigs = {}, (0, _defineProperty2["default"])(_baseConfigs, mainnetConfig.chainId, mainnetConfig), (0, _defineProperty2["default"])(_baseConfigs, rinkebyConfig.chainId, rinkebyConfig), (0, _defineProperty2["default"])(_baseConfigs, goerliConfig.chainId, goerliConfig), _baseConfigs);
 var Config = /*#__PURE__*/(0, _createClass2["default"])(function Config() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
