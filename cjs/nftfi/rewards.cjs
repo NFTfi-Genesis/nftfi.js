@@ -8,10 +8,6 @@ exports["default"] = void 0;
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-/**
- * @class
- * Class for working with rewards.
- */
 var Rewards = /*#__PURE__*/(0, _createClass2["default"])(function Rewards() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   (0, _classCallCheck2["default"])(this, Rewards);

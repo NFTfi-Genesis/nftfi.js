@@ -57,6 +57,8 @@ import RewardsOg from './nftfi/rewards/og/index.js';
 import RewardsEarn from './nftfi/rewards/earn/index.js';
 import RewardsOgAllocations from './nftfi/rewards/og/allocations/index.js';
 import RewardsEarnAllocations from './nftfi/rewards/earn/allocations/index.js';
+import RewardsEarnAllocationsHelper from './nftfi/rewards/earn/allocations/helper.js';
+import RewardsEarnSeasons from './nftfi/rewards/earn/seasons/index.js';
 import RewardsEarnPoints from './nftfi/rewards/earn/points/index.js';
 import Rewards from './nftfi/rewards.js';
 
@@ -248,9 +250,18 @@ export default {
     const events = new Events({ websocket });
     const allocationsOg = new RewardsOgAllocations({ account, api, result, error, assertion });
     const rewardsOg = new RewardsOg({ allocations: allocationsOg });
-    const allocationsEarn = new RewardsEarnAllocations({ account, api, result, error, assertion });
+    const allocationsEarnHelper = new RewardsEarnAllocationsHelper();
+    const allocationsEarn = new RewardsEarnAllocations({
+      account,
+      helper: allocationsEarnHelper,
+      api,
+      result,
+      error,
+      assertion
+    });
+    const seasonsEarn = new RewardsEarnSeasons({ api, result, error });
     const pointsEarn = new RewardsEarnPoints({ api, result, error });
-    const rewardsEarn = new RewardsEarn({ allocations: allocationsEarn, points: pointsEarn });
+    const rewardsEarn = new RewardsEarn({ allocations: allocationsEarn, points: pointsEarn, seasons: seasonsEarn });
     const rewards = new Rewards({ og: rewardsOg, earn: rewardsEarn });
     const nft = new Nft({
       config,

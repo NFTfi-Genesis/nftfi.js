@@ -1342,15 +1342,6 @@ const validation = await nftfi.offers.validate({
 
 * * *
 
-<a name="Rewards"></a>
-
-### Rewards
-Class for working with rewards.
-
-**Kind**: global class  
-
-* * *
-
 <a name="Utils"></a>
 
 ### Utils

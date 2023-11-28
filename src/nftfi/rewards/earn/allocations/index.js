@@ -4,6 +4,7 @@
  */
 class RewardsEarnAllocations {
   #account;
+  #helper;
   #api;
   #result;
   #error;
@@ -11,6 +12,7 @@ class RewardsEarnAllocations {
 
   constructor(options = {}) {
     this.#account = options?.account;
+    this.#helper = options?.helper;
     this.#api = options?.api;
     this.#result = options?.result;
     this.#error = options?.error;
@@ -22,6 +24,7 @@ class RewardsEarnAllocations {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {object} [options.account.address] - The account address to get the allocations of (optional)
+   * @param {string} [options.season.id] - The season id to get the allocations of (optional)
    *
    * @returns {Object} An object containing information about your Earn allocations.
    *
@@ -29,6 +32,7 @@ class RewardsEarnAllocations {
    * // Get your Earn reward allocation
    * const points = await nftfi.rewards.earn.allocations.get();
    * const points = await nftfi.rewards.earn.allocations.get({ account: { address: walletAddress } });
+   * const points = await nftfi.rewards.earn.allocations.get({ season: { id: seasonId } });
    */
   async get(options) {
     try {
@@ -39,7 +43,8 @@ class RewardsEarnAllocations {
       }
       const accountAddress = options?.account?.address || this.#account.getAddress();
       const response = await this.#api.get({
-        uri: `v0.1/rewards/earn/allocations/${accountAddress}`
+        uri: `v0.1/rewards/earn/allocations/${accountAddress}`,
+        params: this.#helper.getParams(options)
       });
       return this.#result.handle(response);
     } catch (e) {
@@ -50,15 +55,18 @@ class RewardsEarnAllocations {
   /**
    * Gets Earn points for the first 100 accounts sorted by rank.
    *
+   * @param {string} [options.season.id] - The season id to get the allocations of (optional)
    * @returns {Object} An array containing objects about user's Earn allocations.
    *
    * @example
    * const list = await nftfi.rewards.earn.allocations.list();
+   * const list = await nftfi.rewards.earn.allocations.list({ season: { id: seasonId } });
    */
-  async list() {
+  async list(options = {}) {
     try {
       const list = await this.#api.get({
-        uri: 'v0.1/rewards/earn/allocations'
+        uri: 'v0.1/rewards/earn/allocations',
+        params: this.#helper.getParams(options)
       });
 
       return this.#result.handle(list);

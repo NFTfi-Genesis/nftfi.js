@@ -66,7 +66,9 @@ var _index10 = _interopRequireDefault(require("./nftfi/rewards/og/index.cjs"));
 var _index11 = _interopRequireDefault(require("./nftfi/rewards/earn/index.cjs"));
 var _index12 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
 var _index13 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/index.cjs"));
-var _index14 = _interopRequireDefault(require("./nftfi/rewards/earn/points/index.cjs"));
+var _helper4 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/helper.cjs"));
+var _index14 = _interopRequireDefault(require("./nftfi/rewards/earn/seasons/index.cjs"));
+var _index15 = _interopRequireDefault(require("./nftfi/rewards/earn/points/index.cjs"));
 var _rewards = _interopRequireDefault(require("./nftfi/rewards.cjs"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -163,7 +165,9 @@ var _default = {
         events,
         allocationsOg,
         rewardsOg,
+        allocationsEarnHelper,
         allocationsEarn,
+        seasonsEarn,
         pointsEarn,
         rewardsEarn,
         rewards,
@@ -538,21 +542,29 @@ var _default = {
             rewardsOg = new _index10["default"]({
               allocations: allocationsOg
             });
+            allocationsEarnHelper = new _helper4["default"]();
             allocationsEarn = new _index13["default"]({
               account: account,
+              helper: allocationsEarnHelper,
               api: api,
               result: result,
               error: error,
               assertion: assertion
             });
-            pointsEarn = new _index14["default"]({
+            seasonsEarn = new _index14["default"]({
+              api: api,
+              result: result,
+              error: error
+            });
+            pointsEarn = new _index15["default"]({
               api: api,
               result: result,
               error: error
             });
             rewardsEarn = new _index11["default"]({
               allocations: allocationsEarn,
-              points: pointsEarn
+              points: pointsEarn,
+              seasons: seasonsEarn
             });
             rewards = new _rewards["default"]({
               og: rewardsOg,
@@ -592,7 +604,7 @@ var _default = {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 107:
+          case 109:
           case "end":
             return _context.stop();
         }

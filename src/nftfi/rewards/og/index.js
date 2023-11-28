@@ -1,7 +1,3 @@
-/**
- * @class
- * Class for working with OG rewards.
- */
 class RewardsOg {
   allocations;
 

@@ -1,7 +1,3 @@
-/**
- * @class
- * Class for working with rewards.
- */
 class Rewards {
   og;
   earn;

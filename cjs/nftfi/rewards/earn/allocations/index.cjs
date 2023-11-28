@@ -14,6 +14,7 @@ var _classPrivateFieldSet2 = _interopRequireDefault(require("@babel/runtime/help
 function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 var _account = /*#__PURE__*/new WeakMap();
+var _helper = /*#__PURE__*/new WeakMap();
 var _api = /*#__PURE__*/new WeakMap();
 var _result = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
@@ -27,6 +28,10 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     (0, _classCallCheck2["default"])(this, RewardsEarnAllocations);
     _classPrivateFieldInitSpec(this, _account, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _helper, {
       writable: true,
       value: void 0
     });
@@ -47,6 +52,7 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
       value: void 0
     });
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
+    (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
     (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
     (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
@@ -58,6 +64,7 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {object} [options.account.address] - The account address to get the allocations of (optional)
+   * @param {string} [options.season.id] - The season id to get the allocations of (optional)
    *
    * @returns {Object} An object containing information about your Earn allocations.
    *
@@ -65,6 +72,7 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
    * // Get your Earn reward allocation
    * const points = await nftfi.rewards.earn.allocations.get();
    * const points = await nftfi.rewards.earn.allocations.get({ account: { address: walletAddress } });
+   * const points = await nftfi.rewards.earn.allocations.get({ season: { id: seasonId } });
    */
   (0, _createClass2["default"])(RewardsEarnAllocations, [{
     key: "get",
@@ -81,7 +89,8 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
               accountAddress = (options === null || options === void 0 ? void 0 : (_options$account2 = options.account) === null || _options$account2 === void 0 ? void 0 : _options$account2.address) || (0, _classPrivateFieldGet2["default"])(this, _account).getAddress();
               _context.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: "v0.1/rewards/earn/allocations/".concat(accountAddress)
+                uri: "v0.1/rewards/earn/allocations/".concat(accountAddress),
+                params: (0, _classPrivateFieldGet2["default"])(this, _helper).getParams(options)
               });
             case 5:
               response = _context.sent;
@@ -104,36 +113,42 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
     /**
      * Gets Earn points for the first 100 accounts sorted by rank.
      *
+     * @param {string} [options.season.id] - The season id to get the allocations of (optional)
      * @returns {Object} An array containing objects about user's Earn allocations.
      *
      * @example
      * const list = await nftfi.rewards.earn.allocations.list();
+     * const list = await nftfi.rewards.earn.allocations.list({ season: { id: seasonId } });
      */
   }, {
     key: "list",
     value: function () {
       var _list = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-        var _list2;
+        var options,
+          _list2,
+          _args2 = arguments;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
+              options = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : {};
+              _context2.prev = 1;
+              _context2.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'v0.1/rewards/earn/allocations'
+                uri: 'v0.1/rewards/earn/allocations',
+                params: (0, _classPrivateFieldGet2["default"])(this, _helper).getParams(options)
               });
-            case 3:
+            case 4:
               _list2 = _context2.sent;
               return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(_list2));
-            case 7:
-              _context2.prev = 7;
-              _context2.t0 = _context2["catch"](0);
+            case 8:
+              _context2.prev = 8;
+              _context2.t0 = _context2["catch"](1);
               return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context2.t0));
-            case 10:
+            case 11:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[0, 7]]);
+        }, _callee2, this, [[1, 8]]);
       }));
       function list() {
         return _list.apply(this, arguments);
