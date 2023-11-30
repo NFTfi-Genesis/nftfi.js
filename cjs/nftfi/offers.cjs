@@ -307,7 +307,7 @@ var Offers = /*#__PURE__*/function () {
     key: "create",
     value: function () {
       var _create = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
-        var errors, response, contractName, payload, _payload, _payload2, _payload3;
+        var errors, response, contractName, payload, _payload;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
@@ -316,11 +316,11 @@ var Offers = /*#__PURE__*/function () {
               options = _objectSpread(_objectSpread({}, options.listing), options); // copying options.listing fields onto the root, for backwards compatibility.
               contractName = options.nftfi.contract.name;
               _context3.t0 = contractName;
-              _context3.next = _context3.t0 === 'v2-1.loan.fixed' ? 7 : _context3.t0 === 'v2-3.loan.fixed' ? 14 : _context3.t0 === 'v2.loan.fixed.collection' ? 21 : _context3.t0 === 'v2-3.loan.fixed.collection' ? 28 : 35;
+              _context3.next = _context3.t0 === 'v2-3.loan.fixed' ? 7 : _context3.t0 === 'v2-3.loan.fixed.collection' ? 14 : 21;
               break;
             case 7:
               _context3.next = 9;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2Offer(options);
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3Offer(options);
             case 9:
               payload = _context3.sent;
               _context3.next = 12;
@@ -330,10 +330,10 @@ var Offers = /*#__PURE__*/function () {
               });
             case 12:
               response = _context3.sent;
-              return _context3.abrupt("break", 38);
+              return _context3.abrupt("break", 24);
             case 14:
               _context3.next = 16;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3Offer(options);
+              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3FixedCollectionOffer(options);
             case 16:
               _payload = _context3.sent;
               _context3.next = 19;
@@ -343,52 +343,26 @@ var Offers = /*#__PURE__*/function () {
               });
             case 19:
               response = _context3.sent;
-              return _context3.abrupt("break", 38);
+              return _context3.abrupt("break", 24);
             case 21:
-              _context3.next = 23;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2FixedCollectionOffer(options);
-            case 23:
-              _payload2 = _context3.sent;
-              _context3.next = 26;
-              return (0, _classPrivateFieldGet2["default"])(this, _api).post({
-                uri: 'v0.1/offers',
-                payload: _payload2
-              });
-            case 26:
-              response = _context3.sent;
-              return _context3.abrupt("break", 38);
-            case 28:
-              _context3.next = 30;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructV2_3FixedCollectionOffer(options);
-            case 30:
-              _payload3 = _context3.sent;
-              _context3.next = 33;
-              return (0, _classPrivateFieldGet2["default"])(this, _api).post({
-                uri: 'v0.1/offers',
-                payload: _payload3
-              });
-            case 33:
-              response = _context3.sent;
-              return _context3.abrupt("break", 38);
-            case 35:
               errors = {
                 'nftfi.contract.name': ["".concat(contractName, " not supported")]
               };
               response = {
                 errors: errors
               };
-              return _context3.abrupt("break", 38);
-            case 38:
+              return _context3.abrupt("break", 24);
+            case 24:
               return _context3.abrupt("return", response);
-            case 41:
-              _context3.prev = 41;
+            case 27:
+              _context3.prev = 27;
               _context3.t1 = _context3["catch"](0);
               return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t1));
-            case 44:
+            case 30:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[0, 41]]);
+        }, _callee3, this, [[0, 27]]);
       }));
       function create(_x2) {
         return _create.apply(this, arguments);

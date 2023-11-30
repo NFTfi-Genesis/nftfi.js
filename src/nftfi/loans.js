@@ -111,18 +111,8 @@ class Loans {
       let response;
       const contractName = options.offer.nftfi.contract.name;
       switch (contractName) {
-        case 'v2-1.loan.fixed': {
-          let success = await this.#fixed.v2_1.acceptOffer(options);
-          response = { success };
-          break;
-        }
         case 'v2-3.loan.fixed': {
           let success = await this.#fixed.v2_3.acceptOffer(options);
-          response = { success };
-          break;
-        }
-        case 'v2.loan.fixed.collection': {
-          let success = await this.#fixed.collection.v2.acceptOffer(options);
           response = { success };
           break;
         }

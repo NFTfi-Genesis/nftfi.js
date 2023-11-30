@@ -182,24 +182,8 @@ class Offers {
       let response;
       const contractName = options.nftfi.contract.name;
       switch (contractName) {
-        case 'v2-1.loan.fixed': {
-          let payload = await this.#offersHelper.constructV2Offer(options);
-          response = await this.#api.post({
-            uri: 'v0.1/offers',
-            payload
-          });
-          break;
-        }
         case 'v2-3.loan.fixed': {
           let payload = await this.#offersHelper.constructV2_3Offer(options);
-          response = await this.#api.post({
-            uri: 'v0.1/offers',
-            payload
-          });
-          break;
-        }
-        case 'v2.loan.fixed.collection': {
-          let payload = await this.#offersHelper.constructV2FixedCollectionOffer(options);
           response = await this.#api.post({
             uri: 'v0.1/offers',
             payload

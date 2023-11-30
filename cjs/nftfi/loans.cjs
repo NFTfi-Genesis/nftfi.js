@@ -172,7 +172,7 @@ var Loans = /*#__PURE__*/function () {
     key: "begin",
     value: function () {
       var _begin = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
-        var errors, response, contractName, success, _success, _success2, _success3;
+        var errors, response, contractName, success, _success;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -180,63 +180,45 @@ var Loans = /*#__PURE__*/function () {
               (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               contractName = options.offer.nftfi.contract.name;
               _context2.t0 = contractName;
-              _context2.next = _context2.t0 === 'v2-1.loan.fixed' ? 6 : _context2.t0 === 'v2-3.loan.fixed' ? 11 : _context2.t0 === 'v2.loan.fixed.collection' ? 16 : _context2.t0 === 'v2-3.loan.fixed.collection' ? 21 : 26;
+              _context2.next = _context2.t0 === 'v2-3.loan.fixed' ? 6 : _context2.t0 === 'v2-3.loan.fixed.collection' ? 11 : 16;
               break;
             case 6:
               _context2.next = 8;
-              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.acceptOffer(options);
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.acceptOffer(options);
             case 8:
               success = _context2.sent;
               response = {
                 success: success
               };
-              return _context2.abrupt("break", 29);
+              return _context2.abrupt("break", 19);
             case 11:
               _context2.next = 13;
-              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.acceptOffer(options);
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.acceptOffer(options);
             case 13:
               _success = _context2.sent;
               response = {
                 success: _success
               };
-              return _context2.abrupt("break", 29);
+              return _context2.abrupt("break", 19);
             case 16:
-              _context2.next = 18;
-              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.acceptOffer(options);
-            case 18:
-              _success2 = _context2.sent;
-              response = {
-                success: _success2
-              };
-              return _context2.abrupt("break", 29);
-            case 21:
-              _context2.next = 23;
-              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.acceptOffer(options);
-            case 23:
-              _success3 = _context2.sent;
-              response = {
-                success: _success3
-              };
-              return _context2.abrupt("break", 29);
-            case 26:
               errors = {
                 'nftfi.contract.name': ["".concat(contractName, " not supported")]
               };
               response = {
                 errors: errors
               };
-              return _context2.abrupt("break", 29);
-            case 29:
+              return _context2.abrupt("break", 19);
+            case 19:
               return _context2.abrupt("return", response);
-            case 32:
-              _context2.prev = 32;
+            case 22:
+              _context2.prev = 22;
               _context2.t1 = _context2["catch"](0);
               return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context2.t1));
-            case 35:
+            case 25:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[0, 32]]);
+        }, _callee2, this, [[0, 22]]);
       }));
       function begin(_x2) {
         return _begin.apply(this, arguments);

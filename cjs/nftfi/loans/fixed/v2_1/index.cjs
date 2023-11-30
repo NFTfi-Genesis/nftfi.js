@@ -46,65 +46,45 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
       return (0, _classPrivateFieldGet2["default"])(this, _contract);
     }
   }, {
-    key: "acceptOffer",
+    key: "liquidateOverdueLoan",
     value: function () {
-      var _acceptOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var success, offer, signature, borrowerSettings, result;
+      var _liquidateOverdueLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
+        var success, result;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              offer = {
-                loanERC20Denomination: options.offer.terms.loan.currency,
-                loanPrincipalAmount: String(options.offer.terms.loan.principal),
-                maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
-                nftCollateralContract: options.offer.nft.address,
-                nftCollateralId: options.offer.nft.id,
-                referrer: '0x0000000000000000000000000000000000000000',
-                loanDuration: options.offer.terms.loan.duration,
-                loanAdminFeeInBasisPoints: options.offer.nftfi.fee.bps
-              };
-              signature = {
-                signer: options.offer.lender.address,
-                nonce: options.offer.lender.nonce,
-                expiry: options.offer.terms.loan.expiry,
-                signature: options.offer.signature
-              };
-              borrowerSettings = {
-                revenueSharePartner: '0x0000000000000000000000000000000000000000',
-                referralFeeInBasisPoints: 0
-              };
-              _context.next = 6;
+              _context.next = 3;
               return this._contract.call({
-                "function": 'acceptOffer',
-                args: [offer, signature, borrowerSettings]
+                "function": 'liquidateOverdueLoan',
+                args: [options.loan.id]
               });
-            case 6:
+            case 3:
               result = _context.sent;
               success = (result === null || result === void 0 ? void 0 : result.status) === 1;
-              _context.next = 13;
+              _context.next = 10;
               break;
-            case 10:
-              _context.prev = 10;
+            case 7:
+              _context.prev = 7;
               _context.t0 = _context["catch"](0);
               success = false;
-            case 13:
+            case 10:
               return _context.abrupt("return", success);
-            case 14:
+            case 11:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[0, 10]]);
+        }, _callee, this, [[0, 7]]);
       }));
-      function acceptOffer(_x) {
-        return _acceptOffer.apply(this, arguments);
+      function liquidateOverdueLoan(_x) {
+        return _liquidateOverdueLoan.apply(this, arguments);
       }
-      return acceptOffer;
+      return liquidateOverdueLoan;
     }()
   }, {
-    key: "liquidateOverdueLoan",
+    key: "payBackLoan",
     value: function () {
-      var _liquidateOverdueLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
+      var _payBackLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
         var success, result;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
@@ -112,7 +92,7 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
               _context2.prev = 0;
               _context2.next = 3;
               return this._contract.call({
-                "function": 'liquidateOverdueLoan',
+                "function": 'payBackLoan',
                 args: [options.loan.id]
               });
             case 3:
@@ -132,15 +112,15 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
           }
         }, _callee2, this, [[0, 7]]);
       }));
-      function liquidateOverdueLoan(_x2) {
-        return _liquidateOverdueLoan.apply(this, arguments);
+      function payBackLoan(_x2) {
+        return _payBackLoan.apply(this, arguments);
       }
-      return liquidateOverdueLoan;
+      return payBackLoan;
     }()
   }, {
-    key: "payBackLoan",
+    key: "cancelLoanCommitmentBeforeLoanHasBegun",
     value: function () {
-      var _payBackLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
+      var _cancelLoanCommitmentBeforeLoanHasBegun = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
         var success, result;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
@@ -148,8 +128,8 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
               _context3.prev = 0;
               _context3.next = 3;
               return this._contract.call({
-                "function": 'payBackLoan',
-                args: [options.loan.id]
+                "function": 'cancelLoanCommitmentBeforeLoanHasBegun',
+                args: [options.offer.nonce]
               });
             case 3:
               result = _context3.sent;
@@ -168,43 +148,7 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
           }
         }, _callee3, this, [[0, 7]]);
       }));
-      function payBackLoan(_x3) {
-        return _payBackLoan.apply(this, arguments);
-      }
-      return payBackLoan;
-    }()
-  }, {
-    key: "cancelLoanCommitmentBeforeLoanHasBegun",
-    value: function () {
-      var _cancelLoanCommitmentBeforeLoanHasBegun = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
-        var success, result;
-        return _regenerator["default"].wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              _context4.next = 3;
-              return this._contract.call({
-                "function": 'cancelLoanCommitmentBeforeLoanHasBegun',
-                args: [options.offer.nonce]
-              });
-            case 3:
-              result = _context4.sent;
-              success = (result === null || result === void 0 ? void 0 : result.status) === 1;
-              _context4.next = 10;
-              break;
-            case 7:
-              _context4.prev = 7;
-              _context4.t0 = _context4["catch"](0);
-              success = false;
-            case 10:
-              return _context4.abrupt("return", success);
-            case 11:
-            case "end":
-              return _context4.stop();
-          }
-        }, _callee4, this, [[0, 7]]);
-      }));
-      function cancelLoanCommitmentBeforeLoanHasBegun(_x4) {
+      function cancelLoanCommitmentBeforeLoanHasBegun(_x3) {
         return _cancelLoanCommitmentBeforeLoanHasBegun.apply(this, arguments);
       }
       return cancelLoanCommitmentBeforeLoanHasBegun;
