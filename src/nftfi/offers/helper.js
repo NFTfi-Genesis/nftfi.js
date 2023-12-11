@@ -43,7 +43,6 @@ class OffersHelper {
       );
       params = { lenderAddress: this.#account.getAddress() };
     }
-    // you can eq or ne but not both, should we allow both ? not needed now let's not overthink ?
     if (options?.filters?.lender?.address?.eq) {
       return { ...params, lenderAddress: options?.filters?.lender?.address?.eq };
     }
@@ -54,8 +53,6 @@ class OffersHelper {
     return params;
   }
 
-  // adding filtering by borrower address so the first condition in addLender holds and in dapp we'll probably refactor the
-  // "offers received as a borrower" page and that'll be useful
   _addBorrower(options, params) {
     if (options?.filters?.borrower?.address?.eq) {
       return { ...params, borrowerAddress: options.filters.borrower.address.eq };
@@ -100,6 +97,13 @@ class OffersHelper {
     return params;
   }
 
+  _addCountGroup(options, params) {
+    if (options?.group) {
+      return { ...params, group: options.group };
+    }
+    return params;
+  }
+
   getParams(options) {
     let params = {};
     params = this._addCollectionAddress(options, params);
@@ -109,6 +113,7 @@ class OffersHelper {
     params = this._addContract(options, params);
     params = this._addFilters(options, params);
     params = this._addPagination(options, params);
+    params = this._addCountGroup(options, params);
 
     return params;
   }

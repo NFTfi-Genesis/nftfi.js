@@ -141,6 +141,47 @@ class Offers {
   }
 
   /**
+   * Counts offers matching specified filters and groups by specified grouping value.
+   *
+   * @param {object} options - Hashmap of config options for this method
+   * @param {string} [options.filters.nft.address] - NFT contract address to filter by
+   * @param {string} [options.filters.nft.id] - NFT id of the asset to filter by (optional)
+   * @param {string} [options.filters.lender.address.eq] - Lender wallet address to filter by
+   * @param {string} [options.group] - Field to group by
+   * @returns {Array<object>} Array of response object
+   *
+   * @example
+   * // Count offers made by lenderAddress for a given NFT grouped by currency
+   * const results = await nftfi.offers.count({
+   *   filters: {
+   *     nft: {
+   *       address: "0x11111111",
+   *       id: "42"
+   *     },
+   *     lender: {
+   *       address: {
+   *         eq: "0x123"
+   *       }
+   *     }
+   *   },
+   *   group: "termsCurrencyAddress"
+   * });
+   */
+  async count(options = {}) {
+    try {
+      const params = this.#offersHelper.getParams(options);
+      const { result, errors } = await this.#api.get({
+        uri: 'v0.1/offers-count',
+        params
+      });
+      if (errors) return this.#error.handle(errors);
+      return this.#result.handle(result);
+    } catch (e) {
+      return this.#error.handle(e);
+    }
+  }
+
+  /**
    * Creates a new offer on a NFT or collection.
    *
    * @param {object} options - Config options for this method
@@ -185,7 +226,7 @@ class Offers {
         case 'v2-3.loan.fixed': {
           let payload = await this.#offersHelper.constructV2_3Offer(options);
           response = await this.#api.post({
-            uri: 'v0.1/offers',
+            uri: 'v0.2/offers',
             payload
           });
           break;
@@ -193,7 +234,7 @@ class Offers {
         case 'v2-3.loan.fixed.collection': {
           let payload = await this.#offersHelper.constructV2_3FixedCollectionOffer(options);
           response = await this.#api.post({
-            uri: 'v0.1/offers',
+            uri: 'v0.2/offers',
             payload
           });
           break;

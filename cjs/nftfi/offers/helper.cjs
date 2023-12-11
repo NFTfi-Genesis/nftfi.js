@@ -97,7 +97,6 @@ var OffersHelper = /*#__PURE__*/function () {
           lenderAddress: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress()
         };
       }
-      // you can eq or ne but not both, should we allow both ? not needed now let's not overthink ?
       if (options !== null && options !== void 0 && (_options$filters7 = options.filters) !== null && _options$filters7 !== void 0 && (_options$filters7$len = _options$filters7.lender) !== null && _options$filters7$len !== void 0 && (_options$filters7$len2 = _options$filters7$len.address) !== null && _options$filters7$len2 !== void 0 && _options$filters7$len2.eq) {
         var _options$filters8, _options$filters8$len, _options$filters8$len2;
         return _objectSpread(_objectSpread({}, params), {}, {
@@ -112,9 +111,6 @@ var OffersHelper = /*#__PURE__*/function () {
       }
       return params;
     }
-
-    // adding filtering by borrower address so the first condition in addLender holds and in dapp we'll probably refactor the
-    // "offers received as a borrower" page and that'll be useful
   }, {
     key: "_addBorrower",
     value: function _addBorrower(options, params) {
@@ -193,6 +189,16 @@ var OffersHelper = /*#__PURE__*/function () {
       return params;
     }
   }, {
+    key: "_addCountGroup",
+    value: function _addCountGroup(options, params) {
+      if (options !== null && options !== void 0 && options.group) {
+        return _objectSpread(_objectSpread({}, params), {}, {
+          group: options.group
+        });
+      }
+      return params;
+    }
+  }, {
     key: "getParams",
     value: function getParams(options) {
       var params = {};
@@ -203,6 +209,7 @@ var OffersHelper = /*#__PURE__*/function () {
       params = this._addContract(options, params);
       params = this._addFilters(options, params);
       params = this._addPagination(options, params);
+      params = this._addCountGroup(options, params);
       return params;
     }
   }, {
