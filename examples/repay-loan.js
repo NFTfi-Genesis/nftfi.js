@@ -14,12 +14,16 @@ async function run() {
     }
   });
   // Get active loans where you are the borrower counterparty
-  const loans = await borrower.loans.get({
+  const response = await borrower.loans.get({
     filters: {
-      counterparty: 'borrower',
-      status: 'escrow'
+      borrower: {
+        address: borrower.account.getAddress()
+      },
+      status: 'active'
     }
   });
+  const loans = response.data.results;
+
   console.log(`[INFO] found ${loans.length} active loan(s) for account ${borrower.account.getAddress()}.`);
   // Proceed if we find 1 or more loans
   if (loans.length > 0) {

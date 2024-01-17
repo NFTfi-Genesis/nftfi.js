@@ -70,6 +70,7 @@ var _helper4 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/
 var _index14 = _interopRequireDefault(require("./nftfi/rewards/earn/seasons/index.cjs"));
 var _index15 = _interopRequireDefault(require("./nftfi/rewards/earn/points/index.cjs"));
 var _rewards = _interopRequireDefault(require("./nftfi/rewards.cjs"));
+var _helper5 = _interopRequireDefault(require("./nftfi/loans/helper.cjs"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var _default = {
@@ -149,6 +150,7 @@ var _default = {
         loanFixedCollectionV2_3,
         loanFixedCollection,
         loanFixed,
+        loansHelper,
         loans,
         offersSignatures,
         erc20,
@@ -430,12 +432,14 @@ var _default = {
               v2_3: loanFixedV2_3,
               collection: loanFixedCollection
             });
+            loansHelper = new _helper5["default"]();
             loans = new _loans["default"]({
               api: api,
               account: account,
               fixed: loanFixed,
               config: config,
-              helper: helper,
+              helper: loansHelper,
+              result: result,
               error: error,
               assertion: assertion
             });
@@ -604,7 +608,7 @@ var _default = {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 109:
+          case 110:
           case "end":
             return _context.stop();
         }

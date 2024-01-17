@@ -12,12 +12,16 @@ async function run() {
     }
   });
   // Get defaulted loans
-  const loans = await nftfi.loans.get({
+  const response = await nftfi.loans.get({
     filters: {
-      counterparty: 'lender',
+      lender: {
+        address: nftfi.account.getAddress()
+      },
       status: 'defaulted'
     }
   });
+  const loans = response.data.results;
+
   console.log(`[INFO] found ${loans.length} defaulted loan(s) for account ${nftfi.account.getAddress()}.`);
   // Proceed if we find loans
   if (loans.length > 0) {

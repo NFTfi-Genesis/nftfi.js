@@ -19,6 +19,7 @@ var _fixed = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
 var _helper = /*#__PURE__*/new WeakMap();
 var _assertion = /*#__PURE__*/new WeakMap();
+var _result = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
 /**
  * @class
@@ -52,10 +53,15 @@ var Loans = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _result, {
+      writable: true,
+      value: void 0
+    });
     _classPrivateFieldInitSpec(this, _error, {
       writable: true,
       value: void 0
     });
+    (0, _classPrivateFieldSet2["default"])(this, _result, options === null || options === void 0 ? void 0 : options.result);
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
@@ -66,57 +72,97 @@ var Loans = /*#__PURE__*/function () {
   }
 
   /**
-   * Gets loans in which your account is a participant.
+   * Gets loans by specific filters.
    *
    * @param {object} options - Hashmap of config options for this method
-   * @param {string} options.filters.counterparty - Loans where the counterparty is: `lender` or `borrower`
-   * @param {string} options.filters.status - Loan status: `escrow`, `defaulted`, `repaid` or `liquidated`
+   * @param {object} options.filters - Hashmap of filter options for this method
+   * @param {string} options.filters.status - Loan status: `active`, `defaulted`, `repaid` or `liquidated`
+   * @param {string} [options.filters.borrower.address] - Address of the borrower
+   * @param {string} [options.filters.lender.address] - Address of the lender
+   * @param {string} [options.filters.nft.addresses] - Array of NFT addresses being used as collateral
+   * @param {object} [options.sort] - Hashmap of config sorting options for this method
+   * @param {string} [options.sort.by] - Field to sort by `repayment`, `interest`, `apr`, `duration`, `dueDate`, `nftName`
+   * @param {string} [options.sort.direction] - Sort direction: `asc` or `desc`
+   * @param {object} [options.pagination] - Hashmap of pagination options for this method
+   * @param {number} [options.pagination.page] - Page number
+   * @param {number} [options.pagination.limit] - Number of results per page
    * @returns {Array<object>} Array of listing objects
    *
    * @example
-   * // Get loans in `escrow` where your account is the `lender`
-   * const loans = await nftfi.loans.get({
+   * // Get `active` loans where your account is the `lender`
+   * const { data: { results } } = await nftfi.loans.get({
    *   filters: {
-   *     counterparty: 'lender',
-   *     status: 'escrow'
+   *     lender: {
+   *       address: nftfi.account.getAddress()
+   *     },
+   *     status: 'active'
    *   }
+   * });
+   *
+   * @example
+   * // Get `defaulted` loans that your account is either `lender` or `borrower`
+   * const { data: { results } } = await nftfi.loans.get({
+   *   filters: {
+   *     lender: {
+   *       address: nftfi.account.getAddress()
+   *     },
+   *     borrower: {
+   *       address: nftfi.account.getAddress()
+   *     },
+   *     status: 'defaulted'
+   *   },
+   *   pagination: {
+   *    page: 1,
+   *    limit: 10
+   *   }
+   * });
+   *
+   * @example
+   * // Get `repaid` loans that used one of the specified `nft addresses`
+   * const { data: { results } } = await nftfi.loans.get({
+   *   filters: {
+   *     nft: {
+   *       addresses: ['0x0', '0x1']
+   *     },
+   *     status: 'repaid'
+   *   },
+   *  sort: {
+   *    by: 'repayment',
+   *    direction: 'desc'
+   *  },
    * });
    */
   (0, _createClass2["default"])(Loans, [{
     key: "get",
     value: function () {
-      var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var response, loans;
+      var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+        var options,
+          response,
+          _args = arguments;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasAddress();
+              options = _args.length > 0 && _args[0] !== undefined ? _args[0] : {};
+              _context.prev = 1;
               _context.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'v0.1/loans',
-                params: {
-                  accountAddress: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
-                  counterparty: options.filters.counterparty,
-                  status: options.filters.status
-                }
+                uri: 'v0.2/loans',
+                params: (0, _classPrivateFieldGet2["default"])(this, _helper).getParams(options)
               });
             case 4:
               response = _context.sent;
-              loans = response['results'];
-              loans = loans.map((0, _classPrivateFieldGet2["default"])(this, _helper).addCurrencyUnit);
-              return _context.abrupt("return", loans);
-            case 10:
-              _context.prev = 10;
-              _context.t0 = _context["catch"](0);
+              return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(response));
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](1);
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context.t0));
-            case 13:
+            case 11:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[0, 10]]);
+        }, _callee, this, [[1, 8]]);
       }));
-      function get(_x) {
+      function get() {
         return _get.apply(this, arguments);
       }
       return get;
@@ -220,7 +266,7 @@ var Loans = /*#__PURE__*/function () {
           }
         }, _callee2, this, [[0, 22]]);
       }));
-      function begin(_x2) {
+      function begin(_x) {
         return _begin.apply(this, arguments);
       }
       return begin;
@@ -344,7 +390,7 @@ var Loans = /*#__PURE__*/function () {
           }
         }, _callee3, this, [[0, 33]]);
       }));
-      function liquidate(_x3) {
+      function liquidate(_x2) {
         return _liquidate.apply(this, arguments);
       }
       return liquidate;
@@ -467,7 +513,7 @@ var Loans = /*#__PURE__*/function () {
           }
         }, _callee4, this, [[0, 33]]);
       }));
-      function repay(_x4) {
+      function repay(_x3) {
         return _repay.apply(this, arguments);
       }
       return repay;
@@ -581,7 +627,7 @@ var Loans = /*#__PURE__*/function () {
           }
         }, _callee5, this, [[0, 33]]);
       }));
-      function revokeOffer(_x5) {
+      function revokeOffer(_x4) {
         return _revokeOffer.apply(this, arguments);
       }
       return revokeOffer;

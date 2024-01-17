@@ -15,12 +15,15 @@ async function run() {
     }
   });
 
-  const [loan] = await nftfi.loans.get({
+  const response = await nftfi.loans.get({
     filters: {
-      counterparty: 'lender',
-      status: 'escrow'
+      lender: {
+        address: nftfi.account.getAddress()
+      },
+      status: 'active'
     }
   });
+  const [loan] = response.data.results;
 
   if (loan) {
     console.log(`[INFO] found loan id = "${loan.id}", contract name = "${loan.nftfi.contract.name}"`);

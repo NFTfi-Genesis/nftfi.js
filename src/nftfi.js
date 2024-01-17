@@ -61,6 +61,7 @@ import RewardsEarnAllocationsHelper from './nftfi/rewards/earn/allocations/helpe
 import RewardsEarnSeasons from './nftfi/rewards/earn/seasons/index.js';
 import RewardsEarnPoints from './nftfi/rewards/earn/points/index.js';
 import Rewards from './nftfi/rewards.js';
+import LoansHelper from './nftfi/loans/helper.js';
 
 export default {
   init: async function (options = {}) {
@@ -222,7 +223,8 @@ export default {
       v2_3: loanFixedV2_3,
       collection: loanFixedCollection
     });
-    const loans = new Loans({ api, account, fixed: loanFixed, config, helper, error, assertion });
+    const loansHelper = new LoansHelper();
+    const loans = new Loans({ api, account, fixed: loanFixed, config, helper: loansHelper, result, error, assertion });
     const offersSignatures = new OffersSignatures({ account, ethers, config });
     const erc20 = new Erc20({ config, utils, account, contractFactory, BN, error, assertion });
     const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account, assertion });

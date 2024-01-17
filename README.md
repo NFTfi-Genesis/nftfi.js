@@ -872,7 +872,7 @@ Class for working with loans.
 <a name="Loans+get"></a>
 
 #### `loans.get(options)` ⇒ <code>Array.&lt;object&gt;</code>
-Gets loans in which your account is a participant.
+Gets loans by specific filters.
 
 **Kind**: instance method of [<code>Loans</code>](#Loans)  
 **Returns**: <code>Array.&lt;object&gt;</code> - Array of listing objects  
@@ -880,17 +880,63 @@ Gets loans in which your account is a participant.
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
-| options.filters.counterparty | <code>string</code> | Loans where the counterparty is: `lender` or `borrower` |
-| options.filters.status | <code>string</code> | Loan status: `escrow`, `defaulted`, `repaid` or `liquidated` |
+| options.filters | <code>object</code> | Hashmap of filter options for this method |
+| options.filters.status | <code>string</code> | Loan status: `active`, `defaulted`, `repaid` or `liquidated` |
+| [options.filters.borrower.address] | <code>string</code> | Address of the borrower |
+| [options.filters.lender.address] | <code>string</code> | Address of the lender |
+| [options.filters.nft.addresses] | <code>string</code> | Array of NFT addresses being used as collateral |
+| [options.sort] | <code>object</code> | Hashmap of config sorting options for this method |
+| [options.sort.by] | <code>string</code> | Field to sort by `repayment`, `interest`, `apr`, `duration`, `dueDate`, `nftName` |
+| [options.sort.direction] | <code>string</code> | Sort direction: `asc` or `desc` |
+| [options.pagination] | <code>object</code> | Hashmap of pagination options for this method |
+| [options.pagination.page] | <code>number</code> | Page number |
+| [options.pagination.limit] | <code>number</code> | Number of results per page |
 
 **Example**  
 ```js
-// Get loans in `escrow` where your account is the `lender`
-const loans = await nftfi.loans.get({
+// Get `active` loans where your account is the `lender`
+const { data: { results } } = await nftfi.loans.get({
   filters: {
-    counterparty: 'lender',
-    status: 'escrow'
+    lender: {
+      address: nftfi.account.getAddress()
+    },
+    status: 'active'
   }
+});
+```
+**Example**  
+```js
+// Get `defaulted` loans that your account is either `lender` or `borrower`
+const { data: { results } } = await nftfi.loans.get({
+  filters: {
+    lender: {
+      address: nftfi.account.getAddress()
+    },
+    borrower: {
+      address: nftfi.account.getAddress()
+    },
+    status: 'defaulted'
+  },
+  pagination: {
+   page: 1,
+   limit: 10
+  }
+});
+```
+**Example**  
+```js
+// Get `repaid` loans that used one of the specified `nft addresses`
+const { data: { results } } = await nftfi.loans.get({
+  filters: {
+    nft: {
+      addresses: ['0x0', '0x1']
+    },
+    status: 'repaid'
+  },
+ sort: {
+   by: 'repayment',
+   direction: 'desc'
+ },
 });
 ```
 
@@ -1076,6 +1122,7 @@ Class for working with offers.
 
 * [Offers](#Offers)
     * [`.get([options])`](#Offers+get) ⇒ <code>Array.&lt;object&gt;</code>
+    * [`.count(options)`](#Offers+count) ⇒ <code>Array.&lt;object&gt;</code>
     * [`.create(options)`](#Offers+create) ⇒ <code>object</code>
     * [`.delete(options)`](#Offers+delete) ⇒ <code>object</code>
     * [`.revoke(options)`](#Offers+revoke) ⇒ <code>object</code>
@@ -1177,6 +1224,43 @@ const offers = await nftfi.offers.get({
   validation: {
     check: false
   }
+});
+```
+
+* * *
+
+<a name="Offers+count"></a>
+
+#### `offers.count(options)` ⇒ <code>Array.&lt;object&gt;</code>
+Counts offers matching specified filters and groups by specified grouping value.
+
+**Kind**: instance method of [<code>Offers</code>](#Offers)  
+**Returns**: <code>Array.&lt;object&gt;</code> - Array of response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Hashmap of config options for this method |
+| [options.filters.nft.address] | <code>string</code> | NFT contract address to filter by |
+| [options.filters.nft.id] | <code>string</code> | NFT id of the asset to filter by (optional) |
+| [options.filters.lender.address.eq] | <code>string</code> | Lender wallet address to filter by |
+| [options.group] | <code>string</code> | Field to group by |
+
+**Example**  
+```js
+// Count offers made by lenderAddress for a given NFT grouped by currency
+const results = await nftfi.offers.count({
+  filters: {
+    nft: {
+      address: "0x11111111",
+      id: "42"
+    },
+    lender: {
+      address: {
+        eq: "0x123"
+      }
+    }
+  },
+  group: "termsCurrencyAddress"
 });
 ```
 

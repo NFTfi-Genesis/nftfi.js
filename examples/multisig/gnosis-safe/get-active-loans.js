@@ -21,12 +21,16 @@ async function run() {
       }
     }
   });
-  const loans = await nftfi.loans.get({
+  const response = await nftfi.loans.get({
     filters: {
-      counterparty: 'lender',
-      status: 'escrow'
+      lender: {
+        address: nftfi.account.getAddress()
+      },
+      status: 'active'
     }
   });
+  const loans = response.data.results;
+
   console.log(`[INFO] found ${loans.length} active loan(s) for account ${nftfi.account.getAddress()}.`);
   if (loans.length > 0) {
     for (var i = 0; i < loans.length; i++) {

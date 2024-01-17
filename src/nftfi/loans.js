@@ -9,9 +9,11 @@ class Loans {
   #config;
   #helper;
   #assertion;
+  #result;
   #error;
 
   constructor(options = {}) {
+    this.#result = options?.result;
     this.#api = options?.api;
     this.#config = options?.config;
     this.#account = options?.account;
@@ -22,36 +24,74 @@ class Loans {
   }
 
   /**
-   * Gets loans in which your account is a participant.
+   * Gets loans by specific filters.
    *
    * @param {object} options - Hashmap of config options for this method
-   * @param {string} options.filters.counterparty - Loans where the counterparty is: `lender` or `borrower`
-   * @param {string} options.filters.status - Loan status: `escrow`, `defaulted`, `repaid` or `liquidated`
+   * @param {object} options.filters - Hashmap of filter options for this method
+   * @param {string} options.filters.status - Loan status: `active`, `defaulted`, `repaid` or `liquidated`
+   * @param {string} [options.filters.borrower.address] - Address of the borrower
+   * @param {string} [options.filters.lender.address] - Address of the lender
+   * @param {string} [options.filters.nft.addresses] - Array of NFT addresses being used as collateral
+   * @param {object} [options.sort] - Hashmap of config sorting options for this method
+   * @param {string} [options.sort.by] - Field to sort by `repayment`, `interest`, `apr`, `duration`, `dueDate`, `nftName`
+   * @param {string} [options.sort.direction] - Sort direction: `asc` or `desc`
+   * @param {object} [options.pagination] - Hashmap of pagination options for this method
+   * @param {number} [options.pagination.page] - Page number
+   * @param {number} [options.pagination.limit] - Number of results per page
    * @returns {Array<object>} Array of listing objects
    *
    * @example
-   * // Get loans in `escrow` where your account is the `lender`
-   * const loans = await nftfi.loans.get({
+   * // Get `active` loans where your account is the `lender`
+   * const { data: { results } } = await nftfi.loans.get({
    *   filters: {
-   *     counterparty: 'lender',
-   *     status: 'escrow'
+   *     lender: {
+   *       address: nftfi.account.getAddress()
+   *     },
+   *     status: 'active'
    *   }
    * });
+   *
+   * @example
+   * // Get `defaulted` loans that your account is either `lender` or `borrower`
+   * const { data: { results } } = await nftfi.loans.get({
+   *   filters: {
+   *     lender: {
+   *       address: nftfi.account.getAddress()
+   *     },
+   *     borrower: {
+   *       address: nftfi.account.getAddress()
+   *     },
+   *     status: 'defaulted'
+   *   },
+   *   pagination: {
+   *    page: 1,
+   *    limit: 10
+   *   }
+   * });
+   *
+   * @example
+   * // Get `repaid` loans that used one of the specified `nft addresses`
+   * const { data: { results } } = await nftfi.loans.get({
+   *   filters: {
+   *     nft: {
+   *       addresses: ['0x0', '0x1']
+   *     },
+   *     status: 'repaid'
+   *   },
+   *  sort: {
+   *    by: 'repayment',
+   *    direction: 'desc'
+   *  },
+   * });
    */
-  async get(options) {
+  async get(options = {}) {
     try {
-      this.#assertion.hasAddress();
-      let response = await this.#api.get({
-        uri: 'v0.1/loans',
-        params: {
-          accountAddress: this.#account.getAddress(),
-          counterparty: options.filters.counterparty,
-          status: options.filters.status
-        }
+      const response = await this.#api.get({
+        uri: 'v0.2/loans',
+        params: this.#helper.getParams(options)
       });
-      let loans = response['results'];
-      loans = loans.map(this.#helper.addCurrencyUnit);
-      return loans;
+
+      return this.#result.handle(response);
     } catch (e) {
       return this.#error.handle(e);
     }
