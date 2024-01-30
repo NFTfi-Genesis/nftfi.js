@@ -19,6 +19,7 @@ var _fixed = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
 var _helper = /*#__PURE__*/new WeakMap();
 var _assertion = /*#__PURE__*/new WeakMap();
+var _validation = /*#__PURE__*/new WeakMap();
 var _result = /*#__PURE__*/new WeakMap();
 var _error = /*#__PURE__*/new WeakMap();
 /**
@@ -53,6 +54,10 @@ var Loans = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _validation, {
+      writable: true,
+      value: void 0
+    });
     _classPrivateFieldInitSpec(this, _result, {
       writable: true,
       value: void 0
@@ -67,6 +72,7 @@ var Loans = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _fixed, options === null || options === void 0 ? void 0 : options.fixed);
     (0, _classPrivateFieldSet2["default"])(this, _helper, options === null || options === void 0 ? void 0 : options.helper);
+    (0, _classPrivateFieldSet2["default"])(this, _validation, options === null || options === void 0 ? void 0 : options.validation);
     (0, _classPrivateFieldSet2["default"])(this, _assertion, options === null || options === void 0 ? void 0 : options.assertion);
     (0, _classPrivateFieldSet2["default"])(this, _error, options === null || options === void 0 ? void 0 : options.error);
   }
@@ -519,6 +525,142 @@ var Loans = /*#__PURE__*/function () {
       return repay;
     }()
     /**
+     * Refinance a given loan.
+     *
+     * @param {Object} options - The options object containing the loan and offer information.
+     * @param {Object} options.loan - The loan being refinanced.
+     * @param {Object} options.offer - The offer being used to refinance the loan.
+     * @returns {object} Response object
+     *
+     * @example
+     * // Identify an active loan where you are the borrower.
+     * const { data: { results } } = await nftfi.loans.get({
+     *  filters: {
+     *   borrower: { address: nftfi.account.getAddress() },
+     *   status: 'active'
+     * });
+     * const loan = results[0];
+     *
+     * // Fetch offers that match the currency and NFT of the selected loan.
+     * // **The offer's currency must align with the loan's currency.**
+     * const offers = await borrower.offers.get({
+     *   filters: {
+     *     nft: { address: loan.nft.address, id: loan.nft.id },
+     *     loan: { currency: { address: { eq: loan.terms.loan.currency } } },
+     *     nftfi: { contract: { name: nftfi.config.loan.fixed.v2_1.name } }
+     *   }
+     * });
+     * const offer = offers[0];
+     *
+     * // Approve your obligation receipts with the Refinance contract.
+     * const ORApproval = await nftfi.nft.approve({
+     *  token: { address: nftfi.config.loan.fixed.v2_1.obligationReceipt.address },
+     *  nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+     * });
+     *
+     * // Approve ERC20 Tokens (if additional payment is needed).
+     * const erc20Approval = await nftfi.erc20.approveMax({
+     *  token: { address: loan.terms.loan.currency },
+     *  nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+     * });
+     *
+     * // Mint an obligation receipt for this loan.
+     * const ORMint = await nftfi.loans.mintObligationReceipt({ loan });
+     *
+     * // Initiate the refinancing with the selected loan and offer.
+     * const refiResult = await nftfi.loans.refinance({
+     *   loan,
+     *   offer
+     * });
+     */
+  }, {
+    key: "refinance",
+    value: function () {
+      var _refinance = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
+        var error, response, contractName, success, _success2, _success3, _success4;
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
+              _context5.next = 4;
+              return (0, _classPrivateFieldGet2["default"])(this, _validation).refinance.validateCurrencies(options);
+            case 4:
+              contractName = options.offer.nftfi.contract.name;
+              _context5.t0 = contractName;
+              _context5.next = _context5.t0 === 'v2-1.loan.fixed' ? 8 : _context5.t0 === 'v2-3.loan.fixed' ? 13 : _context5.t0 === 'v2.loan.fixed.collection' ? 18 : _context5.t0 === 'v2-3.loan.fixed.collection' ? 23 : 28;
+              break;
+            case 8:
+              _context5.next = 10;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.refinanceLoan({
+                loan: options.loan,
+                offer: options.offer
+              });
+            case 10:
+              success = _context5.sent;
+              response = {
+                success: success
+              };
+              return _context5.abrupt("break", 30);
+            case 13:
+              _context5.next = 15;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.refinanceLoan({
+                loan: options.loan,
+                offer: options.offer
+              });
+            case 15:
+              _success2 = _context5.sent;
+              response = {
+                success: _success2
+              };
+              return _context5.abrupt("break", 30);
+            case 18:
+              _context5.next = 20;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.refinanceCollectionOfferLoan({
+                loan: options.loan,
+                offer: options.offer
+              });
+            case 20:
+              _success3 = _context5.sent;
+              response = {
+                success: _success3
+              };
+              return _context5.abrupt("break", 30);
+            case 23:
+              _context5.next = 25;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.refinanceCollectionOfferLoan({
+                loan: options.loan,
+                offer: options.offer
+              });
+            case 25:
+              _success4 = _context5.sent;
+              response = {
+                success: _success4
+              };
+              return _context5.abrupt("break", 30);
+            case 28:
+              error = {
+                'nftfi.contract.name': ["".concat(contractName, " not supported")]
+              };
+              throw error;
+            case 30:
+              return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(response));
+            case 33:
+              _context5.prev = 33;
+              _context5.t1 = _context5["catch"](0);
+              return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context5.t1));
+            case 36:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, this, [[0, 33]]);
+      }));
+      function refinance(_x4) {
+        return _refinance.apply(this, arguments);
+      }
+      return refinance;
+    }()
+    /**
      * Revokes an active offer made by your account.
      *
      * @param {object} options - Hashmap of config options for this method
@@ -542,95 +684,188 @@ var Loans = /*#__PURE__*/function () {
   }, {
     key: "revokeOffer",
     value: function () {
-      var _revokeOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
+      var _revokeOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(options) {
         var success;
-        return _regenerator["default"].wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
+        return _regenerator["default"].wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.prev = 0;
+              _context6.prev = 0;
               (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               success = false;
-              _context5.t0 = options.nftfi.contract.name;
-              _context5.next = _context5.t0 === 'v1.loan.fixed' ? 6 : _context5.t0 === 'v2.loan.fixed' ? 10 : _context5.t0 === 'v2-1.loan.fixed' ? 14 : _context5.t0 === 'v2-3.loan.fixed' ? 18 : _context5.t0 === 'v2.loan.fixed.collection' ? 22 : _context5.t0 === 'v2-3.loan.fixed.collection' ? 26 : 30;
+              _context6.t0 = options.nftfi.contract.name;
+              _context6.next = _context6.t0 === 'v1.loan.fixed' ? 6 : _context6.t0 === 'v2.loan.fixed' ? 10 : _context6.t0 === 'v2-1.loan.fixed' ? 14 : _context6.t0 === 'v2-3.loan.fixed' ? 18 : _context6.t0 === 'v2.loan.fixed.collection' ? 22 : _context6.t0 === 'v2-3.loan.fixed.collection' ? 26 : 30;
               break;
             case 6:
-              _context5.next = 8;
+              _context6.next = 8;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v1.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
             case 8:
-              success = _context5.sent;
-              return _context5.abrupt("break", 30);
+              success = _context6.sent;
+              return _context6.abrupt("break", 30);
             case 10:
-              _context5.next = 12;
+              _context6.next = 12;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
             case 12:
-              success = _context5.sent;
-              return _context5.abrupt("break", 30);
+              success = _context6.sent;
+              return _context6.abrupt("break", 30);
             case 14:
-              _context5.next = 16;
+              _context6.next = 16;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
             case 16:
-              success = _context5.sent;
-              return _context5.abrupt("break", 30);
+              success = _context6.sent;
+              return _context6.abrupt("break", 30);
             case 18:
-              _context5.next = 20;
+              _context6.next = 20;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
             case 20:
-              success = _context5.sent;
-              return _context5.abrupt("break", 30);
+              success = _context6.sent;
+              return _context6.abrupt("break", 30);
             case 22:
-              _context5.next = 24;
+              _context6.next = 24;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
             case 24:
-              success = _context5.sent;
-              return _context5.abrupt("break", 30);
+              success = _context6.sent;
+              return _context6.abrupt("break", 30);
             case 26:
-              _context5.next = 28;
+              _context6.next = 28;
               return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
                 offer: {
                   nonce: options.offer.nonce
                 }
               });
             case 28:
-              success = _context5.sent;
-              return _context5.abrupt("break", 30);
+              success = _context6.sent;
+              return _context6.abrupt("break", 30);
             case 30:
-              return _context5.abrupt("return", {
+              return _context6.abrupt("return", {
                 success: success
               });
             case 33:
-              _context5.prev = 33;
-              _context5.t1 = _context5["catch"](0);
-              return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context5.t1));
+              _context6.prev = 33;
+              _context6.t1 = _context6["catch"](0);
+              return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context6.t1));
             case 36:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5, this, [[0, 33]]);
+        }, _callee6, this, [[0, 33]]);
       }));
-      function revokeOffer(_x4) {
+      function revokeOffer(_x5) {
         return _revokeOffer.apply(this, arguments);
       }
       return revokeOffer;
+    }()
+    /**
+     * Mints an obligation receipt for a given loan.
+     *
+     * @param {Object} options - The options object containing the loan details and contract information.
+     * @param {number} options.loan.nftfi.id - The ID of the loan.
+     * @param {string} options.loan.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2-3.loan.fixed`, `v2.loan.fixed.collection`, `v2-3.loan.fixed.collection`
+     * @returns {object} Response object
+     *
+     * @example
+     * // Mint an Obligation Receipt for a v2.3 fixed loan
+     * const response = await nftfi.loans.mintObligationReceipt({
+     *   loan: {
+     *     id: '42',
+     *     nftfi: {
+     *       contract: {
+     *         name: 'v2-3.loan.fixed'
+     *       }
+     *     }
+     *   },
+     * });
+     */
+  }, {
+    key: "mintObligationReceipt",
+    value: function () {
+      var _mintObligationReceipt = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(options) {
+        var error, response, contractName, success, _success5, _success6, _success7;
+        return _regenerator["default"].wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.prev = 0;
+              (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
+              contractName = options.loan.nftfi.contract.name;
+              _context7.t0 = contractName;
+              _context7.next = _context7.t0 === 'v2-3.loan.fixed' ? 6 : _context7.t0 === 'v2-1.loan.fixed' ? 11 : _context7.t0 === 'v2-3.loan.fixed.collection' ? 16 : _context7.t0 === 'v2.loan.fixed.collection' ? 21 : 26;
+              break;
+            case 6:
+              _context7.next = 8;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_3.mintObligationReceipt(options);
+            case 8:
+              success = _context7.sent;
+              response = {
+                success: success
+              };
+              return _context7.abrupt("break", 28);
+            case 11:
+              _context7.next = 13;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).v2_1.mintObligationReceipt(options);
+            case 13:
+              _success5 = _context7.sent;
+              response = {
+                success: _success5
+              };
+              return _context7.abrupt("break", 28);
+            case 16:
+              _context7.next = 18;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2_3.mintObligationReceipt(options);
+            case 18:
+              _success6 = _context7.sent;
+              response = {
+                success: _success6
+              };
+              return _context7.abrupt("break", 28);
+            case 21:
+              _context7.next = 23;
+              return (0, _classPrivateFieldGet2["default"])(this, _fixed).collection.v2.mintObligationReceipt(options);
+            case 23:
+              _success7 = _context7.sent;
+              response = {
+                success: _success7
+              };
+              return _context7.abrupt("break", 28);
+            case 26:
+              error = {
+                'nftfi.contract.name': ["".concat(contractName, " not supported")]
+              };
+              throw error;
+            case 28:
+              return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(response));
+            case 31:
+              _context7.prev = 31;
+              _context7.t1 = _context7["catch"](0);
+              return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context7.t1));
+            case 34:
+            case "end":
+              return _context7.stop();
+          }
+        }, _callee7, this, [[0, 31]]);
+      }));
+      function mintObligationReceipt(_x6) {
+        return _mintObligationReceipt.apply(this, arguments);
+      }
+      return mintObligationReceipt;
     }()
   }]);
   return Loans;

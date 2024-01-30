@@ -41,6 +41,17 @@ import Result from './nftfi/result.js';
 import Error from './nftfi/error.js';
 import NFTfi from './nftfi/index.js';
 import Storage from './nftfi/storage.js';
+import RewardsOg from './nftfi/rewards/og/index.js';
+import RewardsEarn from './nftfi/rewards/earn/index.js';
+import RewardsOgAllocations from './nftfi/rewards/og/allocations/index.js';
+import RewardsEarnAllocations from './nftfi/rewards/earn/allocations/index.js';
+import RewardsEarnAllocationsHelper from './nftfi/rewards/earn/allocations/helper.js';
+import RewardsEarnSeasons from './nftfi/rewards/earn/seasons/index.js';
+import RewardsEarnPoints from './nftfi/rewards/earn/points/index.js';
+import Rewards from './nftfi/rewards.js';
+import LoansHelper from './nftfi/loans/helper.js';
+import LoansValidation from './nftfi/loans/validation.js';
+import LoansValidationRefinance from './nftfi/loans/validation/refinance.js';
 
 import { SafeEthersSigner, SafeService } from '@safe-global/safe-ethers-adapters';
 import Safe from '@safe-global/safe-core-sdk';
@@ -52,16 +63,8 @@ import axios from 'axios';
 import merge from 'lodash.merge';
 import set from 'lodash.set';
 import io from 'socket.io-client';
+import * as yup from 'yup';
 import { Mutex } from 'async-mutex';
-import RewardsOg from './nftfi/rewards/og/index.js';
-import RewardsEarn from './nftfi/rewards/earn/index.js';
-import RewardsOgAllocations from './nftfi/rewards/og/allocations/index.js';
-import RewardsEarnAllocations from './nftfi/rewards/earn/allocations/index.js';
-import RewardsEarnAllocationsHelper from './nftfi/rewards/earn/allocations/helper.js';
-import RewardsEarnSeasons from './nftfi/rewards/earn/seasons/index.js';
-import RewardsEarnPoints from './nftfi/rewards/earn/points/index.js';
-import Rewards from './nftfi/rewards.js';
-import LoansHelper from './nftfi/loans/helper.js';
 
 export default {
   init: async function (options = {}) {
@@ -186,7 +189,7 @@ export default {
     }
 
     const mutex = new Mutex();
-    const assertion = new Assertion({ account, provider });
+    const assertion = options?.dependencies?.assertion || new Assertion({ account, provider });
     const websocket = new Websocket({ config, io });
     const http = new Http({ axios });
     const contractFactory =
@@ -211,10 +214,13 @@ export default {
 
     const loanFixedV1 = new LoansFixedV1({ config, contractFactory });
     const loanFixedV2 = new LoansFixedV2({ config, contractFactory });
-    const loanFixedV2_1 = new LoansFixedV2_1({ config, contractFactory });
-    const loanFixedV2_3 = new LoansFixedV2_3({ config, contractFactory });
-    const loanFixedCollectionV2 = new LoansFixedCollectionV2({ config, contractFactory });
-    const loanFixedCollectionV2_3 = new LoansFixedCollectionV2_3({ config, contractFactory });
+    const loanFixedV2_1 = options?.dependencies?.loans?.fixed?.v2_1 || new LoansFixedV2_1({ config, contractFactory });
+    const loanFixedV2_3 = options?.dependencies?.loans?.fixed?.v2_3 || new LoansFixedV2_3({ config, contractFactory });
+    const loanFixedCollectionV2 =
+      options?.dependencies?.loans?.fixed?.collection?.v2 || new LoansFixedCollectionV2({ config, contractFactory });
+    const loanFixedCollectionV2_3 =
+      options?.dependencies?.loans?.fixed?.collection?.v2_3 ||
+      new LoansFixedCollectionV2_3({ config, contractFactory });
     const loanFixedCollection = new LoansFixedCollection({ v2: loanFixedCollectionV2, v2_3: loanFixedCollectionV2_3 });
     const loanFixed = new LoansFixed({
       v1: loanFixedV1,
@@ -224,7 +230,19 @@ export default {
       collection: loanFixedCollection
     });
     const loansHelper = new LoansHelper();
-    const loans = new Loans({ api, account, fixed: loanFixed, config, helper: loansHelper, result, error, assertion });
+    const loansValidationRefinance = new LoansValidationRefinance({ yup });
+    const loansValidation = new LoansValidation({ refinance: loansValidationRefinance });
+    const loans = new Loans({
+      api,
+      account,
+      fixed: loanFixed,
+      config,
+      helper: loansHelper,
+      result,
+      error,
+      assertion,
+      validation: loansValidation
+    });
     const offersSignatures = new OffersSignatures({ account, ethers, config });
     const erc20 = new Erc20({ config, utils, account, contractFactory, BN, error, assertion });
     const offersHelper = new OffersHelper({ BN, Number, utils, offersSignatures, config, account, assertion });

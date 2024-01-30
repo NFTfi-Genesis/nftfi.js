@@ -37,6 +37,8 @@ class Erc721 {
         return this.#config.loan.fixed.collection.v2_3.address;
       case 'v1.bundler.migrate':
         return this.#config.bundler.migrate.v1.address;
+      case 'loan.refinance':
+        return this.#config.loan.refinance.address;
     }
   }
 

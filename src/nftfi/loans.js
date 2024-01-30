@@ -9,6 +9,7 @@ class Loans {
   #config;
   #helper;
   #assertion;
+  #validation;
   #result;
   #error;
 
@@ -19,6 +20,7 @@ class Loans {
     this.#account = options?.account;
     this.#fixed = options?.fixed;
     this.#helper = options?.helper;
+    this.#validation = options?.validation;
     this.#assertion = options?.assertion;
     this.#error = options?.error;
   }
@@ -323,6 +325,106 @@ class Loans {
   }
 
   /**
+   * Refinance a given loan.
+   *
+   * @param {Object} options - The options object containing the loan and offer information.
+   * @param {Object} options.loan - The loan being refinanced.
+   * @param {Object} options.offer - The offer being used to refinance the loan.
+   * @returns {object} Response object
+   *
+   * @example
+   * // Identify an active loan where you are the borrower.
+   * const { data: { results } } = await nftfi.loans.get({
+   *  filters: {
+   *   borrower: { address: nftfi.account.getAddress() },
+   *   status: 'active'
+   * });
+   * const loan = results[0];
+   *
+   * // Fetch offers that match the currency and NFT of the selected loan.
+   * // **The offer's currency must align with the loan's currency.**
+   * const offers = await borrower.offers.get({
+   *   filters: {
+   *     nft: { address: loan.nft.address, id: loan.nft.id },
+   *     loan: { currency: { address: { eq: loan.terms.loan.currency } } },
+   *     nftfi: { contract: { name: nftfi.config.loan.fixed.v2_1.name } }
+   *   }
+   * });
+   * const offer = offers[0];
+   *
+   * // Approve your obligation receipts with the Refinance contract.
+   * const ORApproval = await nftfi.nft.approve({
+   *  token: { address: nftfi.config.loan.fixed.v2_1.obligationReceipt.address },
+   *  nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+   * });
+   *
+   * // Approve ERC20 Tokens (if additional payment is needed).
+   * const erc20Approval = await nftfi.erc20.approveMax({
+   *  token: { address: loan.terms.loan.currency },
+   *  nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+   * });
+   *
+   * // Mint an obligation receipt for this loan.
+   * const ORMint = await nftfi.loans.mintObligationReceipt({ loan });
+   *
+   * // Initiate the refinancing with the selected loan and offer.
+   * const refiResult = await nftfi.loans.refinance({
+   *   loan,
+   *   offer
+   * });
+   */
+  async refinance(options) {
+    try {
+      this.#assertion.hasSigner();
+      await this.#validation.refinance.validateCurrencies(options);
+      let error;
+      let response;
+      const contractName = options.offer.nftfi.contract.name;
+      switch (contractName) {
+        case 'v2-1.loan.fixed': {
+          let success = await this.#fixed.v2_1.refinanceLoan({
+            loan: options.loan,
+            offer: options.offer
+          });
+          response = { success };
+          break;
+        }
+        case 'v2-3.loan.fixed': {
+          let success = await this.#fixed.v2_3.refinanceLoan({
+            loan: options.loan,
+            offer: options.offer
+          });
+          response = { success };
+          break;
+        }
+        case 'v2.loan.fixed.collection': {
+          let success = await this.#fixed.collection.v2.refinanceCollectionOfferLoan({
+            loan: options.loan,
+            offer: options.offer
+          });
+          response = { success };
+          break;
+        }
+        case 'v2-3.loan.fixed.collection': {
+          let success = await this.#fixed.collection.v2_3.refinanceCollectionOfferLoan({
+            loan: options.loan,
+            offer: options.offer
+          });
+          response = { success };
+          break;
+        }
+        default: {
+          error = { 'nftfi.contract.name': [`${contractName} not supported`] };
+          throw error;
+        }
+      }
+      return this.#result.handle(response);
+    } catch (e) {
+      return this.#error.handle(e);
+    }
+  }
+
+  /**
    * Revokes an active offer made by your account.
    *
    * @param {object} options - Hashmap of config options for this method
@@ -382,6 +484,65 @@ class Loans {
       return {
         success
       };
+    } catch (e) {
+      return this.#error.handle(e);
+    }
+  }
+
+  /**
+   * Mints an obligation receipt for a given loan.
+   *
+   * @param {Object} options - The options object containing the loan details and contract information.
+   * @param {number} options.loan.nftfi.id - The ID of the loan.
+   * @param {string} options.loan.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2-3.loan.fixed`, `v2.loan.fixed.collection`, `v2-3.loan.fixed.collection`
+   * @returns {object} Response object
+   *
+   * @example
+   * // Mint an Obligation Receipt for a v2.3 fixed loan
+   * const response = await nftfi.loans.mintObligationReceipt({
+   *   loan: {
+   *     id: '42',
+   *     nftfi: {
+   *       contract: {
+   *         name: 'v2-3.loan.fixed'
+   *       }
+   *     }
+   *   },
+   * });
+   */
+  async mintObligationReceipt(options) {
+    try {
+      this.#assertion.hasSigner();
+      let error;
+      let response;
+      const contractName = options.loan.nftfi.contract.name;
+      switch (contractName) {
+        case 'v2-3.loan.fixed': {
+          let success = await this.#fixed.v2_3.mintObligationReceipt(options);
+          response = { success };
+          break;
+        }
+        case 'v2-1.loan.fixed': {
+          let success = await this.#fixed.v2_1.mintObligationReceipt(options);
+          response = { success };
+          break;
+        }
+        case 'v2-3.loan.fixed.collection': {
+          let success = await this.#fixed.collection.v2_3.mintObligationReceipt(options);
+          response = { success };
+          break;
+        }
+        case 'v2.loan.fixed.collection': {
+          let success = await this.#fixed.collection.v2.mintObligationReceipt(options);
+          response = { success };
+          break;
+        }
+        default: {
+          error = { 'nftfi.contract.name': [`${contractName} not supported`] };
+          throw error;
+        }
+      }
+      return this.#result.handle(response);
     } catch (e) {
       return this.#error.handle(e);
     }

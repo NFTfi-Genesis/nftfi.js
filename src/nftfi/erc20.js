@@ -35,6 +35,8 @@ class Erc20 {
         return this.#config.loan.fixed.collection.v2.address;
       case 'v2-3.loan.fixed.collection':
         return this.#config.loan.fixed.collection.v2_3.address;
+      case 'loan.refinance':
+        return this.#config.loan.refinance.address;
     }
   }
 

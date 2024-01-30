@@ -864,7 +864,9 @@ Class for working with loans.
     * [`.begin(options)`](#Loans+begin) ⇒ <code>object</code>
     * [`.liquidate(options)`](#Loans+liquidate) ⇒ <code>object</code>
     * [`.repay(options)`](#Loans+repay) ⇒ <code>object</code>
+    * [`.refinance(options)`](#Loans+refinance) ⇒ <code>object</code>
     * [`.revokeOffer(options)`](#Loans+revokeOffer) ⇒ <code>object</code>
+    * [`.mintObligationReceipt(options)`](#Loans+mintObligationReceipt) ⇒ <code>object</code>
 
 
 * * *
@@ -1082,6 +1084,65 @@ const result = await nftfi.loans.repay({
 
 * * *
 
+<a name="Loans+refinance"></a>
+
+#### `loans.refinance(options)` ⇒ <code>object</code>
+Refinance a given loan.
+
+**Kind**: instance method of [<code>Loans</code>](#Loans)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | The options object containing the loan and offer information. |
+| options.loan | <code>Object</code> | The loan being refinanced. |
+| options.offer | <code>Object</code> | The offer being used to refinance the loan. |
+
+**Example**  
+```js
+// Identify an active loan where you are the borrower.
+const { data: { results } } = await nftfi.loans.get({
+ filters: {
+  borrower: { address: nftfi.account.getAddress() },
+  status: 'active'
+});
+const loan = results[0];
+
+// Fetch offers that match the currency and NFT of the selected loan.
+// **The offer's currency must align with the loan's currency.**
+const offers = await borrower.offers.get({
+  filters: {
+    nft: { address: loan.nft.address, id: loan.nft.id },
+    loan: { currency: { address: { eq: loan.terms.loan.currency } } },
+    nftfi: { contract: { name: nftfi.config.loan.fixed.v2_1.name } }
+  }
+});
+const offer = offers[0];
+
+// Approve your obligation receipts with the Refinance contract.
+const ORApproval = await nftfi.nft.approve({
+ token: { address: nftfi.config.loan.fixed.v2_1.obligationReceipt.address },
+ nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+});
+
+// Approve ERC20 Tokens (if additional payment is needed).
+const erc20Approval = await nftfi.erc20.approveMax({
+ token: { address: loan.terms.loan.currency },
+ nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+});
+
+// Mint an obligation receipt for this loan.
+const ORMint = await nftfi.loans.mintObligationReceipt({ loan });
+
+// Initiate the refinancing with the selected loan and offer.
+const refiResult = await nftfi.loans.refinance({
+  loan,
+  offer
+});
+```
+
+* * *
+
 <a name="Loans+revokeOffer"></a>
 
 #### `loans.revokeOffer(options)` ⇒ <code>object</code>
@@ -1108,6 +1169,37 @@ const revoked = await nftfi.loans.revoke({
       name: 'v2-3.loan.fixed'
     }
   }
+});
+```
+
+* * *
+
+<a name="Loans+mintObligationReceipt"></a>
+
+#### `loans.mintObligationReceipt(options)` ⇒ <code>object</code>
+Mints an obligation receipt for a given loan.
+
+**Kind**: instance method of [<code>Loans</code>](#Loans)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | The options object containing the loan details and contract information. |
+| options.loan.nftfi.id | <code>number</code> | The ID of the loan. |
+| options.loan.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2-3.loan.fixed`, `v2.loan.fixed.collection`, `v2-3.loan.fixed.collection` |
+
+**Example**  
+```js
+// Mint an Obligation Receipt for a v2.3 fixed loan
+const response = await nftfi.loans.mintObligationReceipt({
+  loan: {
+    id: '42',
+    nftfi: {
+      contract: {
+        name: 'v2-3.loan.fixed'
+      }
+    }
+  },
 });
 ```
 

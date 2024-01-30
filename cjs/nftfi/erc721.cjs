@@ -73,6 +73,8 @@ var Erc721 = /*#__PURE__*/function () {
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.address;
         case 'v1.bundler.migrate':
           return (0, _classPrivateFieldGet2["default"])(this, _config).bundler.migrate.v1.address;
+        case 'loan.refinance':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.refinance.address;
       }
     }
 

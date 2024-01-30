@@ -15,7 +15,8 @@ function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedec
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 var _config = /*#__PURE__*/new WeakMap();
 var _contractFactory = /*#__PURE__*/new WeakMap();
-var _contract = /*#__PURE__*/new WeakMap();
+var _loanContract = /*#__PURE__*/new WeakMap();
+var _refinanceContract = /*#__PURE__*/new WeakMap();
 var LoansFixedV2_1 = /*#__PURE__*/function () {
   function LoansFixedV2_1(options) {
     (0, _classCallCheck2["default"])(this, LoansFixedV2_1);
@@ -27,7 +28,11 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
-    _classPrivateFieldInitSpec(this, _contract, {
+    _classPrivateFieldInitSpec(this, _loanContract, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _refinanceContract, {
       writable: true,
       value: void 0
     });
@@ -35,15 +40,26 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
   }
   (0, _createClass2["default"])(LoansFixedV2_1, [{
-    key: "_contract",
+    key: "_loanContract",
     get: function get() {
-      if (!(0, _classPrivateFieldGet2["default"])(this, _contract)) {
-        (0, _classPrivateFieldSet2["default"])(this, _contract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+      if (!(0, _classPrivateFieldGet2["default"])(this, _loanContract)) {
+        (0, _classPrivateFieldSet2["default"])(this, _loanContract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
           address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.address,
           abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_1.abi
         }));
       }
-      return (0, _classPrivateFieldGet2["default"])(this, _contract);
+      return (0, _classPrivateFieldGet2["default"])(this, _loanContract);
+    }
+  }, {
+    key: "_refinanceContract",
+    get: function get() {
+      if (!(0, _classPrivateFieldGet2["default"])(this, _refinanceContract)) {
+        (0, _classPrivateFieldSet2["default"])(this, _refinanceContract, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+          address: (0, _classPrivateFieldGet2["default"])(this, _config).loan.refinance.address,
+          abi: (0, _classPrivateFieldGet2["default"])(this, _config).loan.refinance.abi
+        }));
+      }
+      return (0, _classPrivateFieldGet2["default"])(this, _refinanceContract);
     }
   }, {
     key: "liquidateOverdueLoan",
@@ -55,7 +71,7 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
             case 0:
               _context.prev = 0;
               _context.next = 3;
-              return this._contract.call({
+              return this._loanContract.call({
                 "function": 'liquidateOverdueLoan',
                 args: [options.loan.id]
               });
@@ -91,7 +107,7 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
             case 0:
               _context2.prev = 0;
               _context2.next = 3;
-              return this._contract.call({
+              return this._loanContract.call({
                 "function": 'payBackLoan',
                 args: [options.loan.id]
               });
@@ -127,7 +143,7 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
             case 0:
               _context3.prev = 0;
               _context3.next = 3;
-              return this._contract.call({
+              return this._loanContract.call({
                 "function": 'cancelLoanCommitmentBeforeLoanHasBegun',
                 args: [options.offer.nonce]
               });
@@ -152,6 +168,103 @@ var LoansFixedV2_1 = /*#__PURE__*/function () {
         return _cancelLoanCommitmentBeforeLoanHasBegun.apply(this, arguments);
       }
       return cancelLoanCommitmentBeforeLoanHasBegun;
+    }()
+  }, {
+    key: "mintObligationReceipt",
+    value: function () {
+      var _mintObligationReceipt = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
+        var success, result;
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              _context4.next = 3;
+              return this._loanContract.call({
+                "function": 'mintObligationReceipt',
+                args: [options.loan.id]
+              });
+            case 3:
+              result = _context4.sent;
+              success = (result === null || result === void 0 ? void 0 : result.status) === 1;
+              _context4.next = 10;
+              break;
+            case 7:
+              _context4.prev = 7;
+              _context4.t0 = _context4["catch"](0);
+              success = false;
+            case 10:
+              return _context4.abrupt("return", success);
+            case 11:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4, this, [[0, 7]]);
+      }));
+      function mintObligationReceipt(_x4) {
+        return _mintObligationReceipt.apply(this, arguments);
+      }
+      return mintObligationReceipt;
+    }()
+  }, {
+    key: "refinanceLoan",
+    value: function () {
+      var _refinanceLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
+        var success, refinanceableContract, refinancingData, offer, signature, borrowerSettings, result;
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              refinanceableContract = (0, _classPrivateFieldGet2["default"])(this, _config).getContractAddress(options.loan.nftfi.contract.name);
+              refinancingData = {
+                loanIdentifier: options.loan.id,
+                refinanceableContract: refinanceableContract
+              };
+              offer = {
+                loanERC20Denomination: options.offer.terms.loan.currency,
+                loanPrincipalAmount: String(options.offer.terms.loan.principal),
+                maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
+                nftCollateralContract: options.offer.nft.address,
+                nftCollateralId: options.offer.nft.id,
+                referrer: '0x0000000000000000000000000000000000000000',
+                loanDuration: options.offer.terms.loan.duration,
+                loanAdminFeeInBasisPoints: options.offer.nftfi.fee.bps
+              };
+              signature = {
+                signer: options.offer.lender.address,
+                nonce: options.offer.lender.nonce,
+                expiry: options.offer.terms.loan.expiry,
+                signature: options.offer.signature
+              };
+              borrowerSettings = {
+                revenueSharePartner: '0x0000000000000000000000000000000000000000',
+                referralFeeInBasisPoints: 0
+              };
+              _context5.next = 8;
+              return this._refinanceContract.call({
+                "function": 'refinanceLoan',
+                args: [refinancingData, offer, signature, borrowerSettings]
+              });
+            case 8:
+              result = _context5.sent;
+              success = result.status === 1;
+              _context5.next = 15;
+              break;
+            case 12:
+              _context5.prev = 12;
+              _context5.t0 = _context5["catch"](0);
+              success = false;
+            case 15:
+              return _context5.abrupt("return", success);
+            case 16:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, this, [[0, 12]]);
+      }));
+      function refinanceLoan(_x5) {
+        return _refinanceLoan.apply(this, arguments);
+      }
+      return refinanceLoan;
     }()
   }]);
   return LoansFixedV2_1;

@@ -21,17 +21,27 @@ const baseConfig = {
   },
   loan: {
     adminFeeInBasisPoints: '',
+    refinance: {
+      abi: [],
+      address: ''
+    },
     fixed: {
       collection: {
         v2: {
           name: '',
           address: '',
-          abi: []
+          abi: [],
+          obligationReceipt: {
+            address: ''
+          }
         },
         v2_3: {
           name: '',
           address: '',
-          abi: []
+          abi: [],
+          obligationReceipt: {
+            address: ''
+          }
         }
       },
       v1: {
@@ -47,12 +57,18 @@ const baseConfig = {
       v2_1: {
         name: '',
         address: '',
-        abi: []
+        abi: [],
+        obligationReceipt: {
+          address: ''
+        }
       },
       v2_3: {
         name: '',
         address: '',
-        abi: []
+        abi: [],
+        obligationReceipt: {
+          address: ''
+        }
       }
     }
   },
@@ -208,8 +224,10 @@ mainnetConfig.loan.fixed.collection.v2.abi = [
   'function payBackLoan(uint32 _loanId)',
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
   'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
+  'function mintObligationReceipt(uint32 _loanId)',
   'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
 ];
+mainnetConfig.loan.fixed.collection.v2.obligationReceipt.address = '0xe73ece5988fff33a012cea8bb6fd5b27679fc481';
 mainnetConfig.loan.fixed.collection.v2_3.name = 'v2-3.loan.fixed.collection';
 mainnetConfig.loan.fixed.collection.v2_3.address = '0xD0C6e59B50C32530C627107F50Acc71958C4341F';
 mainnetConfig.loan.fixed.collection.v2_3.abi = [
@@ -219,8 +237,10 @@ mainnetConfig.loan.fixed.collection.v2_3.abi = [
   'function acceptCollectionOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer), tuple(uint256 nonce, uint256 expiry, address signer, bytes signature), tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints)) returns (uint32)',
   'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
+  'function mintObligationReceipt(uint32 _loanId)',
   'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
 ];
+mainnetConfig.loan.fixed.collection.v2_3.obligationReceipt.address = '0xaabd3ebcc6ae1e87150c6184c038b94dc01a7708';
 mainnetConfig.loan.fixed.v2.name = 'v2.loan.fixed';
 mainnetConfig.loan.fixed.v2.address = '0xf896527c49b44aAb3Cf22aE356Fa3AF8E331F280';
 mainnetConfig.loan.fixed.v2.abi = [
@@ -229,15 +249,24 @@ mainnetConfig.loan.fixed.v2.abi = [
   'function payBackLoan(uint32 _loanId)',
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
   'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
+  'function mintObligationReceipt(uint32 _loanId)',
   'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
 ];
 mainnetConfig.loan.fixed.v2_1.name = 'v2-1.loan.fixed';
 mainnetConfig.loan.fixed.v2_1.address = '0x8252Df1d8b29057d1Afe3062bf5a64D503152BC8';
 mainnetConfig.loan.fixed.v2_1.abi = mainnetConfig.loan.fixed.v2.abi;
+mainnetConfig.loan.fixed.v2_1.obligationReceipt.address = '0xe73ece5988fff33a012cea8bb6fd5b27679fc481';
 mainnetConfig.loan.fixed.v2_3.name = 'v2-3.loan.fixed';
 mainnetConfig.loan.fixed.v2_3.address = '0xd0a40eB7FD94eE97102BA8e9342243A2b2E22207';
 mainnetConfig.loan.fixed.v2_3.abi = mainnetConfig.loan.fixed.v2.abi;
+mainnetConfig.loan.fixed.v2_3.obligationReceipt.address = '0xaabd3ebcc6ae1e87150c6184c038b94dc01a7708';
 mainnetConfig.loan.adminFeeInBasisPoints = '500';
+mainnetConfig.loan.refinance.name = 'loan.refinance';
+mainnetConfig.loan.refinance.address = '0x25fF4B398cD97B5bFBbE68378Aae1F23CBe13bBA';
+mainnetConfig.loan.refinance.abi = [
+  'function refinanceCollectionOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
+  'function refinanceLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)'
+];
 mainnetConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction-mainnet.safe.global';
 mainnetConfig.signingUtils.v2.address = '0x5a42d72372858e10edc03b26bf449f78ff3c0e6f';
 mainnetConfig.signingUtils.v2.abi = [
@@ -303,53 +332,6 @@ mainnetConfig.auth.token.key = 'nftfiSdkToken';
 mainnetConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 mainnetConfig.auth.tokenError.key = 'nftfiSdkTokenError';
 
-const rinkebyConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
-rinkebyConfig.chainId = 4;
-rinkebyConfig.website.baseURI = 'https://integration.nftfi.com';
-rinkebyConfig.api.baseURI = 'https://development-sdk-api.nftfi.com';
-rinkebyConfig.erc721.abi = mainnetConfig.erc721.abi;
-rinkebyConfig.erc20.abi = [
-  'function balanceOf(address owner) view returns (uint256)',
-  'function approve(address spender, uint256 value) returns (bool)',
-  'function allowance(address owner, address spender) public view returns (uint256)'
-];
-rinkebyConfig.erc20.weth.address = '0xc778417e063141139fce010982780140aa0cd5ab';
-rinkebyConfig.erc20.weth.symbol = 'wETH';
-rinkebyConfig.erc20.dai.address = '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea';
-rinkebyConfig.erc20.dai.symbol = 'DAI';
-rinkebyConfig.loan.fixed.v1.name = 'v1.loan.fixed';
-rinkebyConfig.loan.fixed.v1.address = '0xA2cDED5Ce935eB83d34DcaEA2e2B95e955F967EF';
-rinkebyConfig.loan.fixed.v1.abi = [
-  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
-  'function liquidateOverdueLoan(uint256 _loanId) nonpayable returns()',
-  'function payBackLoan(uint256 _loanId)'
-];
-rinkebyConfig.loan.fixed.collection.v2.name = 'v2.loan.fixed.collection';
-rinkebyConfig.loan.fixed.collection.v2.address = '0x9954C7DA264DEa250ef934A3562C70dde8F65B43';
-rinkebyConfig.loan.fixed.collection.v2.abi = [
-  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
-  'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
-  'function payBackLoan(uint32 _loanId)',
-  'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
-  'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
-  'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
-];
-rinkebyConfig.loan.fixed.v2.name = 'v2.loan.fixed';
-rinkebyConfig.loan.fixed.v2.address = '0x33e75763F3705252775C5AEEd92E5B4987622f44';
-rinkebyConfig.loan.fixed.v2.abi = [
-  'function cancelLoanCommitmentBeforeLoanHasBegun(uint256 nonce)',
-  'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
-  'function payBackLoan(uint32 _loanId)',
-  'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
-  'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
-];
-rinkebyConfig.loan.adminFeeInBasisPoints = '500';
-rinkebyConfig.ethereum.account.multisig.gnosis.service.url = 'https://safe-transaction.rinkeby.gnosis.io';
-rinkebyConfig.signingUtils.v2.address = '0x245BF99045F2638d2EEf762E0F9305B70A5B0575';
-rinkebyConfig.signingUtils.v2.abi = [
-  'function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, address _loanContract) public view returns (bool)'
-];
-
 const goerliConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 goerliConfig.chainId = 5;
 goerliConfig.website.baseURI = 'https://goerli-integration.nftfi.com';
@@ -404,14 +386,17 @@ goerliConfig.loan.fixed.v2.abi = [
   'function payBackLoan(uint32 _loanId)',
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
   'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
+  'function mintObligationReceipt(uint32 _loanId)',
   'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
 ];
 goerliConfig.loan.fixed.v2_1.name = 'v2-1.loan.fixed';
 goerliConfig.loan.fixed.v2_1.address = '0x77097f421CEb2454eB5F77898d25159ff3C7381d';
 goerliConfig.loan.fixed.v2_1.abi = goerliConfig.loan.fixed.v2.abi;
+goerliConfig.loan.fixed.v2_1.obligationReceipt.address = '0x3a44cc29c019865aa71c2352abc5700403296d58';
 goerliConfig.loan.fixed.v2_3.name = 'v2-3.loan.fixed';
 goerliConfig.loan.fixed.v2_3.address = '0x2f42800C426237e535cA9eCccdC38F794f26F6e3';
 goerliConfig.loan.fixed.v2_3.abi = goerliConfig.loan.fixed.v2.abi;
+goerliConfig.loan.fixed.v2_3.obligationReceipt.address = '0xDeE9b6E2f1aa9c14214d87d2911f3550ef1A87bB';
 goerliConfig.loan.fixed.collection.v2.name = 'v2.loan.fixed.collection';
 goerliConfig.loan.fixed.collection.v2.address = '0x06aE278EaE3A87d06652843Ac90d03e3E0d2E3f5';
 goerliConfig.loan.fixed.collection.v2.abi = [
@@ -420,12 +405,21 @@ goerliConfig.loan.fixed.collection.v2.abi = [
   'function payBackLoan(uint32 _loanId)',
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
   'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
+  'function mintObligationReceipt(uint32 _loanId)',
   'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
 ];
+goerliConfig.loan.fixed.collection.v2.obligationReceipt.address = '0x3a44cc29c019865aa71c2352abc5700403296d58';
 goerliConfig.loan.fixed.collection.v2_3.name = 'v2-3.loan.fixed.collection';
 goerliConfig.loan.fixed.collection.v2_3.address = '0xdA1FfB0Bf2cE637FF12CA31C841Ced04b6483CfD';
 goerliConfig.loan.fixed.collection.v2_3.abi = mainnetConfig.loan.fixed.collection.v2_3.abi;
+goerliConfig.loan.fixed.collection.v2_3.obligationReceipt.address = '0xDeE9b6E2f1aa9c14214d87d2911f3550ef1A87bB';
 goerliConfig.loan.adminFeeInBasisPoints = '500';
+goerliConfig.loan.refinance.name = 'loan.refinance';
+goerliConfig.loan.refinance.address = '0x0D7d94C2977160e5B4DD1bcc68828F74751b1A27';
+goerliConfig.loan.refinance.abi = [
+  'function refinanceCollectionOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
+  'function refinanceLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)'
+];
 goerliConfig.signingUtils.v2.address = '0x7e4Dbdb623fBD48b01aF813aC324228575D04834';
 goerliConfig.signingUtils.v2.abi = [
   'function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, address _loanContract) public view returns (bool)'
@@ -483,7 +477,6 @@ goerliConfig.auth.tokenError.key = 'nftfiSdkTokenError';
 
 const baseConfigs = {
   [mainnetConfig.chainId]: mainnetConfig,
-  [rinkebyConfig.chainId]: rinkebyConfig,
   [goerliConfig.chainId]: goerliConfig
 };
 
@@ -495,6 +488,19 @@ class Config {
     const mergedConfig = merge(baseConfig, customConfig);
     for (const prop in mergedConfig) {
       this[prop] = mergedConfig[prop];
+    }
+  }
+
+  getContractAddress(contractName) {
+    switch (contractName) {
+      case 'v2-1.loan.fixed':
+        return this.loan.fixed.v2_1.address;
+      case 'v2-3.loan.fixed':
+        return this.loan.fixed.v2_3.address;
+      case 'v2.loan.fixed.collection':
+        return this.loan.fixed.collection.v2.address;
+      case 'v2-3.loan.fixed.collection':
+        return this.loan.fixed.collection.v2_3.address;
     }
   }
 }

@@ -1,6 +1,7 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _typeof = require("@babel/runtime/helpers/typeof");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -51,6 +52,17 @@ var _result = _interopRequireDefault(require("./nftfi/result.cjs"));
 var _error = _interopRequireDefault(require("./nftfi/error.cjs"));
 var _index9 = _interopRequireDefault(require("./nftfi/index.cjs"));
 var _storage = _interopRequireDefault(require("./nftfi/storage.cjs"));
+var _index10 = _interopRequireDefault(require("./nftfi/rewards/og/index.cjs"));
+var _index11 = _interopRequireDefault(require("./nftfi/rewards/earn/index.cjs"));
+var _index12 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
+var _index13 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/index.cjs"));
+var _helper4 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/helper.cjs"));
+var _index14 = _interopRequireDefault(require("./nftfi/rewards/earn/seasons/index.cjs"));
+var _index15 = _interopRequireDefault(require("./nftfi/rewards/earn/points/index.cjs"));
+var _rewards = _interopRequireDefault(require("./nftfi/rewards.cjs"));
+var _helper5 = _interopRequireDefault(require("./nftfi/loans/helper.cjs"));
+var _validation2 = _interopRequireDefault(require("./nftfi/loans/validation.cjs"));
+var _refinance = _interopRequireDefault(require("./nftfi/loans/validation/refinance.cjs"));
 var _safeEthersAdapters = require("@safe-global/safe-ethers-adapters");
 var _safeCoreSdk = _interopRequireDefault(require("@safe-global/safe-core-sdk"));
 var _safeEthersLib = _interopRequireDefault(require("@safe-global/safe-ethers-lib"));
@@ -61,22 +73,16 @@ var _axios = _interopRequireDefault(require("axios"));
 var _lodash = _interopRequireDefault(require("lodash.merge"));
 var _lodash2 = _interopRequireDefault(require("lodash.set"));
 var _socket = _interopRequireDefault(require("socket.io-client"));
+var yup = _interopRequireWildcard(require("yup"));
 var _asyncMutex = require("async-mutex");
-var _index10 = _interopRequireDefault(require("./nftfi/rewards/og/index.cjs"));
-var _index11 = _interopRequireDefault(require("./nftfi/rewards/earn/index.cjs"));
-var _index12 = _interopRequireDefault(require("./nftfi/rewards/og/allocations/index.cjs"));
-var _index13 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/index.cjs"));
-var _helper4 = _interopRequireDefault(require("./nftfi/rewards/earn/allocations/helper.cjs"));
-var _index14 = _interopRequireDefault(require("./nftfi/rewards/earn/seasons/index.cjs"));
-var _index15 = _interopRequireDefault(require("./nftfi/rewards/earn/points/index.cjs"));
-var _rewards = _interopRequireDefault(require("./nftfi/rewards.cjs"));
-var _helper5 = _interopRequireDefault(require("./nftfi/loans/helper.cjs"));
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var _default = {
   init: function () {
     var _init = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-      var _options$config, _options$config$api, _options$config2, _options$config2$api, _options$ethereum, _options$ethereum$acc, _options$ethereum$acc2, _options$ethereum$acc3, _options$ethereum$acc4, _options$ethereum$acc5, _options$ethereum2, _options$ethereum2$ac, _options$ethereum2$ac2, _options$ethereum2$ac3, _options$ethereum2$ac4, _options$ethereum3, _options$ethereum3$ac, _options$ethereum4, _options$ethereum4$we, _window, _options$dependencies, _options$ethereum5, _options$ethereum5$pr, _options$ethereum7, _options$ethereum7$we, _options$ethereum9, _options$ethereum9$ch, _provider, _options$ethereum10, _options$ethereum10$c, _options$ethereum11, _options$ethereum11$a, _options$ethereum11$a2, _options$dependencies4, _options$dependencies5, _options$dependencies6, _options$dependencies7, _options$logging;
+      var _options$config, _options$config$api, _options$config2, _options$config2$api, _options$ethereum, _options$ethereum$acc, _options$ethereum$acc2, _options$ethereum$acc3, _options$ethereum$acc4, _options$ethereum$acc5, _options$ethereum2, _options$ethereum2$ac, _options$ethereum2$ac2, _options$ethereum2$ac3, _options$ethereum2$ac4, _options$ethereum3, _options$ethereum3$ac, _options$ethereum4, _options$ethereum4$we, _window, _options$dependencies, _options$ethereum5, _options$ethereum5$pr, _options$ethereum7, _options$ethereum7$we, _options$ethereum9, _options$ethereum9$ch, _provider, _options$ethereum10, _options$ethereum10$c, _options$ethereum11, _options$ethereum11$a, _options$ethereum11$a2, _options$dependencies4, _options$dependencies5, _options$dependencies6, _options$dependencies7, _options$dependencies8, _options$dependencies9, _options$dependencies10, _options$dependencies11, _options$dependencies12, _options$dependencies13, _options$dependencies14, _options$dependencies15, _options$dependencies16, _options$dependencies17, _options$dependencies18, _options$dependencies19, _options$dependencies20, _options$dependencies21, _options$dependencies22, _options$logging;
       var options,
         _options$api,
         hasApiKey,
@@ -151,6 +157,8 @@ var _default = {
         loanFixedCollection,
         loanFixed,
         loansHelper,
+        loansValidationRefinance,
+        loansValidation,
         loans,
         offersSignatures,
         erc20,
@@ -339,7 +347,7 @@ var _default = {
             });
           case 62:
             mutex = new _asyncMutex.Mutex();
-            assertion = new _assertion["default"]({
+            assertion = (options === null || options === void 0 ? void 0 : (_options$dependencies4 = options.dependencies) === null || _options$dependencies4 === void 0 ? void 0 : _options$dependencies4.assertion) || new _assertion["default"]({
               account: account,
               provider: provider
             });
@@ -350,7 +358,7 @@ var _default = {
             http = new _http["default"]({
               axios: _axios["default"]
             });
-            contractFactory = (options === null || options === void 0 ? void 0 : (_options$dependencies4 = options.dependencies) === null || _options$dependencies4 === void 0 ? void 0 : _options$dependencies4.contractFactory) || new _factory["default"]({
+            contractFactory = (options === null || options === void 0 ? void 0 : (_options$dependencies5 = options.dependencies) === null || _options$dependencies5 === void 0 ? void 0 : _options$dependencies5.contractFactory) || new _factory["default"]({
               signer: signer,
               ethers: ethers,
               account: account,
@@ -358,7 +366,7 @@ var _default = {
               provider: provider,
               assertion: assertion
             });
-            utils = (options === null || options === void 0 ? void 0 : (_options$dependencies5 = options.dependencies) === null || _options$dependencies5 === void 0 ? void 0 : _options$dependencies5.utils) || new _utils["default"]({
+            utils = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.utils) || new _utils["default"]({
               ethers: ethers,
               BN: _bn["default"],
               Date: Date,
@@ -368,7 +376,7 @@ var _default = {
               contractFactory: contractFactory,
               config: config
             });
-            storage = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.storage) || new _storage["default"]({
+            storage = (options === null || options === void 0 ? void 0 : (_options$dependencies7 = options.dependencies) === null || _options$dependencies7 === void 0 ? void 0 : _options$dependencies7.storage) || new _storage["default"]({
               storage: localStorage,
               config: config
             });
@@ -379,7 +387,7 @@ var _default = {
               utils: utils,
               storage: storage
             });
-            api = (options === null || options === void 0 ? void 0 : (_options$dependencies7 = options.dependencies) === null || _options$dependencies7 === void 0 ? void 0 : _options$dependencies7.api) || new _api["default"]({
+            api = (options === null || options === void 0 ? void 0 : (_options$dependencies8 = options.dependencies) === null || _options$dependencies8 === void 0 ? void 0 : _options$dependencies8.api) || new _api["default"]({
               config: config,
               auth: auth,
               http: http,
@@ -405,19 +413,19 @@ var _default = {
               config: config,
               contractFactory: contractFactory
             });
-            loanFixedV2_1 = new _index4["default"]({
+            loanFixedV2_1 = (options === null || options === void 0 ? void 0 : (_options$dependencies9 = options.dependencies) === null || _options$dependencies9 === void 0 ? void 0 : (_options$dependencies10 = _options$dependencies9.loans) === null || _options$dependencies10 === void 0 ? void 0 : (_options$dependencies11 = _options$dependencies10.fixed) === null || _options$dependencies11 === void 0 ? void 0 : _options$dependencies11.v2_1) || new _index4["default"]({
               config: config,
               contractFactory: contractFactory
             });
-            loanFixedV2_3 = new _index5["default"]({
+            loanFixedV2_3 = (options === null || options === void 0 ? void 0 : (_options$dependencies12 = options.dependencies) === null || _options$dependencies12 === void 0 ? void 0 : (_options$dependencies13 = _options$dependencies12.loans) === null || _options$dependencies13 === void 0 ? void 0 : (_options$dependencies14 = _options$dependencies13.fixed) === null || _options$dependencies14 === void 0 ? void 0 : _options$dependencies14.v2_3) || new _index5["default"]({
               config: config,
               contractFactory: contractFactory
             });
-            loanFixedCollectionV2 = new _index7["default"]({
+            loanFixedCollectionV2 = (options === null || options === void 0 ? void 0 : (_options$dependencies15 = options.dependencies) === null || _options$dependencies15 === void 0 ? void 0 : (_options$dependencies16 = _options$dependencies15.loans) === null || _options$dependencies16 === void 0 ? void 0 : (_options$dependencies17 = _options$dependencies16.fixed) === null || _options$dependencies17 === void 0 ? void 0 : (_options$dependencies18 = _options$dependencies17.collection) === null || _options$dependencies18 === void 0 ? void 0 : _options$dependencies18.v2) || new _index7["default"]({
               config: config,
               contractFactory: contractFactory
             });
-            loanFixedCollectionV2_3 = new _index8["default"]({
+            loanFixedCollectionV2_3 = (options === null || options === void 0 ? void 0 : (_options$dependencies19 = options.dependencies) === null || _options$dependencies19 === void 0 ? void 0 : (_options$dependencies20 = _options$dependencies19.loans) === null || _options$dependencies20 === void 0 ? void 0 : (_options$dependencies21 = _options$dependencies20.fixed) === null || _options$dependencies21 === void 0 ? void 0 : (_options$dependencies22 = _options$dependencies21.collection) === null || _options$dependencies22 === void 0 ? void 0 : _options$dependencies22.v2_3) || new _index8["default"]({
               config: config,
               contractFactory: contractFactory
             });
@@ -433,6 +441,12 @@ var _default = {
               collection: loanFixedCollection
             });
             loansHelper = new _helper5["default"]();
+            loansValidationRefinance = new _refinance["default"]({
+              yup: yup
+            });
+            loansValidation = new _validation2["default"]({
+              refinance: loansValidationRefinance
+            });
             loans = new _loans["default"]({
               api: api,
               account: account,
@@ -441,7 +455,8 @@ var _default = {
               helper: loansHelper,
               result: result,
               error: error,
-              assertion: assertion
+              assertion: assertion,
+              validation: loansValidation
             });
             offersSignatures = new _signatures["default"]({
               account: account,
@@ -608,7 +623,7 @@ var _default = {
               console.log('NFTfi SDK initialised.');
             }
             return _context.abrupt("return", nftfi);
-          case 110:
+          case 112:
           case "end":
             return _context.stop();
         }
