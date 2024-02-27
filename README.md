@@ -37,9 +37,9 @@ yarn install
 
 Before starting, ensure you have an NFTfi API key. If you don't, please reach out to our team. This key is essential for initializing the SDK.
 
-For beginners, we advise testing with the SDK on the Goerli network. This gives you an understanding of its functionalities. Once comfortable, switch to the Mainnet.
+For beginners, we advise testing with the SDK on the Sepolia network. This gives you an understanding of its functionalities. Once comfortable, switch to the Mainnet.
 
-When the SDK is set to the Goerli network, it interacts with the dApp at https://goerli-integration.nftfi.com. For a Mainnet setup, the SDK will interact with https://app.nftfi.com.
+When the SDK is set to the Sepolia network, it interacts with the dApp at https://sepolia-integration.nftfi.com. For a Mainnet setup, the SDK will interact with https://app.nftfi.com.
 
 When initializing, the NFTfi SDK links to the account interacting with the NFTfi protocol (if authenticated). The SDK can compute the account address from the private key, web3 provider, or the `ethereum.account.address` field.
 
