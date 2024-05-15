@@ -506,7 +506,7 @@ sepoliaConfig.erc20.abi = [
 sepoliaConfig.erc20.weth.address = '0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9';
 sepoliaConfig.erc20.weth.symbol = 'wETH';
 sepoliaConfig.erc20.weth.unit = 'ether';
-sepoliaConfig.erc20.dai.address = '0x3e622317f8C93f7328350cF0B56d9eD4C620C5d6';
+sepoliaConfig.erc20.dai.address = '0x53844f9577c2334e541aec7df7174ece5df1fcf0';
 sepoliaConfig.erc20.dai.symbol = 'DAI';
 sepoliaConfig.erc20.dai.unit = 'ether';
 sepoliaConfig.erc20.usdc.address = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238';
@@ -567,7 +567,7 @@ sepoliaConfig.signingUtils.v2.abi = [
 sepoliaConfig.signingUtils.v2_3.address = '0xA9bcE822C9C7F342765B9f664c235BfEfFEae85A';
 sepoliaConfig.signingUtils.v2_3.abi = sepoliaConfig.signingUtils.v2.abi;
 sepoliaConfig.bundler.v1.name = 'v1.bundler';
-sepoliaConfig.bundler.v1.address = '0x0000000000000000000000000000000000000000';
+sepoliaConfig.bundler.v1.address = '0xea092C0728ECd6b0768b02e0563f0b7FAA66b713';
 sepoliaConfig.bundler.v1.abi = [
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
   'event ImmutableMinted(uint256 indexed immutableId, uint256 indexed bundleId, address indexed personalBundler)',
@@ -600,7 +600,7 @@ sepoliaConfig.bundler.migrate.v1.name = 'v1.bundler.migrate';
 sepoliaConfig.bundler.migrate.v1.address = '0x3C12F251821F24deF784E32192a72DAF676cd9cc';
 sepoliaConfig.bundler.migrate.v1.abi = mainnetConfig.bundler.migrate.v1.abi;
 sepoliaConfig.immutable.v1.name = 'v1.immutable.bundle';
-sepoliaConfig.immutable.v1.address = '0x0000000000000000000000000000000000000000';
+sepoliaConfig.immutable.v1.address = '0x4b45B6fC98616D4A3E9c59395d4526a863202B6e';
 sepoliaConfig.immutable.v1.abi = [
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
   'function bundleOfImmutable(uint256) view returns (uint256)',
