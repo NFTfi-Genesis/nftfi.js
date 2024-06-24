@@ -52,6 +52,8 @@ import Rewards from './nftfi/rewards.js';
 import LoansHelper from './nftfi/loans/helper.js';
 import LoansValidation from './nftfi/loans/validation.js';
 import LoansValidationRefinance from './nftfi/loans/validation/refinance.js';
+import Logger from './nftfi/logger/index.js';
+import LoggerFactory from './nftfi/logger/factory.js';
 
 import { SafeEthersSigner, SafeService } from '@safe-global/safe-ethers-adapters';
 import Safe from '@safe-global/safe-core-sdk';
@@ -114,6 +116,13 @@ export default {
       config: {
         ...options.config
       }
+    });
+
+    const loggerFactory = new LoggerFactory({
+      Logger,
+      console,
+      verbose: options?.logging?.verbose,
+      json: JSON
     });
 
     // Create an account, which is either an EOA or Multisig (Gnosis)
@@ -191,7 +200,7 @@ export default {
     const mutex = new Mutex();
     const assertion = options?.dependencies?.assertion || new Assertion({ account, provider });
     const websocket = new Websocket({ config, io });
-    const http = new Http({ axios });
+    const http = new Http({ axios, loggerFactory });
     const contractFactory =
       options?.dependencies?.contractFactory ||
       new ContractFactory({
@@ -311,9 +320,8 @@ export default {
       utils
     });
 
-    if (options?.logging?.verbose !== false) {
-      console.log('NFTfi SDK initialised.');
-    }
+    const logger = loggerFactory.create();
+    logger.info('NFTfi SDK initialised.');
 
     return nftfi;
   }

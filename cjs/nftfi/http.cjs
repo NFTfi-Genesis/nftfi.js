@@ -14,6 +14,7 @@ var _classPrivateFieldSet2 = _interopRequireDefault(require("@babel/runtime/help
 function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 var _axios = /*#__PURE__*/new WeakMap();
+var _loggerFactory = /*#__PURE__*/new WeakMap();
 var Http = /*#__PURE__*/function () {
   function Http() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -22,7 +23,12 @@ var Http = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _loggerFactory, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _axios, options === null || options === void 0 ? void 0 : options.axios);
+    (0, _classPrivateFieldSet2["default"])(this, _loggerFactory, options === null || options === void 0 ? void 0 : options.loggerFactory);
   }
   (0, _createClass2["default"])(Http, [{
     key: "get",
@@ -30,6 +36,7 @@ var Http = /*#__PURE__*/function () {
       var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(uri) {
         var options,
           execOptions,
+          logger,
           result,
           _execOptions$error,
           _args = arguments;
@@ -38,30 +45,36 @@ var Http = /*#__PURE__*/function () {
             case 0:
               options = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
               execOptions = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
-              _context.prev = 2;
-              _context.next = 5;
+              logger = (0, _classPrivateFieldGet2["default"])(this, _loggerFactory).create({
+                scope: 'HTTP_REQ',
+                id: Date.now()
+              });
+              _context.prev = 3;
+              _context.next = 6;
               return (0, _classPrivateFieldGet2["default"])(this, _axios).get(uri, options);
-            case 5:
+            case 6:
               result = _context.sent;
-              _context.next = 13;
+              logger.info('HTTP GET request successful: ', uri, options, result);
+              _context.next = 16;
               break;
-            case 8:
-              _context.prev = 8;
-              _context.t0 = _context["catch"](2);
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](3);
+              logger.error('HTTP GET request failed: ', uri, options, _context.t0);
               if (!((_execOptions$error = execOptions.error) !== null && _execOptions$error !== void 0 && _execOptions$error.rethrow)) {
-                _context.next = 12;
+                _context.next = 15;
                 break;
               }
               throw _context.t0;
-            case 12:
+            case 15:
               result = _context.t0.response;
-            case 13:
+            case 16:
               return _context.abrupt("return", result);
-            case 14:
+            case 17:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[2, 8]]);
+        }, _callee, this, [[3, 10]]);
       }));
       function get(_x) {
         return _get.apply(this, arguments);
@@ -73,30 +86,37 @@ var Http = /*#__PURE__*/function () {
     value: function () {
       var _delete2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(uri) {
         var options,
+          logger,
           result,
           _args2 = arguments;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               options = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
-              _context2.prev = 1;
-              _context2.next = 4;
+              logger = (0, _classPrivateFieldGet2["default"])(this, _loggerFactory).create({
+                scope: 'HTTP_REQ',
+                id: Date.now()
+              });
+              _context2.prev = 2;
+              _context2.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _axios)["delete"](uri, options);
-            case 4:
+            case 5:
               result = _context2.sent;
-              _context2.next = 10;
+              logger.info('HTTP DELETE request successful: ', uri, options, result);
+              _context2.next = 13;
               break;
-            case 7:
-              _context2.prev = 7;
-              _context2.t0 = _context2["catch"](1);
+            case 9:
+              _context2.prev = 9;
+              _context2.t0 = _context2["catch"](2);
+              logger.error('HTTP DELETE request failed: ', uri, options, _context2.t0);
               result = _context2.t0.response;
-            case 10:
+            case 13:
               return _context2.abrupt("return", result);
-            case 11:
+            case 14:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[1, 7]]);
+        }, _callee2, this, [[2, 9]]);
       }));
       function _delete(_x2) {
         return _delete2.apply(this, arguments);
@@ -108,30 +128,37 @@ var Http = /*#__PURE__*/function () {
     value: function () {
       var _post = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(uri, body) {
         var options,
+          logger,
           result,
           _args3 = arguments;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               options = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : {};
-              _context3.prev = 1;
-              _context3.next = 4;
+              logger = (0, _classPrivateFieldGet2["default"])(this, _loggerFactory).create({
+                scope: 'HTTP_REQ',
+                id: Date.now()
+              });
+              _context3.prev = 2;
+              _context3.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _axios).post(uri, body, options);
-            case 4:
+            case 5:
               result = _context3.sent;
-              _context3.next = 10;
+              logger.info('HTTP POST request successful: ', uri, options, result);
+              _context3.next = 13;
               break;
-            case 7:
-              _context3.prev = 7;
-              _context3.t0 = _context3["catch"](1);
+            case 9:
+              _context3.prev = 9;
+              _context3.t0 = _context3["catch"](2);
+              logger.error('HTTP POST request failed: ', uri, options, _context3.t0);
               result = _context3.t0.response;
-            case 10:
+            case 13:
               return _context3.abrupt("return", result);
-            case 11:
+            case 14:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[1, 7]]);
+        }, _callee3, this, [[2, 9]]);
       }));
       function post(_x3, _x4) {
         return _post.apply(this, arguments);

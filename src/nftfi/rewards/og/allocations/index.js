@@ -38,9 +38,12 @@ class RewardsOgAllocations {
         );
       }
       const accountAddress = options?.account?.address || this.#account.getAddress();
-      const response = await this.#api.get({
-        uri: `v0.1/rewards/og/allocations/${accountAddress}`
-      });
+      const response = await this.#api.get(
+        {
+          uri: `v0.1/rewards/og/allocations/${accountAddress}`
+        },
+        options?.httpOptions
+      );
       if (!response) {
         return this.#result.handle({ status: { id: 'not-eligible' } });
       }

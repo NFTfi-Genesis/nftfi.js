@@ -82,7 +82,7 @@ var RewardsOgAllocations = /*#__PURE__*/function () {
               _context.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
                 uri: "v0.1/rewards/og/allocations/".concat(accountAddress)
-              });
+              }, options === null || options === void 0 ? void 0 : options.httpOptions);
             case 5:
               response = _context.sent;
               if (response) {

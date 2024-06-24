@@ -125,11 +125,16 @@ var OffersHelper = /*#__PURE__*/function () {
   }, {
     key: "_addContract",
     value: function _addContract(options, params) {
-      var _options$filters12, _options$filters12$nf, _options$filters12$nf2;
-      if (options !== null && options !== void 0 && (_options$filters12 = options.filters) !== null && _options$filters12 !== void 0 && (_options$filters12$nf = _options$filters12.nftfi) !== null && _options$filters12$nf !== void 0 && (_options$filters12$nf2 = _options$filters12$nf.contract) !== null && _options$filters12$nf2 !== void 0 && _options$filters12$nf2.name) {
-        var _options$filters13, _options$filters13$nf, _options$filters13$nf2;
+      var _options$filters12, _options$filters12$nf, _options$filters12$nf2, _options$filters12$nf3, _options$filters13, _options$filters13$nf, _options$filters13$nf2;
+      if (options !== null && options !== void 0 && (_options$filters12 = options.filters) !== null && _options$filters12 !== void 0 && (_options$filters12$nf = _options$filters12.nftfi) !== null && _options$filters12$nf !== void 0 && (_options$filters12$nf2 = _options$filters12$nf.contract) !== null && _options$filters12$nf2 !== void 0 && (_options$filters12$nf3 = _options$filters12$nf2.name) !== null && _options$filters12$nf3 !== void 0 && _options$filters12$nf3["in"]) {
         return _objectSpread(_objectSpread({}, params), {}, {
-          contractName: options === null || options === void 0 ? void 0 : (_options$filters13 = options.filters) === null || _options$filters13 === void 0 ? void 0 : (_options$filters13$nf = _options$filters13.nftfi) === null || _options$filters13$nf === void 0 ? void 0 : (_options$filters13$nf2 = _options$filters13$nf.contract) === null || _options$filters13$nf2 === void 0 ? void 0 : _options$filters13$nf2.name
+          contractNameIn: options.filters.nftfi.contract.name["in"].join(',')
+        });
+      }
+      if (options !== null && options !== void 0 && (_options$filters13 = options.filters) !== null && _options$filters13 !== void 0 && (_options$filters13$nf = _options$filters13.nftfi) !== null && _options$filters13$nf !== void 0 && (_options$filters13$nf2 = _options$filters13$nf.contract) !== null && _options$filters13$nf2 !== void 0 && _options$filters13$nf2.name) {
+        var _options$filters14, _options$filters14$nf, _options$filters14$nf2;
+        return _objectSpread(_objectSpread({}, params), {}, {
+          contractName: options === null || options === void 0 ? void 0 : (_options$filters14 = options.filters) === null || _options$filters14 === void 0 ? void 0 : (_options$filters14$nf = _options$filters14.nftfi) === null || _options$filters14$nf === void 0 ? void 0 : (_options$filters14$nf2 = _options$filters14$nf.contract) === null || _options$filters14$nf2 === void 0 ? void 0 : _options$filters14$nf2.name
         });
       }
       return params;
@@ -137,29 +142,29 @@ var OffersHelper = /*#__PURE__*/function () {
   }, {
     key: "_addFilters",
     value: function _addFilters(options, params) {
-      var _options$filters14, _options$filters14$lo, _options$filters14$lo2, _options$filters16, _options$filters16$lo, _options$filters16$lo2, _options$filters18, _options$filters18$lo, _options$filters18$lo2, _options$filters20, _options$filters20$lo, _options$filters20$lo2, _options$filters20$lo3;
-      if (options !== null && options !== void 0 && (_options$filters14 = options.filters) !== null && _options$filters14 !== void 0 && (_options$filters14$lo = _options$filters14.loan) !== null && _options$filters14$lo !== void 0 && (_options$filters14$lo2 = _options$filters14$lo.apr) !== null && _options$filters14$lo2 !== void 0 && _options$filters14$lo2.lte) {
-        var _options$filters15, _options$filters15$lo, _options$filters15$lo2;
+      var _options$filters15, _options$filters15$lo, _options$filters15$lo2, _options$filters17, _options$filters17$lo, _options$filters17$lo2, _options$filters19, _options$filters19$lo, _options$filters19$lo2, _options$filters21, _options$filters21$lo, _options$filters21$lo2, _options$filters21$lo3;
+      if (options !== null && options !== void 0 && (_options$filters15 = options.filters) !== null && _options$filters15 !== void 0 && (_options$filters15$lo = _options$filters15.loan) !== null && _options$filters15$lo !== void 0 && (_options$filters15$lo2 = _options$filters15$lo.apr) !== null && _options$filters15$lo2 !== void 0 && _options$filters15$lo2.lte) {
+        var _options$filters16, _options$filters16$lo, _options$filters16$lo2;
         params = _objectSpread(_objectSpread({}, params), {}, {
-          termsAprLte: options === null || options === void 0 ? void 0 : (_options$filters15 = options.filters) === null || _options$filters15 === void 0 ? void 0 : (_options$filters15$lo = _options$filters15.loan) === null || _options$filters15$lo === void 0 ? void 0 : (_options$filters15$lo2 = _options$filters15$lo.apr) === null || _options$filters15$lo2 === void 0 ? void 0 : _options$filters15$lo2.lte
+          termsAprLte: options === null || options === void 0 ? void 0 : (_options$filters16 = options.filters) === null || _options$filters16 === void 0 ? void 0 : (_options$filters16$lo = _options$filters16.loan) === null || _options$filters16$lo === void 0 ? void 0 : (_options$filters16$lo2 = _options$filters16$lo.apr) === null || _options$filters16$lo2 === void 0 ? void 0 : _options$filters16$lo2.lte
         });
       }
-      if (options !== null && options !== void 0 && (_options$filters16 = options.filters) !== null && _options$filters16 !== void 0 && (_options$filters16$lo = _options$filters16.loan) !== null && _options$filters16$lo !== void 0 && (_options$filters16$lo2 = _options$filters16$lo.duration) !== null && _options$filters16$lo2 !== void 0 && _options$filters16$lo2.eq) {
-        var _options$filters17, _options$filters17$lo, _options$filters17$lo2;
+      if (options !== null && options !== void 0 && (_options$filters17 = options.filters) !== null && _options$filters17 !== void 0 && (_options$filters17$lo = _options$filters17.loan) !== null && _options$filters17$lo !== void 0 && (_options$filters17$lo2 = _options$filters17$lo.duration) !== null && _options$filters17$lo2 !== void 0 && _options$filters17$lo2.eq) {
+        var _options$filters18, _options$filters18$lo, _options$filters18$lo2;
         params = _objectSpread(_objectSpread({}, params), {}, {
-          termsDuration: options === null || options === void 0 ? void 0 : (_options$filters17 = options.filters) === null || _options$filters17 === void 0 ? void 0 : (_options$filters17$lo = _options$filters17.loan) === null || _options$filters17$lo === void 0 ? void 0 : (_options$filters17$lo2 = _options$filters17$lo.duration) === null || _options$filters17$lo2 === void 0 ? void 0 : _options$filters17$lo2.eq
+          termsDuration: options === null || options === void 0 ? void 0 : (_options$filters18 = options.filters) === null || _options$filters18 === void 0 ? void 0 : (_options$filters18$lo = _options$filters18.loan) === null || _options$filters18$lo === void 0 ? void 0 : (_options$filters18$lo2 = _options$filters18$lo.duration) === null || _options$filters18$lo2 === void 0 ? void 0 : _options$filters18$lo2.eq
         });
       }
-      if (options !== null && options !== void 0 && (_options$filters18 = options.filters) !== null && _options$filters18 !== void 0 && (_options$filters18$lo = _options$filters18.loan) !== null && _options$filters18$lo !== void 0 && (_options$filters18$lo2 = _options$filters18$lo.duration) !== null && _options$filters18$lo2 !== void 0 && _options$filters18$lo2.nin) {
-        var _options$filters19, _options$filters19$lo, _options$filters19$lo2, _options$filters19$lo3;
+      if (options !== null && options !== void 0 && (_options$filters19 = options.filters) !== null && _options$filters19 !== void 0 && (_options$filters19$lo = _options$filters19.loan) !== null && _options$filters19$lo !== void 0 && (_options$filters19$lo2 = _options$filters19$lo.duration) !== null && _options$filters19$lo2 !== void 0 && _options$filters19$lo2.nin) {
+        var _options$filters20, _options$filters20$lo, _options$filters20$lo2, _options$filters20$lo3;
         params = _objectSpread(_objectSpread({}, params), {}, {
-          termsDurationNin: options === null || options === void 0 ? void 0 : (_options$filters19 = options.filters) === null || _options$filters19 === void 0 ? void 0 : (_options$filters19$lo = _options$filters19.loan) === null || _options$filters19$lo === void 0 ? void 0 : (_options$filters19$lo2 = _options$filters19$lo.duration) === null || _options$filters19$lo2 === void 0 ? void 0 : (_options$filters19$lo3 = _options$filters19$lo2.nin) === null || _options$filters19$lo3 === void 0 ? void 0 : _options$filters19$lo3.join(',')
+          termsDurationNin: options === null || options === void 0 ? void 0 : (_options$filters20 = options.filters) === null || _options$filters20 === void 0 ? void 0 : (_options$filters20$lo = _options$filters20.loan) === null || _options$filters20$lo === void 0 ? void 0 : (_options$filters20$lo2 = _options$filters20$lo.duration) === null || _options$filters20$lo2 === void 0 ? void 0 : (_options$filters20$lo3 = _options$filters20$lo2.nin) === null || _options$filters20$lo3 === void 0 ? void 0 : _options$filters20$lo3.join(',')
         });
       }
-      if (options !== null && options !== void 0 && (_options$filters20 = options.filters) !== null && _options$filters20 !== void 0 && (_options$filters20$lo = _options$filters20.loan) !== null && _options$filters20$lo !== void 0 && (_options$filters20$lo2 = _options$filters20$lo.currency) !== null && _options$filters20$lo2 !== void 0 && (_options$filters20$lo3 = _options$filters20$lo2.address) !== null && _options$filters20$lo3 !== void 0 && _options$filters20$lo3.eq) {
-        var _options$filters21, _options$filters21$lo, _options$filters21$lo2, _options$filters21$lo3;
+      if (options !== null && options !== void 0 && (_options$filters21 = options.filters) !== null && _options$filters21 !== void 0 && (_options$filters21$lo = _options$filters21.loan) !== null && _options$filters21$lo !== void 0 && (_options$filters21$lo2 = _options$filters21$lo.currency) !== null && _options$filters21$lo2 !== void 0 && (_options$filters21$lo3 = _options$filters21$lo2.address) !== null && _options$filters21$lo3 !== void 0 && _options$filters21$lo3.eq) {
+        var _options$filters22, _options$filters22$lo, _options$filters22$lo2, _options$filters22$lo3;
         params = _objectSpread(_objectSpread({}, params), {}, {
-          termsCurrencyAddress: options === null || options === void 0 ? void 0 : (_options$filters21 = options.filters) === null || _options$filters21 === void 0 ? void 0 : (_options$filters21$lo = _options$filters21.loan) === null || _options$filters21$lo === void 0 ? void 0 : (_options$filters21$lo2 = _options$filters21$lo.currency) === null || _options$filters21$lo2 === void 0 ? void 0 : (_options$filters21$lo3 = _options$filters21$lo2.address) === null || _options$filters21$lo3 === void 0 ? void 0 : _options$filters21$lo3.eq
+          termsCurrencyAddress: options === null || options === void 0 ? void 0 : (_options$filters22 = options.filters) === null || _options$filters22 === void 0 ? void 0 : (_options$filters22$lo = _options$filters22.loan) === null || _options$filters22$lo === void 0 ? void 0 : (_options$filters22$lo2 = _options$filters22$lo.currency) === null || _options$filters22$lo2 === void 0 ? void 0 : (_options$filters22$lo3 = _options$filters22$lo2.address) === null || _options$filters22$lo3 === void 0 ? void 0 : _options$filters22$lo3.eq
         });
       }
       return params;

@@ -1241,6 +1241,7 @@ When provided with filters, gets all offers by specified filters.
 | [options.filters.borrower.address.eq] | <code>string</code> |  | Borrower wallet address to filter by (optional) |
 | [options.filters.lender.address.ne] | <code>string</code> |  | Lender wallet address to exclude (optional) |
 | [options.filters.nftfi.contract.name] | <code>string</code> |  | Contract name to filter by (optional) |
+| [options.filters.nftfi.contract.name.in] | <code>Array.&lt;string&gt;</code> |  | Contract names to filter by (optional) |
 | [options.filters.loan.apr.lte] | <code>string</code> |  | Max apr to filter by (optional) |
 | [options.filters.loan.duration.eq] | <code>string</code> |  | Loan duration to filter by (optional) |
 | [options.filters.loan.duration.nin] | <code>Array.&lt;number&gt;</code> |  | Loan durations to exclude (optional) |

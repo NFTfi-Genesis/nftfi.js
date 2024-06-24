@@ -103,6 +103,7 @@ var Offers = /*#__PURE__*/function () {
    * @param {string} [options.filters.borrower.address.eq] - Borrower wallet address to filter by (optional)
    * @param {string} [options.filters.lender.address.ne] - Lender wallet address to exclude (optional)
    * @param {string} [options.filters.nftfi.contract.name] - Contract name to filter by (optional)
+   * @param {Array<string>} [options.filters.nftfi.contract.name.in] - Contract names to filter by (optional)
    * @param {string} [options.filters.loan.apr.lte] - Max apr to filter by (optional)
    * @param {string} [options.filters.loan.duration.eq] - Loan duration to filter by (optional)
    * @param {Array<number>} [options.filters.loan.duration.nin] - Loan durations to exclude (optional)

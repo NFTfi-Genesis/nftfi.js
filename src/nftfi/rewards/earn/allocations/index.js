@@ -42,10 +42,13 @@ class RewardsEarnAllocations {
         );
       }
       const accountAddress = options?.account?.address || this.#account.getAddress();
-      const response = await this.#api.get({
-        uri: `v0.1/rewards/earn/allocations/${accountAddress}`,
-        params: this.#helper.getParams(options)
-      });
+      const response = await this.#api.get(
+        {
+          uri: `v0.1/rewards/earn/allocations/${accountAddress}`,
+          params: this.#helper.getParams(options)
+        },
+        options?.httpOptions
+      );
       return this.#result.handle(response);
     } catch (e) {
       return this.#error.handle(e);

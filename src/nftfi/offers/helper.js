@@ -61,6 +61,9 @@ class OffersHelper {
   }
 
   _addContract(options, params) {
+    if (options?.filters?.nftfi?.contract?.name?.in) {
+      return { ...params, contractNameIn: options.filters.nftfi.contract.name.in.join(',') };
+    }
     if (options?.filters?.nftfi?.contract?.name) {
       return { ...params, contractName: options?.filters?.nftfi?.contract?.name };
     }

@@ -91,7 +91,7 @@ var RewardsEarnAllocations = /*#__PURE__*/function () {
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
                 uri: "v0.1/rewards/earn/allocations/".concat(accountAddress),
                 params: (0, _classPrivateFieldGet2["default"])(this, _helper).getParams(options)
-              });
+              }, options === null || options === void 0 ? void 0 : options.httpOptions);
             case 5:
               response = _context.sent;
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(response));
