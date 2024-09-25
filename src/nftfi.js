@@ -54,6 +54,10 @@ import LoansValidation from './nftfi/loans/validation.js';
 import LoansValidationRefinance from './nftfi/loans/validation/refinance.js';
 import Logger from './nftfi/logger/index.js';
 import LoggerFactory from './nftfi/logger/factory.js';
+import LoansAssetOffer from './nftfi/loans/assetOffer/index.js';
+import LoansAssetOfferV1 from './nftfi/loans/assetOffer/v1/index.js';
+import LoansCollectionOffer from './nftfi/loans/assetOffer/index.js';
+import LoansCollectionOfferV1 from './nftfi/loans/collectionOffer/v1/index.js';
 
 import { SafeEthersSigner, SafeService } from '@safe-global/safe-ethers-adapters';
 import Safe from '@safe-global/safe-core-sdk';
@@ -67,6 +71,7 @@ import set from 'lodash.set';
 import io from 'socket.io-client';
 import * as yup from 'yup';
 import { Mutex } from 'async-mutex';
+// import packageJson from '../package.json' assert { type: 'json' };
 
 export default {
   init: async function (options = {}) {
@@ -80,6 +85,7 @@ export default {
     const hasGnosisSafeAddress = options?.ethereum?.account?.multisig?.gnosis?.safe?.address;
     const hasAccountPk = options?.ethereum?.account?.privateKey;
     const hasWeb3Provider = options?.ethereum?.web3?.provider;
+    const hasEthersJsonRpcSigner = options?.ethereum?.ethers?.signer?.jsonRpc;
     const localStorage =
       typeof window !== 'undefined' && typeof window?.localStorage !== 'undefined' ? window.localStorage : null;
 
@@ -90,13 +96,15 @@ export default {
       throw 'Please provide a value for the ethereum.account.multisig.gnosis.safe.address field in the options parameter.';
     }
     if (
-      (hasGnosisSafePks && (hasWeb3Provider || hasAccountPk)) ||
-      (hasWeb3Provider && (hasGnosisSafePks || hasAccountPk)) ||
-      (hasAccountPk && (hasGnosisSafePks || hasWeb3Provider))
+      (hasGnosisSafePks && (hasWeb3Provider || hasAccountPk || hasEthersJsonRpcSigner)) ||
+      (hasWeb3Provider && (hasGnosisSafePks || hasAccountPk || hasEthersJsonRpcSigner)) ||
+      (hasAccountPk && (hasGnosisSafePks || hasWeb3Provider || hasEthersJsonRpcSigner)) ||
+      (hasEthersJsonRpcSigner && (hasGnosisSafePks || hasWeb3Provider || hasAccountPk))
     ) {
-      throw 'Please supply values for either account.privateKey, account.web3.provider, or account.multisig.';
+      throw 'Please supply values for either account.privateKey, account.web3.provider, account.ethereum.ethers.signer.jsonRpc, or account.multisig.';
     }
 
+    const version = 'v0.6.0-beta';
     const ethers = options?.dependencies?.ethers || ethersjs;
     let provider = null;
     if (options?.ethereum?.provider?.url) {
@@ -105,6 +113,9 @@ export default {
     if (options?.ethereum?.web3?.provider) {
       provider = new ethersjs.providers.Web3Provider(options?.ethereum?.web3?.provider);
     }
+    if (options?.ethereum?.ethers?.signer?.jsonRpc) {
+      provider = options?.ethereum?.ethers?.signer?.jsonRpc.provider;
+    }
     if (!provider && !options?.ethereum?.chain?.id) {
       throw 'Please provide a value for either ethereum.provider.url, ethereum.web3.provider or ethereum.chain.id.';
     }
@@ -112,6 +123,7 @@ export default {
     const network = (await provider?.getNetwork()) || { chainId: options?.ethereum?.chain?.id };
     const config = new Config({
       merge,
+      version,
       chainId: network?.chainId,
       config: {
         ...options.config
@@ -176,6 +188,10 @@ export default {
         providerAddresses = await provider.listAccounts();
         address = providerAddresses[0];
       }
+      // Let's get the signer, provider, and address from the EthersJsonRpcSigner
+      if (options?.ethereum?.ethers?.signer?.jsonRpc) {
+        address = options?.ethereum?.ethers?.signer?.jsonRpc.address;
+      }
       // Address is options.ethereum.account.address if it belongs to addresses managed by provider or provider doesn't manage any addresses
       if (
         options?.ethereum?.account?.address &&
@@ -190,6 +206,10 @@ export default {
       if (!pk && options?.ethereum?.web3?.provider && address) {
         signer = await provider.getSigner(address);
       }
+      if (!pk && options?.ethereum?.ethers?.signer?.jsonRpc && address) {
+        signer = options?.ethereum?.ethers?.signer?.jsonRpc;
+        signer['_isSigner'] = true; // To make an Ethers-v6 signer compatible with downstream code
+      }
       if (pk) {
         signer = new ethersjs.Wallet(pk, provider);
       }
@@ -200,7 +220,7 @@ export default {
     const mutex = new Mutex();
     const assertion = options?.dependencies?.assertion || new Assertion({ account, provider });
     const websocket = new Websocket({ config, io });
-    const http = new Http({ axios, loggerFactory });
+    const http = new Http({ config, axios, loggerFactory });
     const contractFactory =
       options?.dependencies?.contractFactory ||
       new ContractFactory({
@@ -241,16 +261,28 @@ export default {
     const loansHelper = new LoansHelper();
     const loansValidationRefinance = new LoansValidationRefinance({ yup });
     const loansValidation = new LoansValidation({ refinance: loansValidationRefinance });
+
+    const loansCollectionOfferV1 =
+      options?.dependencies?.loans?.collectionOffer?.v1 ||
+      new LoansCollectionOfferV1({ config, contractFactory, ethers });
+    const loansCollectionOffer = new LoansCollectionOffer({ v1: loansCollectionOfferV1 });
+    const loansAssetOfferV1 =
+      options?.dependencies?.loans?.assetOffer?.v1 || new LoansAssetOfferV1({ config, contractFactory, ethers });
+    const loansAssetOffer = new LoansAssetOffer({ v1: loansAssetOfferV1 });
     const loans = new Loans({
       api,
       account,
       fixed: loanFixed,
+      assetOffer: loansAssetOffer,
+      collectionOffer: loansCollectionOffer,
       config,
       helper: loansHelper,
       result,
       error,
       assertion,
-      validation: loansValidation
+      validation: loansValidation,
+      contractFactory,
+      ethers
     });
     const offersSignatures = new OffersSignatures({ account, ethers, config });
     const erc20 = new Erc20({ config, utils, account, contractFactory, BN, error, assertion });
@@ -321,7 +353,7 @@ export default {
     });
 
     const logger = loggerFactory.create();
-    logger.info('NFTfi SDK initialised.');
+    logger.info(`NFTfi SDK ${version} initialised.`);
 
     return nftfi;
   }

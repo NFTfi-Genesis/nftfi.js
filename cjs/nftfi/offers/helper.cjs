@@ -142,7 +142,7 @@ var OffersHelper = /*#__PURE__*/function () {
   }, {
     key: "_addFilters",
     value: function _addFilters(options, params) {
-      var _options$filters15, _options$filters15$lo, _options$filters15$lo2, _options$filters17, _options$filters17$lo, _options$filters17$lo2, _options$filters19, _options$filters19$lo, _options$filters19$lo2, _options$filters21, _options$filters21$lo, _options$filters21$lo2, _options$filters21$lo3;
+      var _options$filters15, _options$filters15$lo, _options$filters15$lo2, _options$filters17, _options$filters17$lo, _options$filters17$lo2, _options$filters19, _options$filters19$lo, _options$filters19$lo2, _options$filters21, _options$filters21$lo, _options$filters21$lo2, _options$filters21$lo3, _options$filters23, _options$filters23$ty, _options$filters25, _options$filters27, _options$filters27$in;
       if (options !== null && options !== void 0 && (_options$filters15 = options.filters) !== null && _options$filters15 !== void 0 && (_options$filters15$lo = _options$filters15.loan) !== null && _options$filters15$lo !== void 0 && (_options$filters15$lo2 = _options$filters15$lo.apr) !== null && _options$filters15$lo2 !== void 0 && _options$filters15$lo2.lte) {
         var _options$filters16, _options$filters16$lo, _options$filters16$lo2;
         params = _objectSpread(_objectSpread({}, params), {}, {
@@ -165,6 +165,24 @@ var OffersHelper = /*#__PURE__*/function () {
         var _options$filters22, _options$filters22$lo, _options$filters22$lo2, _options$filters22$lo3;
         params = _objectSpread(_objectSpread({}, params), {}, {
           termsCurrencyAddress: options === null || options === void 0 ? void 0 : (_options$filters22 = options.filters) === null || _options$filters22 === void 0 ? void 0 : (_options$filters22$lo = _options$filters22.loan) === null || _options$filters22$lo === void 0 ? void 0 : (_options$filters22$lo2 = _options$filters22$lo.currency) === null || _options$filters22$lo2 === void 0 ? void 0 : (_options$filters22$lo3 = _options$filters22$lo2.address) === null || _options$filters22$lo3 === void 0 ? void 0 : _options$filters22$lo3.eq
+        });
+      }
+      if (options !== null && options !== void 0 && (_options$filters23 = options.filters) !== null && _options$filters23 !== void 0 && (_options$filters23$ty = _options$filters23.type) !== null && _options$filters23$ty !== void 0 && _options$filters23$ty["in"]) {
+        var _options$filters24, _options$filters24$ty;
+        params = _objectSpread(_objectSpread({}, params), {}, {
+          typeIn: options === null || options === void 0 ? void 0 : (_options$filters24 = options.filters) === null || _options$filters24 === void 0 ? void 0 : (_options$filters24$ty = _options$filters24.type) === null || _options$filters24$ty === void 0 ? void 0 : _options$filters24$ty["in"].join(',')
+        });
+      }
+      if (typeof (options === null || options === void 0 ? void 0 : (_options$filters25 = options.filters) === null || _options$filters25 === void 0 ? void 0 : _options$filters25.type) === 'string') {
+        var _options$filters26;
+        params = _objectSpread(_objectSpread({}, params), {}, {
+          type: options === null || options === void 0 ? void 0 : (_options$filters26 = options.filters) === null || _options$filters26 === void 0 ? void 0 : _options$filters26.type
+        });
+      }
+      if (typeof (options === null || options === void 0 ? void 0 : (_options$filters27 = options.filters) === null || _options$filters27 === void 0 ? void 0 : (_options$filters27$in = _options$filters27.interest) === null || _options$filters27$in === void 0 ? void 0 : _options$filters27$in.prorated) === 'boolean') {
+        var _options$filters28, _options$filters28$in;
+        params = _objectSpread(_objectSpread({}, params), {}, {
+          interestProrated: options === null || options === void 0 ? void 0 : (_options$filters28 = options.filters) === null || _options$filters28 === void 0 ? void 0 : (_options$filters28$in = _options$filters28.interest) === null || _options$filters28$in === void 0 ? void 0 : _options$filters28$in.prorated
         });
       }
       return params;
@@ -218,11 +236,11 @@ var OffersHelper = /*#__PURE__*/function () {
       return params;
     }
   }, {
-    key: "constructV2_3Offer",
+    key: "constructAssetOffer",
     value: function () {
-      var _constructV2_3Offer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var _options$terms;
-        var repayment, principal, loanInterestRateForDurationInBasisPoints, lenderNonce, expiry, offer;
+      var _constructAssetOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
+        var _options$terms, _options$terms$expiry;
+        var repayment, principal, origination, lenderNonce, expiry, type, offer;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -232,10 +250,14 @@ var OffersHelper = /*#__PURE__*/function () {
               principal = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.principal).toLocaleString('fullwide', {
                 useGrouping: false
               });
-              loanInterestRateForDurationInBasisPoints = 0;
+              origination = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.origination).toLocaleString('fullwide', {
+                useGrouping: false
+              });
               lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
-              expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms = options.terms) === null || _options$terms === void 0 ? void 0 : _options$terms.expiry);
+              expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms = options.terms) === null || _options$terms === void 0 ? void 0 : (_options$terms$expiry = _options$terms.expiry) === null || _options$terms$expiry === void 0 ? void 0 : _options$terms$expiry.seconds);
+              type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.value;
               offer = {
+                type: type,
                 nft: {
                   id: options.nft.id,
                   address: options.nft.address
@@ -247,56 +269,47 @@ var OffersHelper = /*#__PURE__*/function () {
                 borrower: {
                   address: options.borrower.address
                 },
-                referrer: {
-                  address: '0x0000000000000000000000000000000000000000'
-                },
                 terms: {
                   loan: {
                     duration: options.terms.duration,
                     repayment: repayment,
                     principal: principal,
+                    origination: origination,
                     currency: options.terms.currency,
-                    expiry: expiry,
                     interest: {
-                      prorated: false,
-                      bps: loanInterestRateForDurationInBasisPoints
-                    }
-                  }
-                },
-                nftfi: {
-                  contract: {
-                    name: options.nftfi.contract.name
-                  },
-                  fee: {
-                    bps: (0, _classPrivateFieldGet2["default"])(this, _config).loan.adminFeeInBasisPoints
+                      prorated: options.terms.interest.prorated
+                    },
+                    expiry: expiry
                   }
                 },
                 metadata: options.metadata
               };
-              _context.next = 8;
-              return (0, _classPrivateFieldGet2["default"])(this, _signatures).getV2_3OfferSignature(_objectSpread(_objectSpread({}, options), {}, {
+              _context.next = 9;
+              return (0, _classPrivateFieldGet2["default"])(this, _signatures).getAssetOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
                 offer: offer
               }));
-            case 8:
+            case 9:
               offer['signature'] = _context.sent;
-              return _context.abrupt("return", offer);
-            case 10:
+              return _context.abrupt("return", _objectSpread(_objectSpread({}, offer), {}, {
+                type: options.type
+              }));
+            case 11:
             case "end":
               return _context.stop();
           }
         }, _callee, this);
       }));
-      function constructV2_3Offer(_x) {
-        return _constructV2_3Offer.apply(this, arguments);
+      function constructAssetOffer(_x) {
+        return _constructAssetOffer.apply(this, arguments);
       }
-      return constructV2_3Offer;
+      return constructAssetOffer;
     }()
   }, {
-    key: "constructV2_3FixedCollectionOffer",
+    key: "constructCollectionOffer",
     value: function () {
-      var _constructV2_3FixedCollectionOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
+      var _constructCollectionOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
         var _options$terms2, _options$terms2$expir;
-        var repayment, principal, loanInterestRateForDurationInBasisPoints, lenderNonce, expiry, nftId, offer;
+        var repayment, principal, origination, lenderNonce, expiry, nftId, type, offer;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -306,11 +319,15 @@ var OffersHelper = /*#__PURE__*/function () {
               principal = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.principal).toLocaleString('fullwide', {
                 useGrouping: false
               });
-              loanInterestRateForDurationInBasisPoints = 0;
+              origination = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.origination).toLocaleString('fullwide', {
+                useGrouping: false
+              });
               lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
               expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms2 = options.terms) === null || _options$terms2 === void 0 ? void 0 : (_options$terms2$expir = _options$terms2.expiry) === null || _options$terms2$expir === void 0 ? void 0 : _options$terms2$expir.seconds);
               nftId = 0;
+              type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.value;
               offer = {
+                type: type,
                 nft: {
                   id: nftId,
                   address: options.nft.address
@@ -319,49 +336,40 @@ var OffersHelper = /*#__PURE__*/function () {
                   address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
                   nonce: lenderNonce
                 },
-                referrer: {
-                  address: '0x0000000000000000000000000000000000000000'
-                },
                 terms: {
                   loan: {
                     duration: options.terms.duration,
                     repayment: repayment,
                     principal: principal,
+                    origination: origination,
                     currency: options.terms.currency,
-                    expiry: expiry,
                     interest: {
-                      prorated: false,
-                      bps: loanInterestRateForDurationInBasisPoints
-                    }
-                  }
-                },
-                nftfi: {
-                  contract: {
-                    name: options.nftfi.contract.name
-                  },
-                  fee: {
-                    bps: (0, _classPrivateFieldGet2["default"])(this, _config).loan.adminFeeInBasisPoints
+                      prorated: options.terms.interest.prorated
+                    },
+                    expiry: expiry
                   }
                 },
                 metadata: options.metadata
               };
-              _context2.next = 9;
-              return (0, _classPrivateFieldGet2["default"])(this, _signatures).getV2_3FixedCollectionOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
+              _context2.next = 10;
+              return (0, _classPrivateFieldGet2["default"])(this, _signatures).getCollectionOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
                 offer: offer
               }));
-            case 9:
-              offer.signature = _context2.sent;
-              return _context2.abrupt("return", offer);
-            case 11:
+            case 10:
+              offer['signature'] = _context2.sent;
+              return _context2.abrupt("return", _objectSpread(_objectSpread({}, offer), {}, {
+                type: options.type
+              }));
+            case 12:
             case "end":
               return _context2.stop();
           }
         }, _callee2, this);
       }));
-      function constructV2_3FixedCollectionOffer(_x2) {
-        return _constructV2_3FixedCollectionOffer.apply(this, arguments);
+      function constructCollectionOffer(_x2) {
+        return _constructCollectionOffer.apply(this, arguments);
       }
-      return constructV2_3FixedCollectionOffer;
+      return constructCollectionOffer;
     }()
   }]);
   return OffersHelper;

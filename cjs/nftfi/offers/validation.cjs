@@ -69,6 +69,14 @@ var OffersValidator = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "_getCoordinatorAddressAndAbi",
+    value: function _getCoordinatorAddressAndAbi() {
+      return {
+        address: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.coordinator.address,
+        abi: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.coordinator.abi
+      };
+    }
+  }, {
     key: "_getSigningUtilsContractAddressAndAbi",
     value: function _getSigningUtilsContractAddressAndAbi(contractName) {
       switch (contractName) {
@@ -85,6 +93,14 @@ var OffersValidator = /*#__PURE__*/function () {
             abi: (0, _classPrivateFieldGet2["default"])(this, _config).signingUtils.v2_3.abi
           };
       }
+    }
+  }, {
+    key: "_getSigningUtilsAddressAndAbi",
+    value: function _getSigningUtilsAddressAndAbi() {
+      return {
+        address: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.signingUtils.v1.address,
+        abi: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.signingUtils.v1.abi
+      };
     }
   }, {
     key: "_isValidAllowance",
@@ -148,13 +164,27 @@ var OffersValidator = /*#__PURE__*/function () {
     key: "_isValidSignature",
     value: function () {
       var _isValidSignature2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(offer) {
-        var _this$_getContractAdd, loanContract, _this$_getSigningUtil, signingUtilsContract, signingUtilsContractAbi, contract, offerTerms, signature;
+        var offerType, type, _this$_getSigningUtil, signingUtilsContract, signingUtilsContractAbi, contract, offerTerms, signature, _this$_getContractAdd, loanContract, _this$_getSigningUtil2, _signingUtilsContract, _signingUtilsContractAbi, _contract, _offerTerms, _signature;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
-              _this$_getContractAdd = this._getContractAddressAndAbi(offer.nftfi.contract.name), loanContract = _this$_getContractAdd.address;
-              _this$_getSigningUtil = this._getSigningUtilsContractAddressAndAbi(offer.nftfi.contract.name), signingUtilsContract = _this$_getSigningUtil.address, signingUtilsContractAbi = _this$_getSigningUtil.abi;
+              offerType = offer === null || offer === void 0 ? void 0 : offer.type;
+              if (!offerType) {
+                _context3.next = 19;
+                break;
+              }
+              _context3.t0 = offerType;
+              _context3.next = _context3.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.name ? 6 : _context3.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.name ? 8 : 10;
+              break;
+            case 6:
+              type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.value;
+              return _context3.abrupt("break", 10);
+            case 8:
+              type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.value;
+              return _context3.abrupt("break", 10);
+            case 10:
+              _this$_getSigningUtil = this._getSigningUtilsAddressAndAbi(), signingUtilsContract = _this$_getSigningUtil.address, signingUtilsContractAbi = _this$_getSigningUtil.abi;
               contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
                 address: signingUtilsContract,
                 abi: signingUtilsContractAbi
@@ -169,9 +199,11 @@ var OffersValidator = /*#__PURE__*/function () {
                 nftCollateralId: offer.nft.id,
                 nftCollateralContract: offer.nft.address,
                 loanDuration: offer.terms.loan.duration,
-                loanAdminFeeInBasisPoints: offer.nftfi.fee.bps.toString(),
                 loanERC20Denomination: offer.terms.loan.currency,
-                referrer: offer.referrer.address
+                isProRata: offer.terms.loan.interest.prorated,
+                originationFee: offer.terms.loan.origination.toLocaleString('fullwide', {
+                  useGrouping: false
+                })
               };
               signature = {
                 nonce: offer.lender.nonce.toString(),
@@ -179,22 +211,59 @@ var OffersValidator = /*#__PURE__*/function () {
                 signer: offer.lender.address,
                 signature: offer.signature
               };
-              _context3.next = 8;
+              _context3.next = 16;
               return contract.call({
                 "function": 'isValidLenderSignature',
-                args: [offerTerms, signature, loanContract]
+                args: [offerTerms, signature, (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatBytes32String(type)]
               });
-            case 8:
+            case 16:
               return _context3.abrupt("return", _context3.sent);
-            case 11:
-              _context3.prev = 11;
-              _context3.t0 = _context3["catch"](0);
-              return _context3.abrupt("return", _context3.t0);
-            case 14:
+            case 19:
+              _this$_getContractAdd = this._getContractAddressAndAbi(offer.nftfi.contract.name), loanContract = _this$_getContractAdd.address;
+              _this$_getSigningUtil2 = this._getSigningUtilsContractAddressAndAbi(offer.nftfi.contract.name), _signingUtilsContract = _this$_getSigningUtil2.address, _signingUtilsContractAbi = _this$_getSigningUtil2.abi;
+              _contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+                address: _signingUtilsContract,
+                abi: _signingUtilsContractAbi
+              });
+              _offerTerms = {
+                loanPrincipalAmount: offer.terms.loan.principal.toLocaleString('fullwide', {
+                  useGrouping: false
+                }),
+                maximumRepaymentAmount: offer.terms.loan.repayment.toLocaleString('fullwide', {
+                  useGrouping: false
+                }),
+                nftCollateralId: offer.nft.id,
+                nftCollateralContract: offer.nft.address,
+                loanDuration: offer.terms.loan.duration,
+                loanAdminFeeInBasisPoints: offer.nftfi.fee.bps.toString(),
+                loanERC20Denomination: offer.terms.loan.currency,
+                referrer: offer.referrer.address
+              };
+              _signature = {
+                nonce: offer.lender.nonce.toString(),
+                expiry: offer.terms.loan.expiry.toString(),
+                signer: offer.lender.address,
+                signature: offer.signature
+              };
+              _context3.next = 26;
+              return _contract.call({
+                "function": 'isValidLenderSignature',
+                args: [_offerTerms, _signature, loanContract]
+              });
+            case 26:
+              return _context3.abrupt("return", _context3.sent);
+            case 27:
+              _context3.next = 32;
+              break;
+            case 29:
+              _context3.prev = 29;
+              _context3.t1 = _context3["catch"](0);
+              return _context3.abrupt("return", _context3.t1);
+            case 32:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[0, 11]]);
+        }, _callee3, this, [[0, 29]]);
       }));
       function _isValidSignature(_x3) {
         return _isValidSignature2.apply(this, arguments);
@@ -205,33 +274,65 @@ var OffersValidator = /*#__PURE__*/function () {
     key: "_isValidNonce",
     value: function () {
       var _isValidNonce2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(offer) {
-        var _this$_getContractAdd2, loanContract, loanContractAbi, contract, isUsedNonce;
+        var offerType, type, _this$_getCoordinator, coordinatorAddress, coordinatorAbi, coordinatorContract, isUsedNonce, _this$_getContractAdd2, loanContract, loanContractAbi, contract, _isUsedNonce;
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               _context4.prev = 0;
+              offerType = offer === null || offer === void 0 ? void 0 : offer.type;
+              if (!offerType) {
+                _context4.next = 18;
+                break;
+              }
+              _context4.t0 = offerType;
+              _context4.next = _context4.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.name ? 6 : _context4.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.name ? 8 : 10;
+              break;
+            case 6:
+              type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.value;
+              return _context4.abrupt("break", 10);
+            case 8:
+              type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.value;
+              return _context4.abrupt("break", 10);
+            case 10:
+              _this$_getCoordinator = this._getCoordinatorAddressAndAbi(), coordinatorAddress = _this$_getCoordinator.address, coordinatorAbi = _this$_getCoordinator.abi;
+              coordinatorContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+                address: coordinatorAddress,
+                abi: coordinatorAbi
+              });
+              _context4.next = 14;
+              return coordinatorContract.call({
+                "function": 'getWhetherNonceHasBeenUsedForUser',
+                args: [(0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatBytes32String(type), offer.lender.address, offer.lender.nonce]
+              });
+            case 14:
+              isUsedNonce = _context4.sent;
+              return _context4.abrupt("return", !isUsedNonce);
+            case 18:
               _this$_getContractAdd2 = this._getContractAddressAndAbi(offer.nftfi.contract.name), loanContract = _this$_getContractAdd2.address, loanContractAbi = _this$_getContractAdd2.abi;
               contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
                 address: loanContract,
                 abi: loanContractAbi
               });
-              _context4.next = 5;
+              _context4.next = 22;
               return contract.call({
                 "function": 'getWhetherNonceHasBeenUsedForUser',
                 args: [offer.lender.address, offer.lender.nonce]
               });
-            case 5:
-              isUsedNonce = _context4.sent;
-              return _context4.abrupt("return", !isUsedNonce);
-            case 9:
-              _context4.prev = 9;
-              _context4.t0 = _context4["catch"](0);
-              return _context4.abrupt("return", _context4.t0);
-            case 12:
+            case 22:
+              _isUsedNonce = _context4.sent;
+              return _context4.abrupt("return", !_isUsedNonce);
+            case 24:
+              _context4.next = 29;
+              break;
+            case 26:
+              _context4.prev = 26;
+              _context4.t1 = _context4["catch"](0);
+              return _context4.abrupt("return", _context4.t1);
+            case 29:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, this, [[0, 9]]);
+        }, _callee4, this, [[0, 26]]);
       }));
       function _isValidNonce(_x4) {
         return _isValidNonce2.apply(this, arguments);
@@ -260,12 +361,16 @@ var OffersValidator = /*#__PURE__*/function () {
     key: "validate",
     value: function () {
       var _validate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
-        var _options$checks,
+        var _offer$nftfi,
+          _offer$nftfi$contract,
+          _offer$terms,
+          _offer$terms$loan,
+          _options$checks,
           _options$checks2,
           _options$checks3,
           _options$checks4,
           _this = this;
-        var offer, errors, contract, currency, lender, principalBn, isValidSignature, performAllChecks, isValidNonce, isValidAllowance, isValidBalance;
+        var offer, errors, contract, offerType, currency, lender, principalBn, originationFeeBn, isValidSignature, performAllChecks, isValidNonce, isValidAllowance, isValidBalance;
         return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
@@ -278,12 +383,16 @@ var OffersValidator = /*#__PURE__*/function () {
               this._addError('terms.expiry', 'invalid', 'expiry', 'offer expiry is in the past', errors);
               return _context5.abrupt("return", errors);
             case 5:
-              contract = offer.nftfi.contract.name;
+              contract = offer === null || offer === void 0 ? void 0 : (_offer$nftfi = offer.nftfi) === null || _offer$nftfi === void 0 ? void 0 : (_offer$nftfi$contract = _offer$nftfi.contract) === null || _offer$nftfi$contract === void 0 ? void 0 : _offer$nftfi$contract.name;
+              offerType = offer === null || offer === void 0 ? void 0 : offer.type;
               currency = offer.terms.loan.currency;
               lender = offer.lender.address;
               principalBn = (0, _classPrivateFieldGet2["default"])(this, _ethers).BigNumber.from(offer.terms.loan.principal.toLocaleString('fullwide', {
                 useGrouping: false
               }));
+              originationFeeBn = offer !== null && offer !== void 0 && (_offer$terms = offer.terms) !== null && _offer$terms !== void 0 && (_offer$terms$loan = _offer$terms.loan) !== null && _offer$terms$loan !== void 0 && _offer$terms$loan.origination ? (0, _classPrivateFieldGet2["default"])(this, _ethers).BigNumber.from(offer.terms.loan.origination.toLocaleString('fullwide', {
+                useGrouping: false
+              })) : 0;
               performAllChecks = !(options !== null && options !== void 0 && (_options$checks = options.checks) !== null && _options$checks !== void 0 && _options$checks.length) > 0;
               if (!performAllChecks && !(options !== null && options !== void 0 && (_options$checks2 = options.checks) !== null && _options$checks2 !== void 0 && _options$checks2.includes('signature')) || !offer.signature) {
                 isValidSignature = true;
@@ -302,7 +411,7 @@ var OffersValidator = /*#__PURE__*/function () {
                 isValidAllowance = this._isValidAllowance({
                   nftfi: {
                     contract: {
-                      name: contract
+                      name: offerType ? 'v3.erc20Manager.v1' : contract
                     }
                   },
                   account: {
@@ -312,7 +421,7 @@ var OffersValidator = /*#__PURE__*/function () {
                     address: currency
                   },
                   gte: {
-                    amount: principalBn
+                    amount: principalBn.sub(originationFeeBn)
                   }
                 });
                 isValidBalance = this._isValidBalance({
@@ -328,7 +437,7 @@ var OffersValidator = /*#__PURE__*/function () {
                     address: currency
                   },
                   gte: {
-                    amount: principalBn
+                    amount: principalBn.sub(originationFeeBn)
                   }
                 });
               }
@@ -355,14 +464,14 @@ var OffersValidator = /*#__PURE__*/function () {
                   _this._addError('signature', status, type, msg, errors);
                 }
                 if (checks[3] !== true) {
-                  type = offer.nftfi.contract.name + '.getWhetherNonceHasBeenUsedForUser';
+                  type = (offerType || offer.nftfi.contract.name) + '.getWhetherNonceHasBeenUsedForUser';
                   status = checks[3] ? 'error' : 'invalid';
                   msg = checks[3] ? 'failed to check nonce' : 'lender nonce has already been used';
                   _this._addError('lender.nonce', status, type, msg, errors);
                 }
                 return Object.keys(errors).length > 0 ? errors : null;
               }));
-            case 14:
+            case 16:
             case "end":
               return _context5.stop();
           }

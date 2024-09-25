@@ -14,27 +14,24 @@ async function run() {
   // Get offers
   const offers = await borrower.offers.get({
     filters: {
+      borrower: { address: { eq: await borrower.account.getAddress() } },
       nft: {
         address: process.env.NFTFI_SDK_EXAMPLE_NFT_ADDRESS,
         id: process.env.NFTFI_SDK_EXAMPLE_NFT_ID
-      }
+      },
+      type: borrower.config.protocol.v3.type.asset.name //v3.asset
     }
   });
+
   // Proceed if we find offers
   if (offers.length > 0) {
     // Choose an offer
     const offer = offers[0];
     // Set approval for NFT going into escrow
     console.log('[INFO] approving NFT for use with NFTfi contract');
-    await borrower.nft.erc721.setApprovalForAll({
-      token: {
-        address: offer.nft.address
-      },
-      nftfi: {
-        contract: {
-          name: offer.nftfi.contract.name
-        }
-      }
+    await borrower.nft.approve({
+      token: { address: offer.nft.address },
+      nftfi: { contract: { name: borrower.config.protocol.v3.escrow.v1.name } }
     });
     // Begin loan for given offer
     console.log('[INFO] using offer to begin loan');

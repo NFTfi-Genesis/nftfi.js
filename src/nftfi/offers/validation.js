@@ -30,6 +30,13 @@ class OffersValidator {
     }
   }
 
+  _getCoordinatorAddressAndAbi() {
+    return {
+      address: this.#config.protocol.v3.coordinator.address,
+      abi: this.#config.protocol.v3.coordinator.abi
+    };
+  }
+
   _getSigningUtilsContractAddressAndAbi(contractName) {
     switch (contractName) {
       case 'v2.loan.fixed.collection':
@@ -42,6 +49,13 @@ class OffersValidator {
           abi: this.#config.signingUtils.v2_3.abi
         };
     }
+  }
+
+  _getSigningUtilsAddressAndAbi() {
+    return {
+      address: this.#config.protocol.v3.signingUtils.v1.address,
+      abi: this.#config.protocol.v3.signingUtils.v1.abi
+    };
   }
 
   async _isValidAllowance(options) {
@@ -64,36 +78,79 @@ class OffersValidator {
 
   async _isValidSignature(offer) {
     try {
-      const { address: loanContract } = this._getContractAddressAndAbi(offer.nftfi.contract.name);
-      const { address: signingUtilsContract, abi: signingUtilsContractAbi } =
-        this._getSigningUtilsContractAddressAndAbi(offer.nftfi.contract.name);
+      const offerType = offer?.type;
+      if (offerType) {
+        let type;
+        switch (offerType) {
+          case this.#config.protocol.v3.type.asset.name:
+            type = this.#config.protocol.v3.type.asset.value;
+            break;
+          case this.#config.protocol.v3.type.collection.name:
+            type = this.#config.protocol.v3.type.collection.value;
+            break;
+        }
+        const { address: signingUtilsContract, abi: signingUtilsContractAbi } = this._getSigningUtilsAddressAndAbi();
 
-      const contract = this.#contractFactory.create({
-        address: signingUtilsContract,
-        abi: signingUtilsContractAbi
-      });
+        const contract = this.#contractFactory.create({
+          address: signingUtilsContract,
+          abi: signingUtilsContractAbi
+        });
 
-      const offerTerms = {
-        loanPrincipalAmount: offer.terms.loan.principal.toLocaleString('fullwide', { useGrouping: false }),
-        maximumRepaymentAmount: offer.terms.loan.repayment.toLocaleString('fullwide', { useGrouping: false }),
-        nftCollateralId: offer.nft.id,
-        nftCollateralContract: offer.nft.address,
-        loanDuration: offer.terms.loan.duration,
-        loanAdminFeeInBasisPoints: offer.nftfi.fee.bps.toString(),
-        loanERC20Denomination: offer.terms.loan.currency,
-        referrer: offer.referrer.address
-      };
-      const signature = {
-        nonce: offer.lender.nonce.toString(),
-        expiry: offer.terms.loan.expiry.toString(),
-        signer: offer.lender.address,
-        signature: offer.signature
-      };
+        const offerTerms = {
+          loanPrincipalAmount: offer.terms.loan.principal.toLocaleString('fullwide', { useGrouping: false }),
+          maximumRepaymentAmount: offer.terms.loan.repayment.toLocaleString('fullwide', { useGrouping: false }),
+          nftCollateralId: offer.nft.id,
+          nftCollateralContract: offer.nft.address,
+          loanDuration: offer.terms.loan.duration,
+          loanERC20Denomination: offer.terms.loan.currency,
+          isProRata: offer.terms.loan.interest.prorated,
+          originationFee: offer.terms.loan.origination.toLocaleString('fullwide', { useGrouping: false })
+        };
 
-      return await contract.call({
-        function: 'isValidLenderSignature',
-        args: [offerTerms, signature, loanContract]
-      });
+        const signature = {
+          nonce: offer.lender.nonce.toString(),
+          expiry: offer.terms.loan.expiry.toString(),
+          signer: offer.lender.address,
+          signature: offer.signature
+        };
+
+        return await contract.call({
+          function: 'isValidLenderSignature',
+          args: [offerTerms, signature, this.#ethers.utils.formatBytes32String(type)]
+        });
+      } else {
+        const { address: loanContract } = this._getContractAddressAndAbi(offer.nftfi.contract.name);
+        const { address: signingUtilsContract, abi: signingUtilsContractAbi } =
+          this._getSigningUtilsContractAddressAndAbi(offer.nftfi.contract.name);
+
+        const contract = this.#contractFactory.create({
+          address: signingUtilsContract,
+          abi: signingUtilsContractAbi
+        });
+
+        const offerTerms = {
+          loanPrincipalAmount: offer.terms.loan.principal.toLocaleString('fullwide', { useGrouping: false }),
+          maximumRepaymentAmount: offer.terms.loan.repayment.toLocaleString('fullwide', { useGrouping: false }),
+          nftCollateralId: offer.nft.id,
+          nftCollateralContract: offer.nft.address,
+          loanDuration: offer.terms.loan.duration,
+          loanAdminFeeInBasisPoints: offer.nftfi.fee.bps.toString(),
+          loanERC20Denomination: offer.terms.loan.currency,
+          referrer: offer.referrer.address
+        };
+
+        const signature = {
+          nonce: offer.lender.nonce.toString(),
+          expiry: offer.terms.loan.expiry.toString(),
+          signer: offer.lender.address,
+          signature: offer.signature
+        };
+
+        return await contract.call({
+          function: 'isValidLenderSignature',
+          args: [offerTerms, signature, loanContract]
+        });
+      }
     } catch (error) {
       return error;
     }
@@ -101,17 +158,45 @@ class OffersValidator {
 
   async _isValidNonce(offer) {
     try {
-      const { address: loanContract, abi: loanContractAbi } = this._getContractAddressAndAbi(offer.nftfi.contract.name);
-      const contract = this.#contractFactory.create({
-        address: loanContract,
-        abi: loanContractAbi
-      });
+      const offerType = offer?.type;
 
-      const isUsedNonce = await contract.call({
-        function: 'getWhetherNonceHasBeenUsedForUser',
-        args: [offer.lender.address, offer.lender.nonce]
-      });
-      return !isUsedNonce;
+      if (offerType) {
+        let type;
+        switch (offerType) {
+          case this.#config.protocol.v3.type.asset.name:
+            type = this.#config.protocol.v3.type.asset.value;
+            break;
+          case this.#config.protocol.v3.type.collection.name:
+            type = this.#config.protocol.v3.type.collection.value;
+            break;
+        }
+        const { address: coordinatorAddress, abi: coordinatorAbi } = this._getCoordinatorAddressAndAbi();
+
+        const coordinatorContract = this.#contractFactory.create({
+          address: coordinatorAddress,
+          abi: coordinatorAbi
+        });
+
+        const isUsedNonce = await coordinatorContract.call({
+          function: 'getWhetherNonceHasBeenUsedForUser',
+          args: [this.#ethers.utils.formatBytes32String(type), offer.lender.address, offer.lender.nonce]
+        });
+        return !isUsedNonce;
+      } else {
+        const { address: loanContract, abi: loanContractAbi } = this._getContractAddressAndAbi(
+          offer.nftfi.contract.name
+        );
+        const contract = this.#contractFactory.create({
+          address: loanContract,
+          abi: loanContractAbi
+        });
+
+        const isUsedNonce = await contract.call({
+          function: 'getWhetherNonceHasBeenUsedForUser',
+          args: [offer.lender.address, offer.lender.nonce]
+        });
+        return !isUsedNonce;
+      }
     } catch (error) {
       return error;
     }
@@ -136,12 +221,16 @@ class OffersValidator {
       return errors;
     }
 
-    const contract = offer.nftfi.contract.name;
+    const contract = offer?.nftfi?.contract?.name;
+    const offerType = offer?.type;
     const currency = offer.terms.loan.currency;
     const lender = offer.lender.address;
     const principalBn = this.#ethers.BigNumber.from(
       offer.terms.loan.principal.toLocaleString('fullwide', { useGrouping: false })
     );
+    const originationFeeBn = offer?.terms?.loan?.origination
+      ? this.#ethers.BigNumber.from(offer.terms.loan.origination.toLocaleString('fullwide', { useGrouping: false }))
+      : 0;
 
     let isValidSignature;
     let performAllChecks = !options?.checks?.length > 0;
@@ -166,16 +255,16 @@ class OffersValidator {
       isValidBalance = true;
     } else {
       isValidAllowance = this._isValidAllowance({
-        nftfi: { contract: { name: contract } },
+        nftfi: { contract: { name: offerType ? 'v3.erc20Manager.v1' : contract } },
         account: { address: lender },
         token: { address: currency },
-        gte: { amount: principalBn }
+        gte: { amount: principalBn.sub(originationFeeBn) }
       });
       isValidBalance = this._isValidBalance({
         nftfi: { contract: { name: contract } },
         account: { address: lender },
         token: { address: currency },
-        gte: { amount: principalBn }
+        gte: { amount: principalBn.sub(originationFeeBn) }
       });
     }
 
@@ -208,7 +297,7 @@ class OffersValidator {
       }
 
       if (checks[3] !== true) {
-        type = offer.nftfi.contract.name + '.getWhetherNonceHasBeenUsedForUser';
+        type = (offerType || offer.nftfi.contract.name) + '.getWhetherNonceHasBeenUsedForUser';
         status = checks[3] ? 'error' : 'invalid';
         msg = checks[3] ? 'failed to check nonce' : 'lender nonce has already been used';
         this._addError('lender.nonce', status, type, msg, errors);

@@ -18,7 +18,8 @@ async function run() {
   } = await borrower.loans.get({
     filters: {
       borrower: { address: borrower.account.getAddress() },
-      status: 'active'
+      status: 'active',
+      nftfi: { contract: { name: borrower.config.protocol.v3.assetOfferLoan.v1.name } }
     }
   });
   const loan = results[0];
@@ -34,14 +35,13 @@ async function run() {
     filters: {
       nft: { address: loan.nft.address },
       loan: { currency: { address: { eq: loan.terms.loan.currency } } },
-      nftfi: { contract: { name: borrower.config.loan.fixed.collection.v2_3.name } }
+      type: borrower.config.protocol.v3.type.collection.name //v3.collection
     }
   });
 
   // Use the first available offer
   const offer = offers[0];
-  // Add the NFT id to this collection offer
-  offer.nft.id = loan.nft.id;
+
   if (!offer) {
     console.log(`[ERROR] No offers available for refinancing loanId ${loan.id}.`);
     process.exit();
@@ -50,21 +50,25 @@ async function run() {
 
   // Approve your obligation receipts with the Refinance contract.
   const ORApproval = await borrower.nft.approve({
-    token: { address: borrower.config.loan.fixed.collection.v2_3.obligationReceipt.address },
-    nftfi: { contract: { name: borrower.config.loan.refinance.name } }
+    token: { address: borrower.config.protocol.v3.obligationReceipt.v1.address },
+    nftfi: { contract: { name: borrower.config.protocol.v3.refinance.v1.name } }
   });
   console.log('[INFO] Obligation receipt approval:', ORApproval);
 
   // Approve ERC20 Tokens (if additional payment is needed).
-  const erc20Approval = await borrower.erc20.approveMax({
+  const erc20Approval = await borrower.erc20.approve({
     token: { address: loan.terms.loan.currency },
-    nftfi: { contract: { name: borrower.config.loan.refinance.name } }
+    nftfi: { contract: { name: borrower.config.protocol.v3.refinance.v1.name } },
+    amount: loan.terms.loan.repayment
   });
   console.log('[INFO] Repayment amount approval:', erc20Approval);
 
   // Mint an obligation receipt for this loan.
   const ORMint = await borrower.loans.mintObligationReceipt({ loan });
   console.log('[INFO] Minting obligation receipt:', ORMint);
+
+  // Add the NFT id to this collection offer
+  offer.nft.id = loan.nft.id;
 
   // Initiate the refinancing with the selected loan and offer.
   const refiResult = await borrower.loans.refinance({ loan, offer });

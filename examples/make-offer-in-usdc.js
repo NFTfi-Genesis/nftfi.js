@@ -31,41 +31,40 @@ async function run() {
     token: { address: currency }
   });
   // Construct the loan terms
-  const contractName = nftfi.config.loan.fixed.v2_3.name;
-
-  // Convert 1 USDC amount into wei
-  const principal = nftfi.utils.formatWei(1, nftfi.config.erc20.usdc.unit).toString();
-
+  const principal = nftfi.utils.formatWei(1, nftfi.config.erc20.usdc.unit).toString(); // Convert 1 USDC amount into wei
   const apr = 31.42;
-  const days = 30;
+  const days = 1;
   const repayment = nftfi.utils.calcRepaymentAmount(principal, apr, days);
   const duration = 86400 * days; // Number of days (loan duration) in seconds
+  const expiry = 86400 * days;
+  const origination = 0;
+  const interest = { prorated: false };
   const terms = {
     principal,
     repayment,
     duration,
-    currency
+    currency,
+    expiry,
+    origination,
+    interest
   };
 
   // Approve principal with NFTfi contracts
   await nftfi.erc20.approve({
     token: { address: currency },
-    nftfi: { contract: { name: contractName } },
+    nftfi: { contract: { name: nftfi.config.protocol.v3.erc20Manager.v1.name } },
     amount: principal
   });
   console.log(`[INFO] balance of ${symbol} in account ${nftfi.account.getAddress()} is ${balance}`);
   console.log('[INFO] setting allowance on NFTfi contract.');
   // Create the offer on the NFT
+  const type = nftfi.config.protocol.v3.type.asset.name; //"v3.asset"
   const result = await nftfi.offers.create({
+    type,
     terms,
     nft,
     borrower: {
       address: ownerAddress
-    },
-    nftfi: {
-      contract: {
-        name: contractName
-      }
     }
   });
   if (result.errors) {

@@ -83,6 +83,15 @@ class OffersHelper {
     if (options?.filters?.loan?.currency?.address?.eq) {
       params = { ...params, termsCurrencyAddress: options?.filters?.loan?.currency?.address?.eq };
     }
+    if (options?.filters?.type?.in) {
+      params = { ...params, typeIn: options?.filters?.type?.in.join(',') };
+    }
+    if (typeof options?.filters?.type === 'string') {
+      params = { ...params, type: options?.filters?.type };
+    }
+    if (typeof options?.filters?.interest?.prorated === 'boolean') {
+      params = { ...params, interestProrated: options?.filters?.interest?.prorated };
+    }
     return params;
   }
 
@@ -121,13 +130,17 @@ class OffersHelper {
     return params;
   }
 
-  async constructV2_3Offer(options) {
+  async constructAssetOffer(options) {
     const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
     const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
-    const loanInterestRateForDurationInBasisPoints = 0;
+    const origination = this.#Number(options.terms.origination).toLocaleString('fullwide', {
+      useGrouping: false
+    });
     const lenderNonce = this.#utils.getNonce();
-    const expiry = this.#utils.getExpiry(options?.terms?.expiry);
+    const expiry = this.#utils.getExpiry(options?.terms?.expiry?.seconds);
+    const type = this.#config.protocol.v3.type.asset.value;
     let offer = {
+      type,
       nft: {
         id: options.nft.id,
         address: options.nft.address
@@ -139,47 +152,38 @@ class OffersHelper {
       borrower: {
         address: options.borrower.address
       },
-      referrer: {
-        address: '0x0000000000000000000000000000000000000000'
-      },
       terms: {
         loan: {
           duration: options.terms.duration,
           repayment: repayment,
           principal: principal,
+          origination,
           currency: options.terms.currency,
-          expiry: expiry,
-          interest: {
-            prorated: false,
-            bps: loanInterestRateForDurationInBasisPoints
-          }
-        }
-      },
-      nftfi: {
-        contract: {
-          name: options.nftfi.contract.name
-        },
-        fee: {
-          bps: this.#config.loan.adminFeeInBasisPoints
+          interest: { prorated: options.terms.interest.prorated },
+          expiry: expiry
         }
       },
       metadata: options.metadata
     };
-    offer['signature'] = await this.#signatures.getV2_3OfferSignature({
+    offer['signature'] = await this.#signatures.getAssetOfferSignature({
       ...options,
       offer
     });
-    return offer;
+    return { ...offer, type: options.type };
   }
 
-  async constructV2_3FixedCollectionOffer(options) {
+  async constructCollectionOffer(options) {
     const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
     const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
-    const loanInterestRateForDurationInBasisPoints = 0;
+    const origination = this.#Number(options.terms.origination).toLocaleString('fullwide', {
+      useGrouping: false
+    });
     const lenderNonce = this.#utils.getNonce();
     const expiry = this.#utils.getExpiry(options?.terms?.expiry?.seconds);
     const nftId = 0;
+    const type = this.#config.protocol.v3.type.collection.value;
     let offer = {
+      type,
       nft: {
         id: nftId,
         address: options.nft.address
@@ -188,37 +192,24 @@ class OffersHelper {
         address: this.#account.getAddress(),
         nonce: lenderNonce
       },
-      referrer: {
-        address: '0x0000000000000000000000000000000000000000'
-      },
       terms: {
         loan: {
           duration: options.terms.duration,
           repayment: repayment,
           principal: principal,
+          origination,
           currency: options.terms.currency,
-          expiry: expiry,
-          interest: {
-            prorated: false,
-            bps: loanInterestRateForDurationInBasisPoints
-          }
-        }
-      },
-      nftfi: {
-        contract: {
-          name: options.nftfi.contract.name
-        },
-        fee: {
-          bps: this.#config.loan.adminFeeInBasisPoints
+          interest: { prorated: options.terms.interest.prorated },
+          expiry: expiry
         }
       },
       metadata: options.metadata
     };
-    offer.signature = await this.#signatures.getV2_3FixedCollectionOfferSignature({
+    offer['signature'] = await this.#signatures.getCollectionOfferSignature({
       ...options,
       offer
     });
-    return offer;
+    return { ...offer, type: options.type };
   }
 }
 

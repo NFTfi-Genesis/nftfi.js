@@ -37,14 +37,14 @@ var OffersSignatures = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
   }
   (0, _createClass2["default"])(OffersSignatures, [{
-    key: "getV2_3OfferSignature",
+    key: "getAssetOfferSignature",
     value: function () {
-      var _getV2_3OfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
+      var _getAssetOfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
         var signature;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['address', 'uint256', 'uint256', 'address', 'uint256', 'address', 'uint32', 'uint16', 'address', 'uint256', 'uint256', 'address', 'uint256'], [options.offer.terms.loan.currency, options.offer.terms.loan.principal, options.offer.terms.loan.repayment, options.offer.nft.address, options.offer.nft.id, options.offer.referrer.address, options.offer.terms.loan.duration, options.offer.nftfi.fee.bps, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), options.offer.lender.nonce, options.offer.terms.loan.expiry, (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.v2_3.address, (0, _classPrivateFieldGet2["default"])(this, _config).chainId])));
+              signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['address', 'uint256', 'uint256', 'address', 'uint256', 'uint32', 'bool', 'uint256', 'address', 'uint256', 'uint256', 'bytes32', 'uint256'], [options.offer.terms.loan.currency, options.offer.terms.loan.principal, options.offer.terms.loan.repayment, options.offer.nft.address, options.offer.nft.id, options.offer.terms.loan.duration, options.offer.terms.loan.interest.prorated, options.offer.terms.loan.origination, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), options.offer.lender.nonce, options.offer.terms.loan.expiry, (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatBytes32String(options.offer.type), (0, _classPrivateFieldGet2["default"])(this, _config).chainId])));
               return _context.abrupt("return", signature);
             case 2:
             case "end":
@@ -52,31 +52,29 @@ var OffersSignatures = /*#__PURE__*/function () {
           }
         }, _callee, this);
       }));
-      function getV2_3OfferSignature(_x) {
-        return _getV2_3OfferSignature.apply(this, arguments);
+      function getAssetOfferSignature(_x) {
+        return _getAssetOfferSignature.apply(this, arguments);
       }
-      return getV2_3OfferSignature;
+      return getAssetOfferSignature;
     }()
   }, {
-    key: "getV2_3FixedCollectionOfferSignature",
+    key: "getCollectionOfferSignature",
     value: function () {
-      var _getV2_3FixedCollectionOfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
-        var signature;
+      var _getCollectionOfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['address', 'uint256', 'uint256', 'address', 'uint256', 'address', 'uint32', 'uint16', 'address', 'uint256', 'uint256', 'address', 'uint256'], [options.offer.terms.loan.currency, options.offer.terms.loan.principal, options.offer.terms.loan.repayment, options.offer.nft.address, options.offer.nft.id, options.offer.referrer.address, options.offer.terms.loan.duration, options.offer.nftfi.fee.bps, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), options.offer.lender.nonce, options.offer.terms.loan.expiry, (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.address, (0, _classPrivateFieldGet2["default"])(this, _config).chainId])));
-              return _context2.abrupt("return", signature);
-            case 2:
+              return _context2.abrupt("return", this.getAssetOfferSignature(options));
+            case 1:
             case "end":
               return _context2.stop();
           }
         }, _callee2, this);
       }));
-      function getV2_3FixedCollectionOfferSignature(_x2) {
-        return _getV2_3FixedCollectionOfferSignature.apply(this, arguments);
+      function getCollectionOfferSignature(_x2) {
+        return _getCollectionOfferSignature.apply(this, arguments);
       }
-      return getV2_3FixedCollectionOfferSignature;
+      return getCollectionOfferSignature;
     }()
   }]);
   return OffersSignatures;

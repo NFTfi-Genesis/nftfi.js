@@ -867,6 +867,7 @@ Class for working with loans.
     * [`.refinance(options)`](#Loans+refinance) ⇒ <code>object</code>
     * [`.revokeOffer(options)`](#Loans+revokeOffer) ⇒ <code>object</code>
     * [`.mintObligationReceipt(options)`](#Loans+mintObligationReceipt) ⇒ <code>object</code>
+    * [`.mintPromissoryNote(options)`](#Loans+mintPromissoryNote) ⇒ <code>object</code>
 
 
 * * *
@@ -955,47 +956,40 @@ Begin a loan. Called by the borrower when accepting a lender's offer.
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
+| options.type | <code>object</code> | Type of the offer `v3.asset` or v3.collection` |
 | options.offer.nft.address | <code>string</code> | Address of the NFT being used as collateral |
-| options.offer.nft.id | <code>string</code> | ID of NFT being used as collateral |
+| [options.offer.nft.id] | <code>string</code> | ID of NFT being used as collateral |
 | options.offer.terms.loan.currency | <code>string</code> | Address of the ERC20 contract being used as principal/interest |
 | options.offer.terms.loan.principal | <code>number</code> | Sum of money transferred from lender to borrower at the beginning of the loan |
 | options.offer.terms.loan.repayment | <code>number</code> | Maximum amount of money that the borrower would be required to retrieve their collateral |
+| options.offer.terms.loan.origination | <code>number</code> | Sum of money transferred to the lender at the beginning of the loan |
 | options.offer.terms.loan.duration | <code>number</code> | Amount of time (measured in seconds) that may elapse before the lender can liquidate the loan |
-| options.offer.terms.loan.expiry | <code>number</code> | Timestamp (in seconds) of when the signature expires |
+| options.offer.terms.loan.expiry.seconds | <code>number</code> | Timestamp (in seconds) of when the signature expires |
+| [options.borrower.address] | <code>string</code> | The address of the borrower (owner of nft) |
 | options.offer.lender.address | <code>string</code> | Address of the lender that signed the offer |
 | options.offer.lender.nonce | <code>string</code> | Nonce used by the lender when they signed the offer |
+| [options.offer.nftfi.fee.bps] | <code>number</code> | Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid |
+| [options.offer.nftfi.contract.name] | <code>string</code> | Name of contract used to facilitate the loan: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 | options.offer.signature | <code>string</code> | ECDSA signature of the lender |
-| options.offer.nftfi.fee.bps | <code>number</code> | Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid |
-| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Begin a loan on a lender's offer.
+// Begin a loan on v3 offer
 const result = await nftfi.loans.begin({
-  offer: {
-    nft: {
-      id: '42',
-      address: '0x00000000',
-    },
-    lender: {
-      address: '0x00000000',
-      nonce: '314159265359'
-    },
-    terms: {
-      loan: {
-        principal: 1000000000000000000,
-        repayment: 1100000000000000000,
-        duration: 86400 * 7, // 7 days (in seconds)
-        currency: "0x00000000",
-        expiry: 1690548548 // Friday, 28 July 2023 14:49:08 GMT+02:00
-      }
-    },
-    signature: '0x000000000000000000000000000000000000000000000000000',
-    nftfi: {
-      fee: { bps: 500 },
-      contract: { name: 'v2-3.loan.fixed' }
-    }
-  }
+  type: 'v3.asset',
+  nft: { address: '0x22222222', id: '2' },
+  borrower: { address: '0x11111111' },
+  lender: { address: '0x22222222' },
+  terms: {
+    principal: '1000000000000000000',
+    repayment: '1100000000000000000',
+    origination: '100000000000000000',
+    interest: { prorated: true },
+    duration: 31536000,
+    currency: '0x00000000',
+    expiry: { seconds: 1722260287 }
+  },
+  signature: "0x000000000"
 });
 ```
 
@@ -1014,23 +1008,18 @@ Can be called once a loan has finished its duration and the borrower still has n
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.loan.id | <code>string</code> | The ID of the loan being liquidated |
-| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the liquidation: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
+| [options.nftfi.contract.name] | <code>string</code> | Name of contract used to facilitate the liquidation: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Liquidate a v2-3 fixed collection loan
+// Liquidate a v3 loan
 const result = await nftfi.loans.liquidate({
-  loan: { id: 3 },
-  nftfi: {
-    contract: {
-      name: 'v2-3.loan.fixed.collection'
-    }
-  }
+  loan: { id: 1 },
 });
 ```
 **Example**  
 ```js
-// Liquidate a v2.3 fixed loan
+// Liquidate a v2 loan
 const result = await nftfi.loans.liquidate({
   loan: { id: 2 },
   nftfi: {
@@ -1055,25 +1044,20 @@ Repay a loan. Can be called at any time after the loan has begun and before loan
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.loan.id | <code>string</code> | The ID of the loan being repaid |
-| options.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the repayment: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
+| [options.nftfi.contract.name] | <code>string</code> | Name of contract used to facilitate the repayment: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Repay a v2.3 fixed loan
+// Repay a v3 loan
 const result = await nftfi.loans.repay({
-  loan: { id: 2 },
-  nftfi: {
-    contract: {
-      name: 'v2-3.loan.fixed'
-    }
-  }
+  loan: { id: 1 }
 });
 ```
 **Example**  
 ```js
-// Repay a v2-3 fixed collection loan
+// Repay a v2 loan
 const result = await nftfi.loans.repay({
-  loan: { id: 3 },
+  loan: { id: 2 },
   nftfi: {
     contract: {
       name: 'v2-3.loan.fixed.collection'
@@ -1100,44 +1084,44 @@ Refinance a given loan.
 
 **Example**  
 ```js
-// Identify an active loan where you are the borrower.
-const { data: { results } } = await nftfi.loans.get({
- filters: {
-  borrower: { address: nftfi.account.getAddress() },
-  status: 'active'
+// Fetch active loans
+const loans = await borrower.loans.get({
+  filters: { status: 'active' }
 });
-const loan = results[0];
+const loan = loans.data.results[0];
 
-// Fetch offers that match the currency and NFT of the selected loan.
-// **The offer's currency must align with the loan's currency.**
+// Get a v3 offer
 const offers = await borrower.offers.get({
   filters: {
-    nft: { address: loan.nft.address, id: loan.nft.id },
+    nft: { address: loan.nft.address },
     loan: { currency: { address: { eq: loan.terms.loan.currency } } },
-    nftfi: { contract: { name: nftfi.config.loan.fixed.v2_1.name } }
+    type: 'v3.collection'
   }
 });
 const offer = offers[0];
 
-// Approve your obligation receipts with the Refinance contract.
-const ORApproval = await nftfi.nft.approve({
- token: { address: nftfi.config.loan.fixed.v2_1.obligationReceipt.address },
- nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+// Mint Obligation Receipt
+await nftfi.loans.mintObligationReceipt({ loan });
+
+// Allow the contract to manage your ORs
+await borrower.nft.approve({
+  token: { address: nftfi.config.protocol.v3.obligationReceipt.v1.address },
+  nftfi: { contract: { name: 'v3.refinance.v1' } }
 });
 
-// Approve ERC20 Tokens (if additional payment is needed).
-const erc20Approval = await nftfi.erc20.approveMax({
- token: { address: loan.terms.loan.currency },
- nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+// If the refinancing proceed is negative, also allow the contract to manage your ERC20 to pay the proceed
+await borrower.erc20.approveMax({
+  token: { address: borrower.config.erc20.weth.address },
+  nftfi: { contract: { name: 'v3.refinance.v1' } }
 });
 
-// Mint an obligation receipt for this loan.
-const ORMint = await nftfi.loans.mintObligationReceipt({ loan });
-
-// Initiate the refinancing with the selected loan and offer.
-const refiResult = await nftfi.loans.refinance({
+// Refinance
+const result = await borrower.loans.refinance({
   loan,
-  offer
+  offer: {
+    ...offer,
+    nft: { ...offer.nft, id: NFT_ID }
+  }
 });
 ```
 
@@ -1155,14 +1139,25 @@ Revokes an active offer made by your account.
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.offer.nonce | <code>object</code> | The nonce of the offer to be deleted |
-| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
+| [options.offer.type] | <code>string</code> | Type of the offer `v3.asset` or v3.collection` |
+| [options.nftfi.contract.name] | <code>string</code> | Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Revoke a v2.3 fixed loan offer
+// Revoke a v3 offer
 const revoked = await nftfi.loans.revoke({
   offer: {
-    nonce: '42'
+    nonce: '1',
+    type: 'v3.asset'
+  }
+});
+```
+**Example**  
+```js
+// Revoke a v2 offer
+const revoked = await nftfi.loans.revoke({
+  offer: {
+    nonce: '2'
   },
   nftfi: {
     contract: {
@@ -1186,20 +1181,50 @@ Mints an obligation receipt for a given loan.
 | --- | --- | --- |
 | options | <code>Object</code> | The options object containing the loan details and contract information. |
 | options.loan.nftfi.id | <code>number</code> | The ID of the loan. |
-| options.loan.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2-3.loan.fixed`, `v2.loan.fixed.collection`, `v2-3.loan.fixed.collection` |
+| [options.loan.nftfi.contract.name] | <code>string</code> | Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2-3.loan.fixed`, `v2.loan.fixed.collection`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Mint an Obligation Receipt for a v2.3 fixed loan
+// Mint an Obligation Receipt for a v3 loan
+const response = await nftfi.loans.mintObligationReceipt({
+  loan: { id: '1' }
+});
+```
+**Example**  
+```js
+// Mint an Obligation Receipt for a v2 loan
 const response = await nftfi.loans.mintObligationReceipt({
   loan: {
-    id: '42',
+    id: '2',
     nftfi: {
       contract: {
         name: 'v2-3.loan.fixed'
       }
     }
   },
+});
+```
+
+* * *
+
+<a name="Loans+mintPromissoryNote"></a>
+
+#### `loans.mintPromissoryNote(options)` ⇒ <code>object</code>
+Mints an promissory note for a given loan.
+
+**Kind**: instance method of [<code>Loans</code>](#Loans)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | The options object containing the loan details and contract information. |
+| options.loan.nftfi.id | <code>number</code> | The ID of the loan. |
+
+**Example**  
+```js
+// Mint an Promissory Note for a v3 loan
+const response = await nftfi.loans.mintObligationReceipt({
+  loan: { id: '1' }
 });
 ```
 
@@ -1246,6 +1271,9 @@ When provided with filters, gets all offers by specified filters.
 | [options.filters.loan.duration.eq] | <code>string</code> |  | Loan duration to filter by (optional) |
 | [options.filters.loan.duration.nin] | <code>Array.&lt;number&gt;</code> |  | Loan durations to exclude (optional) |
 | [options.filters.loan.currency.address.eq] | <code>string</code> |  | Loan currency to filter by (optional) |
+| [options.filters.interest.prorated] | <code>boolean</code> |  | Filter for flexible or fixed offers (optional) |
+| [options.filters.type] | <code>string</code> |  | Filter for offers of a certain type, `v3.asset` or `v3.collection` (optional) |
+| [options.filters.type.in] | <code>Array.&lt;string&gt;</code> |  | Filter for offers that match one of many types (optional) |
 | [options.pagination.page] | <code>number</code> |  | Pagination page (optional) |
 | [options.pagination.limit] | <code>number</code> |  | Pagination limit (optional) |
 | [options.pagination.sort] | <code>string</code> |  | Field to sort by (optional) |
@@ -1290,6 +1318,7 @@ const offers = await nftfi.offers.get({
 // Get the first page of collection offers made by a specific lender
 const offers = await nftfi.offers.get({
   filters: {
+    type: 'v3.collection'
     nft: {
       address: "0x00000000",
     },
@@ -1298,11 +1327,6 @@ const offers = await nftfi.offers.get({
         eq: "0x12345567"
       }
     },
-    nftfi: {
-      contract: {
-        name: "v2-3.loan.fixed.collection"
-      }
-    }
   },
   pagination:{
     page: 1,
@@ -1336,6 +1360,7 @@ Counts offers matching specified filters and groups by specified grouping value.
 | [options.filters.nft.address] | <code>string</code> | NFT contract address to filter by |
 | [options.filters.nft.id] | <code>string</code> | NFT id of the asset to filter by (optional) |
 | [options.filters.lender.address.eq] | <code>string</code> | Lender wallet address to filter by |
+| [options.filters.lender.address.ne] | <code>string</code> | Lender wallet address to ignore |
 | [options.group] | <code>string</code> | Field to group by |
 
 **Example**  
@@ -1370,33 +1395,43 @@ Creates a new offer on a NFT or collection.
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>object</code> | Config options for this method |
-| options.terms | <code>object</code> | Terms of the offer |
+| options.type | <code>object</code> | Type of the offer |
 | options.nft | <code>object</code> | NFT to place an offer on |
 | options.borrower | <code>object</code> | Owner of the NFT |
-| options.nftfi | <code>object</code> | NFTfi options |
+| options.terms | <code>object</code> | Terms of the offer |
 
 **Example**  
 ```js
-// Create an offer on a NFT
+// Create a Flexible offer on a NFT
 const offer = await nftfi.offers.create({
+  type: 'v3.asset',
+  nft: { address: '0x22222222', id: '2' },
+  borrower: { address: '0x11111111' },
   terms: {
-    principal: 1000000000000000000,
-    repayment: 1100000000000000000,
-    duration: 86400 * 7, // 7 days (in seconds)
-    currency: "0x00000000",
-    expiry: 21600 // 6 hours (in seconds)
-  },
-  nft: {
-    address: "0x00000000",
-    id: "42"
-  },
-  borrower: {
-    address: "0x00000000"
-  },
-  nftfi: {
-    contract: {
-      name: "v2-3.loan.fixed"
-    }
+    principal: '1000000000000000000',
+    repayment: '1100000000000000000',
+    origination: '100000000000000000',
+    interest: { prorated: true },
+    duration: 31536000,
+    currency: '0x00000000',
+    expiry: { seconds: 1722260287 }
+  }
+});
+```
+**Example**  
+```js
+// Create a Fixed offer on a Collection of NFTs
+const offer = await nftfi.offers.create({
+  type: 'v3.collection',
+  nft: { address: '0x22222222' },
+  terms: {
+    principal: '1000000000000000000',
+    repayment: '1100000000000000000',
+    origination: '0',
+    interest: { prorated: false },
+    duration: 31536000,
+    currency: '0x00000000',
+    expiry: { seconds: 1722260287 }
   }
 });
 ```
@@ -1443,18 +1478,25 @@ Revokes an active offer made by your account.
 | --- | --- | --- |
 | options | <code>object</code> | Hashmap of config options for this method |
 | options.offer.nonce | <code>object</code> | The nonce of the offer to be deleted |
-| options.nftfi.contract.name | <code>string</code> | Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
+| [options.offer.type] | <code>string</code> | Type of offer `v3.asset`, `v3.collection` |
+| [options.offer.contract.name] | <code>string</code> | Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
 
 **Example**  
 ```js
-// Get first available offer made by your account
-const offers = await nftfi.offers.get();
-const nonce = offers[0]['lender']['nonce'];
-const contractName = offers[0]['nftfi']['contract']['name']
-// Revoke offer
-const revoked = await nftfi.offers.revoke({
+// Revoke v3 offer
+const nonce = offer.lender.nonce;
+const type = offer.type;
+const result = await lender.offers.revoke({
+  offer: { nonce, type }
+});
+```
+**Example**  
+```js
+// Revoking a v2 offer
+const nonce = offer.lender.nonce;
+const result = await lender.offers.revoke({
   offer: { nonce },
-  nftfi: { contract: { name: contractName } }
+  nftfi: { contract: { name: offer.nftfi.contract.name } }
 });
 ```
 
@@ -1478,37 +1520,7 @@ Validates an offer based on specified checks.
 ```js
 // Validate an offer based on specified checks
 const validation = await nftfi.offers.validate({
-  offer: {
-    terms: {
-      loan: {
-        principal: 2000000000000000000,
-        repayment: 1100000000000000000,
-        currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
-        duration: 604800,
-        expiry: 1760696014,
-      }
-    },
-    nft: {
-      address: "0x123",
-      id: "00000"
-    },
-    lender: {
-      address: "0x1111111",
-      nonce: "123"
-    },
-    nftfi: {
-      contract: {
-        name: "v2.loan.fixed.collection"
-      },
-      fee: {
-        bps: "500"
-      }
-    },
-    referrer: {
-      address: "0x0000000"
-    },
-    signature: "0x0000000"
-  },
+  offer,
   checks: [
     "signature",
     "terms.principal",
@@ -1527,6 +1539,7 @@ Class with utility methods.
 **Kind**: global class  
 
 * [Utils](#Utils)
+    * [`.calcEffectiveApr`](#Utils+calcEffectiveApr) ⇒ <code>number</code> \| <code>null</code>
     * [`.getNonce()`](#Utils+getNonce) ⇒ <code>string</code>
     * [`.getExpiry()`](#Utils+getExpiry) ⇒ <code>number</code>
     * [`.formatEther(wei)`](#Utils+formatEther) ⇒ <code>string</code>
@@ -1536,6 +1549,34 @@ Class with utility methods.
     * [`.calcApr(principal, repayment, duration)`](#Utils+calcApr) ⇒ <code>number</code>
     * [`.getSupportedInterface(options)`](#Utils+getSupportedInterface) ⇒ <code>Object</code>
 
+
+* * *
+
+<a name="Utils+calcEffectiveApr"></a>
+
+#### `utils.calcEffectiveApr` ⇒ <code>number</code> \| <code>null</code>
+Calculates the effective APR (annual percentage rate) of a loan given its parameters
+
+**Kind**: instance property of [<code>Utils</code>](#Utils)  
+**Returns**: <code>number</code> \| <code>null</code> - The APR in %, calculated including the origination fee  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| principal | <code>string</code> \| <code>bigint</code> | The loan's principal amount in base units (e.g., "1000000000000000000" wei) |
+| repayment | <code>string</code> \| <code>bigint</code> | The total repayment amount to be paid by the borrower, in base units (e.g., "1100000000000000000" wei) |
+| duration | <code>string</code> \| <code>number</code> | The duration of the loan in days |
+| originationFee | <code>string</code> \| <code>bigint</code> | The origination fee of the loan in base units (e.g., "10000000000000000" wei). Defaults to 0 if undefined or null. |
+
+**Example**  
+```js
+// Calculate the effective APR
+const principal = "1000000000000000000";
+const repayment = "1100000000000000000";
+const duration = 30;
+const originationFee = "10000000000000000";
+const apr = calculateEffectiveApr(principal, repayment, duration, originationFee);
+console.log(apr); // Outputs the APR as a percentage
+```
 
 * * *
 

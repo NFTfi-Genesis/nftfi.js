@@ -75,6 +75,10 @@ var Erc721 = /*#__PURE__*/function () {
           return (0, _classPrivateFieldGet2["default"])(this, _config).bundler.migrate.v1.address;
         case 'loan.refinance':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.refinance.address;
+        case 'v3.refinance.v1':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.refinance.v1.address;
+        case 'v3.escrow.v1':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.escrow.v1.address;
       }
     }
 
