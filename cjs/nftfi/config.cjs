@@ -189,6 +189,39 @@ var baseConfig = {
     tokenError: {
       key: ''
     }
+  },
+  protocol: {
+    v3: {
+      coordinator: {
+        name: '',
+        address: '',
+        abi: []
+      },
+      erc20Manager: {
+        v1: {
+          name: '',
+          address: '',
+          abi: []
+        }
+      },
+      signingUtils: {
+        v1: {
+          name: '',
+          address: '',
+          abi: []
+        }
+      },
+      type: {
+        asset: {
+          name: '',
+          value: ''
+        },
+        collection: {
+          name: '',
+          value: ''
+        }
+      }
+    }
   }
 };
 var mainnetConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
@@ -262,6 +295,18 @@ mainnetConfig.immutable.v1_1.abi = mainnetConfig.immutable.v1.abi;
 mainnetConfig.auth.token.key = 'nftfiSdkToken';
 mainnetConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 mainnetConfig.auth.tokenError.key = 'nftfiSdkTokenError';
+mainnetConfig.protocol.v3.coordinator.name = 'v3.coordinator';
+mainnetConfig.protocol.v3.coordinator.address = '0xA6D93ABC54268Cf849a93e867c129786f04fd2e6';
+mainnetConfig.protocol.v3.coordinator.abi = ['function getWhetherNonceHasBeenUsedForUser(bytes32 _offerType, address _user, uint256 _nonce) view returns (bool)', 'function getDefaultLoanContractForOfferType(bytes32 _offerType) view returns (address)'];
+mainnetConfig.protocol.v3.erc20Manager.v1.name = 'v3.erc20Manager.v1';
+mainnetConfig.protocol.v3.erc20Manager.v1.address = '0x6730697f33d6D2490029b32899E7865c0d902Ca0';
+mainnetConfig.protocol.v3.signingUtils.v1.name = 'v3.signingUtils.v1';
+mainnetConfig.protocol.v3.signingUtils.v1.address = '0x898D598B1E929dD77910D296c7524b2Bb8C21889';
+mainnetConfig.protocol.v3.signingUtils.v1.abi = ['function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, bytes32 _offerType) public view returns (bool)'];
+mainnetConfig.protocol.v3.type.asset.name = 'v3.asset';
+mainnetConfig.protocol.v3.type.asset.value = 'ASSET_OFFER_LOAN';
+mainnetConfig.protocol.v3.type.collection.name = 'v3.collection';
+mainnetConfig.protocol.v3.type.collection.value = 'COLLECTION_OFFER_LOAN';
 var goerliConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 goerliConfig.chainId = 5;
 goerliConfig.website.baseURI = 'https://goerli-integration.nftfi.com';
@@ -402,6 +447,18 @@ sepoliaConfig.immutable.v1_1.abi = sepoliaConfig.immutable.v1.abi;
 sepoliaConfig.auth.token.key = 'nftfiSdkToken';
 sepoliaConfig.auth.refreshToken.key = 'nftfiSdkRefreshToken';
 sepoliaConfig.auth.tokenError.key = 'nftfiSdkTokenError';
+sepoliaConfig.protocol.v3.coordinator.name = 'v3.coordinator';
+sepoliaConfig.protocol.v3.coordinator.address = '0x9033fea3C3A99fc87c8A1e7aE8FF63b7a0E6557a';
+sepoliaConfig.protocol.v3.coordinator.abi = ['function getWhetherNonceHasBeenUsedForUser(bytes32 _offerType, address _user, uint256 _nonce) view returns (bool)', 'function getDefaultLoanContractForOfferType(bytes32 _offerType) view returns (address)'];
+sepoliaConfig.protocol.v3.erc20Manager.v1.name = 'v3.erc20Manager.v1';
+sepoliaConfig.protocol.v3.erc20Manager.v1.address = '0x592ce8169e84516a8B7f719a8CB18b2E3E62Fd43';
+sepoliaConfig.protocol.v3.signingUtils.v1.name = 'v3.signingUtils.v1';
+sepoliaConfig.protocol.v3.signingUtils.v1.address = '0x7F92126E152Ed490Dc79C6e9A3D3E562f1C7E251';
+sepoliaConfig.protocol.v3.signingUtils.v1.abi = ['function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, bytes32 _offerType) public view returns (bool)'];
+sepoliaConfig.protocol.v3.type.asset.name = 'v3.asset';
+sepoliaConfig.protocol.v3.type.asset.value = 'ASSET_OFFER_LOAN';
+sepoliaConfig.protocol.v3.type.collection.name = 'v3.collection';
+sepoliaConfig.protocol.v3.type.collection.value = 'COLLECTION_OFFER_LOAN';
 var baseConfigs = (_baseConfigs = {}, (0, _defineProperty2["default"])(_baseConfigs, mainnetConfig.chainId, mainnetConfig), (0, _defineProperty2["default"])(_baseConfigs, goerliConfig.chainId, goerliConfig), (0, _defineProperty2["default"])(_baseConfigs, sepoliaConfig.chainId, sepoliaConfig), _baseConfigs);
 var Config = /*#__PURE__*/function () {
   function Config() {

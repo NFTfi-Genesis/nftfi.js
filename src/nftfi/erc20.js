@@ -37,6 +37,8 @@ class Erc20 {
         return this.#config.loan.fixed.collection.v2_3.address;
       case 'loan.refinance':
         return this.#config.loan.refinance.address;
+      case 'v3.erc20Manager.v1':
+        return this.#config.protocol.v3.erc20Manager.v1.address;
     }
   }
 

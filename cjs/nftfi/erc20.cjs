@@ -80,6 +80,8 @@ var Erc20 = /*#__PURE__*/function () {
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.address;
         case 'loan.refinance':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.refinance.address;
+        case 'v3.erc20Manager.v1':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.erc20Manager.v1.address;
       }
     }
 
