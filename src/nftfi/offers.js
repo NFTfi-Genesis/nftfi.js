@@ -42,9 +42,13 @@ class Offers {
    * @param {string} [options.filters.nftfi.contract.name] - Contract name to filter by (optional)
    * @param {Array<string>} [options.filters.nftfi.contract.name.in] - Contract names to filter by (optional)
    * @param {string} [options.filters.loan.apr.lte] - Max apr to filter by (optional)
+   * @param {string} [options.filters.loan.effectiveApr.lte] - Max effective apr to filter by (optional)
    * @param {string} [options.filters.loan.duration.eq] - Loan duration to filter by (optional)
    * @param {Array<number>} [options.filters.loan.duration.nin] - Loan durations to exclude (optional)
    * @param {string} [options.filters.loan.currency.address.eq] - Loan currency to filter by (optional)
+   * @param {boolean} [options.filters.interest.prorated] - Filter for flexible or fixed offers (optional)
+   * @param {string} [options.filters.type] - Filter for offers of a certain type, `v3.asset` or `v3.collection` (optional)
+   * @param {Array<string>} [options.filters.type.in] - Filter for offers that match one of many types (optional)
    * @param {number} [options.pagination.page] - Pagination page (optional)
    * @param {number} [options.pagination.limit] - Pagination limit (optional)
    * @param {string} [options.pagination.sort] - Field to sort by (optional)
@@ -86,6 +90,7 @@ class Offers {
    * // Get the first page of collection offers made by a specific lender
    * const offers = await nftfi.offers.get({
    *   filters: {
+   *     type: 'v3.collection'
    *     nft: {
    *       address: "0x00000000",
    *     },
@@ -94,11 +99,6 @@ class Offers {
    *         eq: "0x12345567"
    *       }
    *     },
-   *     nftfi: {
-   *       contract: {
-   *         name: "v2-3.loan.fixed.collection"
-   *       }
-   *     }
    *   },
    *   pagination:{
    *     page: 1,
@@ -118,7 +118,7 @@ class Offers {
     try {
       const params = this.#offersHelper.getParams(options);
       const response = await this.#api.get({
-        uri: 'v0.1/offers',
+        uri: 'v0.2/offers',
         auth: { token: options?.auth?.token || 'optional' },
         params
       });
@@ -148,6 +148,7 @@ class Offers {
    * @param {string} [options.filters.nft.address] - NFT contract address to filter by
    * @param {string} [options.filters.nft.id] - NFT id of the asset to filter by (optional)
    * @param {string} [options.filters.lender.address.eq] - Lender wallet address to filter by
+   * @param {string} [options.filters.lender.address.ne] - Lender wallet address to ignore
    * @param {string} [options.group] - Field to group by
    * @returns {Array<object>} Array of response object
    *
@@ -186,33 +187,42 @@ class Offers {
    * Creates a new offer on a NFT or collection.
    *
    * @param {object} options - Config options for this method
-   * @param {object} options.terms - Terms of the offer
+   * @param {object} options.type - Type of the offer
    * @param {object} options.nft - NFT to place an offer on
    * @param {object} options.borrower - Owner of the NFT
-   * @param {object} options.nftfi - NFTfi options
+   * @param {object} options.terms - Terms of the offer
    * @returns {object} Response object
    *
    * @example
-   * // Create an offer on a NFT
+   * // Create a Flexible offer on a NFT
    * const offer = await nftfi.offers.create({
+   *   type: 'v3.asset',
+   *   nft: { address: '0x22222222', id: '2' },
+   *   borrower: { address: '0x11111111' },
    *   terms: {
-   *     principal: 1000000000000000000,
-   *     repayment: 1100000000000000000,
-   *     duration: 86400 * 7, // 7 days (in seconds)
-   *     currency: "0x00000000",
-   *     expiry: 21600 // 6 hours (in seconds)
-   *   },
-   *   nft: {
-   *     address: "0x00000000",
-   *     id: "42"
-   *   },
-   *   borrower: {
-   *     address: "0x00000000"
-   *   },
-   *   nftfi: {
-   *     contract: {
-   *       name: "v2-3.loan.fixed"
-   *     }
+   *     principal: '1000000000000000000',
+   *     repayment: '1100000000000000000',
+   *     origination: '100000000000000000',
+   *     interest: { prorated: true },
+   *     duration: 31536000,
+   *     currency: '0x00000000',
+   *     expiry: { seconds: 1722260287 }
+   *   }
+   * });
+   *
+   * @example
+   * // Create a Fixed offer on a Collection of NFTs
+   * const offer = await nftfi.offers.create({
+   *   type: 'v3.collection',
+   *   nft: { address: '0x22222222' },
+   *   terms: {
+   *     principal: '1000000000000000000',
+   *     repayment: '1100000000000000000',
+   *     origination: '0',
+   *     interest: { prorated: false },
+   *     duration: 31536000,
+   *     currency: '0x00000000',
+   *     expiry: { seconds: 1722260287 }
    *   }
    * });
    */
@@ -222,26 +232,31 @@ class Offers {
       options = { ...options.listing, ...options }; // copying options.listing fields onto the root, for backwards compatibility.
       let errors;
       let response;
-      const contractName = options.nftfi.contract.name;
-      switch (contractName) {
-        case 'v2-3.loan.fixed': {
-          let payload = await this.#offersHelper.constructV2_3Offer(options);
+      const contractName = options?.nftfi?.contract?.name;
+      const type = options?.type;
+      switch (type) {
+        case this.#config.protocol.v3.type.asset.name: {
+          let payload = await this.#offersHelper.constructAssetOffer(options);
           response = await this.#api.post({
-            uri: 'v0.2/offers',
+            uri: 'v0.3/offers',
             payload
           });
           break;
         }
-        case 'v2-3.loan.fixed.collection': {
-          let payload = await this.#offersHelper.constructV2_3FixedCollectionOffer(options);
+        case this.#config.protocol.v3.type.collection.name: {
+          let payload = await this.#offersHelper.constructCollectionOffer(options);
           response = await this.#api.post({
-            uri: 'v0.2/offers',
+            uri: 'v0.3/offers',
             payload
           });
           break;
         }
         default: {
-          errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
+          if (type) {
+            errors = { 'type': [`${type} not supported`] };
+          } else if (contractName) {
+            errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
+          }
           response = { errors };
           break;
         }
@@ -284,18 +299,25 @@ class Offers {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {object} options.offer.nonce - The nonce of the offer to be deleted
-   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
+   * @param {string} [options.offer.type] - Type of offer `v3.asset`, `v3.collection`
+   * @param {string} [options.offer.contract.name] - Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
+   *
    * @example
-   * // Get first available offer made by your account
-   * const offers = await nftfi.offers.get();
-   * const nonce = offers[0]['lender']['nonce'];
-   * const contractName = offers[0]['nftfi']['contract']['name']
-   * // Revoke offer
-   * const revoked = await nftfi.offers.revoke({
+   * // Revoke v3 offer
+   * const nonce = offer.lender.nonce;
+   * const type = offer.type;
+   * const result = await lender.offers.revoke({
+   *   offer: { nonce, type }
+   * });
+   *
+   * @example
+   * // Revoking a v2 offer
+   * const nonce = offer.lender.nonce;
+   * const result = await lender.offers.revoke({
    *   offer: { nonce },
-   *   nftfi: { contract: { name: contractName } }
+   *   nftfi: { contract: { name: offer.nftfi.contract.name } }
    * });
    */
   async revoke(options) {
@@ -313,37 +335,7 @@ class Offers {
    * @example
    * // Validate an offer based on specified checks
    * const validation = await nftfi.offers.validate({
-   *   offer: {
-   *     terms: {
-   *       loan: {
-   *         principal: 2000000000000000000,
-   *         repayment: 1100000000000000000,
-   *         currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
-   *         duration: 604800,
-   *         expiry: 1760696014,
-   *       }
-   *     },
-   *     nft: {
-   *       address: "0x123",
-   *       id: "00000"
-   *     },
-   *     lender: {
-   *       address: "0x1111111",
-   *       nonce: "123"
-   *     },
-   *     nftfi: {
-   *       contract: {
-   *         name: "v2.loan.fixed.collection"
-   *       },
-   *       fee: {
-   *         bps: "500"
-   *       }
-   *     },
-   *     referrer: {
-   *       address: "0x0000000"
-   *     },
-   *     signature: "0x0000000"
-   *   },
+   *   offer,
    *   checks: [
    *     "signature",
    *     "terms.principal",

@@ -5,9 +5,14 @@
 class Loans {
   #api;
   #account;
+  #loanCoordinator;
   #fixed;
+  #assetOffer;
+  #collectionOffer;
   #config;
   #helper;
+  #contractFactory;
+  #ethers;
   #assertion;
   #validation;
   #result;
@@ -19,10 +24,34 @@ class Loans {
     this.#config = options?.config;
     this.#account = options?.account;
     this.#fixed = options?.fixed;
+    this.#assetOffer = options?.assetOffer;
+    this.#collectionOffer = options?.collectionOffer;
     this.#helper = options?.helper;
+    this.#contractFactory = options?.contractFactory;
+    this.#ethers = options?.ethers;
     this.#validation = options?.validation;
     this.#assertion = options?.assertion;
     this.#error = options?.error;
+  }
+
+  get _loanCoordinator() {
+    if (!this.#loanCoordinator) {
+      this.#loanCoordinator = this.#contractFactory.create({
+        address: this.#config.protocol.v3.coordinator.address,
+        abi: this.#config.protocol.v3.coordinator.abi
+      });
+    }
+    return this.#loanCoordinator;
+  }
+
+  async _getLoanData(options) {
+    const loanData = await this._loanCoordinator.call({
+      function: 'getLoanDataAndOfferType',
+      args: [options.loan.id]
+    });
+    const offerType = this.#ethers.utils.parseBytes32String(loanData[1]);
+    const loanContractAddress = loanData[0][0];
+    return { offerType, loanContractAddress };
   }
 
   /**
@@ -103,47 +132,40 @@ class Loans {
    * Begin a loan. Called by the borrower when accepting a lender's offer.
    *
    * @param {object} options - Hashmap of config options for this method
+   * @param {object} options.type - Type of the offer `v3.asset` or v3.collection`
    * @param {string} options.offer.nft.address - Address of the NFT being used as collateral
-   * @param {string} options.offer.nft.id - ID of NFT being used as collateral
+   * @param {string} [options.offer.nft.id] - ID of NFT being used as collateral
    * @param {string} options.offer.terms.loan.currency - Address of the ERC20 contract being used as principal/interest
    * @param {number} options.offer.terms.loan.principal - Sum of money transferred from lender to borrower at the beginning of the loan
    * @param {number} options.offer.terms.loan.repayment - Maximum amount of money that the borrower would be required to retrieve their collateral
+   * @param {number} options.offer.terms.loan.origination - Sum of money transferred to the lender at the beginning of the loan
    * @param {number} options.offer.terms.loan.duration - Amount of time (measured in seconds) that may elapse before the lender can liquidate the loan
-   * @param {number} options.offer.terms.loan.expiry - Timestamp (in seconds) of when the signature expires
+   * @param {number} options.offer.terms.loan.expiry.seconds - Timestamp (in seconds) of when the signature expires
+   * @param {string} [options.borrower.address] - The address of the borrower (owner of nft)
    * @param {string} options.offer.lender.address - Address of the lender that signed the offer
    * @param {string} options.offer.lender.nonce - Nonce used by the lender when they signed the offer
+   * @param {number} [options.offer.nftfi.fee.bps] - Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid
+   * @param {string} [options.offer.nftfi.contract.name] - Name of contract used to facilitate the loan: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @param {string} options.offer.signature - ECDSA signature of the lender
-   * @param {number} options.offer.nftfi.fee.bps - Percent (measured in basis points) of the interest earned that will be taken as a fee by the contract admins when the loan is repaid
-   * @param {string} options.offer.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Begin a loan on a lender's offer.
+   * // Begin a loan on v3 offer
    * const result = await nftfi.loans.begin({
-   *   offer: {
-   *     nft: {
-   *       id: '42',
-   *       address: '0x00000000',
-   *     },
-   *     lender: {
-   *       address: '0x00000000',
-   *       nonce: '314159265359'
-   *     },
-   *     terms: {
-   *       loan: {
-   *         principal: 1000000000000000000,
-   *         repayment: 1100000000000000000,
-   *         duration: 86400 * 7, // 7 days (in seconds)
-   *         currency: "0x00000000",
-   *         expiry: 1690548548 // Friday, 28 July 2023 14:49:08 GMT+02:00
-   *       }
-   *     },
-   *     signature: '0x000000000000000000000000000000000000000000000000000',
-   *     nftfi: {
-   *       fee: { bps: 500 },
-   *       contract: { name: 'v2-3.loan.fixed' }
-   *     }
-   *   }
+   *   type: 'v3.asset',
+   *   nft: { address: '0x22222222', id: '2' },
+   *   borrower: { address: '0x11111111' },
+   *   lender: { address: '0x22222222' },
+   *   terms: {
+   *     principal: '1000000000000000000',
+   *     repayment: '1100000000000000000',
+   *     origination: '100000000000000000',
+   *     interest: { prorated: true },
+   *     duration: 31536000,
+   *     currency: '0x00000000',
+   *     expiry: { seconds: 1722260287 }
+   *   },
+   *   signature: "0x000000000"
    * });
    */
   async begin(options) {
@@ -151,22 +173,44 @@ class Loans {
       this.#assertion.hasSigner();
       let errors;
       let response;
-      const contractName = options.offer.nftfi.contract.name;
-      switch (contractName) {
-        case 'v2-3.loan.fixed': {
-          let success = await this.#fixed.v2_3.acceptOffer(options);
-          response = { success };
-          break;
+      const contractName = options?.offer?.nftfi?.contract?.name;
+      const offerType = options?.offer?.type;
+      if (offerType) {
+        switch (offerType) {
+          case this.#config.protocol.v3.type.asset.name: {
+            let success = await this.#assetOffer.v1.acceptOffer(options);
+            response = { success };
+            break;
+          }
+          case this.#config.protocol.v3.type.collection.name: {
+            let success = await this.#collectionOffer.v1.acceptOffer(options);
+            response = { success };
+            break;
+          }
+          default: {
+            errors = { 'type': [`${offerType} not supported`] };
+            response = { errors };
+            break;
+          }
         }
-        case 'v2-3.loan.fixed.collection': {
-          let success = await this.#fixed.collection.v2_3.acceptOffer(options);
-          response = { success };
-          break;
-        }
-        default: {
-          errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
-          response = { errors };
-          break;
+      } else {
+        switch (contractName) {
+          case 'v2-3.loan.fixed': {
+            let success = await this.#fixed.v2_3.acceptOffer(options);
+            response = { success };
+            break;
+          }
+          case 'v2-3.loan.fixed.collection': {
+            let success = await this.#fixed.collection.v2_3.acceptOffer(options);
+            response = { success };
+            break;
+          }
+
+          default: {
+            errors = { 'nftfi.contract.name': [`${contractName} not supported`] };
+            response = { errors };
+            break;
+          }
         }
       }
       return response;
@@ -181,22 +225,17 @@ class Loans {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {string} options.loan.id - The ID of the loan being liquidated
-   * @param {string} options.nftfi.contract.name - Name of contract used to facilitate the liquidation: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
+   * @param {string} [options.nftfi.contract.name] - Name of contract used to facilitate the liquidation: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Liquidate a v2-3 fixed collection loan
+   * // Liquidate a v3 loan
    * const result = await nftfi.loans.liquidate({
-   *   loan: { id: 3 },
-   *   nftfi: {
-   *     contract: {
-   *       name: 'v2-3.loan.fixed.collection'
-   *     }
-   *   }
+   *   loan: { id: 1 },
    * });
    *
    * @example
-   * // Liquidate a v2.3 fixed loan
+   * // Liquidate a v2 loan
    * const result = await nftfi.loans.liquidate({
    *   loan: { id: 2 },
    *   nftfi: {
@@ -210,37 +249,52 @@ class Loans {
     try {
       this.#assertion.hasSigner();
       let success = false;
-      switch (options.nftfi.contract.name) {
-        case 'v1.loan.fixed':
-          success = await this.#fixed.v1.liquidateOverdueLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2.loan.fixed':
-          success = await this.#fixed.v2.liquidateOverdueLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2.loan.fixed.collection':
-          success = await this.#fixed.collection.v2.liquidateOverdueLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2-3.loan.fixed.collection':
-          success = await this.#fixed.collection.v2_3.liquidateOverdueLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2-1.loan.fixed':
-          success = await this.#fixed.v2_1.liquidateOverdueLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2-3.loan.fixed':
-          success = await this.#fixed.v2_3.liquidateOverdueLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
+      const contractName = options?.nftfi?.contract?.name;
+      if (!contractName || contractName.includes('v3')) {
+        const { offerType, loanContractAddress } = await this._getLoanData(options);
+        switch (offerType) {
+          case this.#config.protocol.v3.type.asset.value: {
+            success = await this.#assetOffer.v1.liquidateOverdueLoan({ ...options, loanContractAddress });
+            break;
+          }
+          case this.#config.protocol.v3.type.collection.value: {
+            success = await this.#collectionOffer.v1.liquidateOverdueLoan({ ...options, loanContractAddress });
+            break;
+          }
+        }
+      } else {
+        switch (contractName) {
+          case 'v1.loan.fixed':
+            success = await this.#fixed.v1.liquidateOverdueLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2.loan.fixed':
+            success = await this.#fixed.v2.liquidateOverdueLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2.loan.fixed.collection':
+            success = await this.#fixed.collection.v2.liquidateOverdueLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2-3.loan.fixed.collection':
+            success = await this.#fixed.collection.v2_3.liquidateOverdueLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2-1.loan.fixed':
+            success = await this.#fixed.v2_1.liquidateOverdueLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2-3.loan.fixed':
+            success = await this.#fixed.v2_3.liquidateOverdueLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+        }
       }
       return {
         success
@@ -255,24 +309,19 @@ class Loans {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {string} options.loan.id - The ID of the loan being repaid
-   * @param {string} options.nftfi.contract.name - Name of contract used to facilitate the repayment: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
+   * @param {string} [options.nftfi.contract.name] - Name of contract used to facilitate the repayment: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Repay a v2.3 fixed loan
+   * // Repay a v3 loan
    * const result = await nftfi.loans.repay({
-   *   loan: { id: 2 },
-   *   nftfi: {
-   *     contract: {
-   *       name: 'v2-3.loan.fixed'
-   *     }
-   *   }
+   *   loan: { id: 1 }
    * });
    *
    * @example
-   * // Repay a v2-3 fixed collection loan
+   * // Repay a v2 loan
    * const result = await nftfi.loans.repay({
-   *   loan: { id: 3 },
+   *   loan: { id: 2 },
    *   nftfi: {
    *     contract: {
    *       name: 'v2-3.loan.fixed.collection'
@@ -284,37 +333,50 @@ class Loans {
     try {
       this.#assertion.hasSigner();
       let success = false;
-      switch (options.nftfi.contract.name) {
-        case 'v1.loan.fixed':
-          success = await this.#fixed.v1.payBackLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2.loan.fixed':
-          success = await this.#fixed.v2.payBackLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2-1.loan.fixed':
-          success = await this.#fixed.v2_1.payBackLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2-3.loan.fixed':
-          success = await this.#fixed.v2_3.payBackLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2.loan.fixed.collection':
-          success = await this.#fixed.collection.v2.payBackLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
-        case 'v2-3.loan.fixed.collection':
-          success = await this.#fixed.collection.v2_3.payBackLoan({
-            loan: { id: options.loan.id }
-          });
-          break;
+      const contractName = options?.nftfi?.contract?.name;
+      if (!contractName || contractName.includes('v3')) {
+        const { offerType, loanContractAddress } = await this._getLoanData(options);
+        switch (offerType) {
+          case this.#config.protocol.v3.type.asset.value:
+            success = await this.#assetOffer.v1.payBackLoan({ ...options, loanContractAddress });
+            break;
+          case this.#config.protocol.v3.type.collection.value:
+            success = await this.#collectionOffer.v1.payBackLoan({ ...options, loanContractAddress });
+            break;
+        }
+      } else {
+        switch (contractName) {
+          case 'v1.loan.fixed':
+            success = await this.#fixed.v1.payBackLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2.loan.fixed':
+            success = await this.#fixed.v2.payBackLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2-1.loan.fixed':
+            success = await this.#fixed.v2_1.payBackLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2-3.loan.fixed':
+            success = await this.#fixed.v2_3.payBackLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2.loan.fixed.collection':
+            success = await this.#fixed.collection.v2.payBackLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+          case 'v2-3.loan.fixed.collection':
+            success = await this.#fixed.collection.v2_3.payBackLoan({
+              loan: { id: options.loan.id }
+            });
+            break;
+        }
       }
       return {
         success
@@ -333,44 +395,44 @@ class Loans {
    * @returns {object} Response object
    *
    * @example
-   * // Identify an active loan where you are the borrower.
-   * const { data: { results } } = await nftfi.loans.get({
-   *  filters: {
-   *   borrower: { address: nftfi.account.getAddress() },
-   *   status: 'active'
+   * // Fetch active loans
+   * const loans = await borrower.loans.get({
+   *   filters: { status: 'active' }
    * });
-   * const loan = results[0];
+   * const loan = loans.data.results[0];
    *
-   * // Fetch offers that match the currency and NFT of the selected loan.
-   * // **The offer's currency must align with the loan's currency.**
+   * // Get a v3 offer
    * const offers = await borrower.offers.get({
    *   filters: {
-   *     nft: { address: loan.nft.address, id: loan.nft.id },
+   *     nft: { address: loan.nft.address },
    *     loan: { currency: { address: { eq: loan.terms.loan.currency } } },
-   *     nftfi: { contract: { name: nftfi.config.loan.fixed.v2_1.name } }
+   *     type: 'v3.collection'
    *   }
    * });
    * const offer = offers[0];
    *
-   * // Approve your obligation receipts with the Refinance contract.
-   * const ORApproval = await nftfi.nft.approve({
-   *  token: { address: nftfi.config.loan.fixed.v2_1.obligationReceipt.address },
-   *  nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+   * // Mint Obligation Receipt
+   * await nftfi.loans.mintObligationReceipt({ loan });
+   *
+   * // Allow the contract to manage your ORs
+   * await borrower.nft.approve({
+   *   token: { address: nftfi.config.protocol.v3.obligationReceipt.v1.address },
+   *   nftfi: { contract: { name: 'v3.refinance.v1' } }
    * });
    *
-   * // Approve ERC20 Tokens (if additional payment is needed).
-   * const erc20Approval = await nftfi.erc20.approveMax({
-   *  token: { address: loan.terms.loan.currency },
-   *  nftfi: { contract: { name: nftfi.config.loan.refinance.name } }
+   * // If the refinancing proceed is negative, also allow the contract to manage your ERC20 to pay the proceed
+   * await borrower.erc20.approveMax({
+   *   token: { address: borrower.config.erc20.weth.address },
+   *   nftfi: { contract: { name: 'v3.refinance.v1' } }
    * });
    *
-   * // Mint an obligation receipt for this loan.
-   * const ORMint = await nftfi.loans.mintObligationReceipt({ loan });
-   *
-   * // Initiate the refinancing with the selected loan and offer.
-   * const refiResult = await nftfi.loans.refinance({
+   * // Refinance
+   * const result = await borrower.loans.refinance({
    *   loan,
-   *   offer
+   *   offer: {
+   *     ...offer,
+   *     nft: { ...offer.nft, id: NFT_ID }
+   *   }
    * });
    */
   async refinance(options) {
@@ -379,43 +441,68 @@ class Loans {
       await this.#validation.refinance.validateCurrencies(options);
       let error;
       let response;
-      const contractName = options.offer.nftfi.contract.name;
-      switch (contractName) {
-        case 'v2-1.loan.fixed': {
-          let success = await this.#fixed.v2_1.refinanceLoan({
-            loan: options.loan,
-            offer: options.offer
-          });
-          response = { success };
-          break;
+      const contractName = options?.offer?.nftfi?.contract?.name;
+      if (!contractName) {
+        switch (options.offer.type) {
+          case this.#config.protocol.v3.type.asset.name: {
+            let success = await this.#assetOffer.v1.refinanceLoan({
+              loan: options.loan,
+              offer: options.offer
+            });
+            response = { success };
+            break;
+          }
+          case this.#config.protocol.v3.type.collection.name: {
+            let success = await this.#collectionOffer.v1.refinanceCollectionOfferLoan({
+              loan: options.loan,
+              offer: options.offer
+            });
+            response = { success };
+            break;
+          }
+          default: {
+            error = { 'type': [`${options.offer.type} not supported`] };
+            throw error;
+          }
         }
-        case 'v2-3.loan.fixed': {
-          let success = await this.#fixed.v2_3.refinanceLoan({
-            loan: options.loan,
-            offer: options.offer
-          });
-          response = { success };
-          break;
-        }
-        case 'v2.loan.fixed.collection': {
-          let success = await this.#fixed.collection.v2.refinanceCollectionOfferLoan({
-            loan: options.loan,
-            offer: options.offer
-          });
-          response = { success };
-          break;
-        }
-        case 'v2-3.loan.fixed.collection': {
-          let success = await this.#fixed.collection.v2_3.refinanceCollectionOfferLoan({
-            loan: options.loan,
-            offer: options.offer
-          });
-          response = { success };
-          break;
-        }
-        default: {
-          error = { 'nftfi.contract.name': [`${contractName} not supported`] };
-          throw error;
+      } else {
+        switch (contractName) {
+          case 'v2-1.loan.fixed': {
+            let success = await this.#fixed.v2_1.refinanceLoan({
+              loan: options.loan,
+              offer: options.offer
+            });
+            response = { success };
+            break;
+          }
+          case 'v2-3.loan.fixed': {
+            let success = await this.#fixed.v2_3.refinanceLoan({
+              loan: options.loan,
+              offer: options.offer
+            });
+            response = { success };
+            break;
+          }
+          case 'v2.loan.fixed.collection': {
+            let success = await this.#fixed.collection.v2.refinanceCollectionOfferLoan({
+              loan: options.loan,
+              offer: options.offer
+            });
+            response = { success };
+            break;
+          }
+          case 'v2-3.loan.fixed.collection': {
+            let success = await this.#fixed.collection.v2_3.refinanceCollectionOfferLoan({
+              loan: options.loan,
+              offer: options.offer
+            });
+            response = { success };
+            break;
+          }
+          default: {
+            error = { 'nftfi.contract.name': [`${contractName} not supported`] };
+            throw error;
+          }
         }
       }
       return this.#result.handle(response);
@@ -429,14 +516,24 @@ class Loans {
    *
    * @param {object} options - Hashmap of config options for this method
    * @param {object} options.offer.nonce - The nonce of the offer to be deleted
-   * @param {string} options.nftfi.contract.name - Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
+   * @param {string} [options.offer.type] - Type of the offer `v3.asset` or v3.collection`
+   * @param {string} [options.nftfi.contract.name] - Name of contract which the offer was created for: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Revoke a v2.3 fixed loan offer
+   * // Revoke a v3 offer
    * const revoked = await nftfi.loans.revoke({
    *   offer: {
-   *     nonce: '42'
+   *     nonce: '1',
+   *     type: 'v3.asset'
+   *   }
+   * });
+   *
+   * @example
+   * // Revoke a v2 offer
+   * const revoked = await nftfi.loans.revoke({
+   *   offer: {
+   *     nonce: '2'
    *   },
    *   nftfi: {
    *     contract: {
@@ -449,37 +546,59 @@ class Loans {
     try {
       this.#assertion.hasSigner();
       let success = false;
-      switch (options.nftfi.contract.name) {
-        case 'v1.loan.fixed':
-          success = await this.#fixed.v1.cancelLoanCommitmentBeforeLoanHasBegun({
-            offer: { nonce: options.offer.nonce }
+      const offerType = options?.offer?.type;
+      if (offerType) {
+        let type;
+        switch (offerType) {
+          case this.#config.protocol.v3.type.asset.name:
+            type = this.#config.protocol.v3.type.asset.value;
+            break;
+          case this.#config.protocol.v3.type.collection.name:
+            type = this.#config.protocol.v3.type.collection.value;
+            break;
+        }
+        try {
+          const result = await this._loanCoordinator.call({
+            function: 'cancelLoanCommitment',
+            args: [this.#ethers.utils.formatBytes32String(type), options.offer.nonce]
           });
-          break;
-        case 'v2.loan.fixed':
-          success = await this.#fixed.v2.cancelLoanCommitmentBeforeLoanHasBegun({
-            offer: { nonce: options.offer.nonce }
-          });
-          break;
-        case 'v2-1.loan.fixed':
-          success = await this.#fixed.v2_1.cancelLoanCommitmentBeforeLoanHasBegun({
-            offer: { nonce: options.offer.nonce }
-          });
-          break;
-        case 'v2-3.loan.fixed':
-          success = await this.#fixed.v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
-            offer: { nonce: options.offer.nonce }
-          });
-          break;
-        case 'v2.loan.fixed.collection':
-          success = await this.#fixed.collection.v2.cancelLoanCommitmentBeforeLoanHasBegun({
-            offer: { nonce: options.offer.nonce }
-          });
-          break;
-        case 'v2-3.loan.fixed.collection':
-          success = await this.#fixed.collection.v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
-            offer: { nonce: options.offer.nonce }
-          });
-          break;
+          success = result?.status === 1;
+        } catch (e) {
+          success = false;
+        }
+      } else {
+        switch (options.nftfi.contract.name) {
+          case 'v1.loan.fixed':
+            success = await this.#fixed.v1.cancelLoanCommitmentBeforeLoanHasBegun({
+              offer: { nonce: options.offer.nonce }
+            });
+            break;
+          case 'v2.loan.fixed':
+            success = await this.#fixed.v2.cancelLoanCommitmentBeforeLoanHasBegun({
+              offer: { nonce: options.offer.nonce }
+            });
+            break;
+          case 'v2-1.loan.fixed':
+            success = await this.#fixed.v2_1.cancelLoanCommitmentBeforeLoanHasBegun({
+              offer: { nonce: options.offer.nonce }
+            });
+            break;
+          case 'v2-3.loan.fixed':
+            success = await this.#fixed.v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
+              offer: { nonce: options.offer.nonce }
+            });
+            break;
+          case 'v2.loan.fixed.collection':
+            success = await this.#fixed.collection.v2.cancelLoanCommitmentBeforeLoanHasBegun({
+              offer: { nonce: options.offer.nonce }
+            });
+            break;
+          case 'v2-3.loan.fixed.collection':
+            success = await this.#fixed.collection.v2_3.cancelLoanCommitmentBeforeLoanHasBegun({
+              offer: { nonce: options.offer.nonce }
+            });
+            break;
+        }
       }
       return {
         success
@@ -494,14 +613,20 @@ class Loans {
    *
    * @param {Object} options - The options object containing the loan details and contract information.
    * @param {number} options.loan.nftfi.id - The ID of the loan.
-   * @param {string} options.loan.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2-3.loan.fixed`, `v2.loan.fixed.collection`, `v2-3.loan.fixed.collection`
+   * @param {string} [options.loan.nftfi.contract.name] - Name of contract used to facilitate the loan: `v2-1.loan.fixed`, `v2-3.loan.fixed`, `v2.loan.fixed.collection`, `v2-3.loan.fixed.collection`
    * @returns {object} Response object
    *
    * @example
-   * // Mint an Obligation Receipt for a v2.3 fixed loan
+   * // Mint an Obligation Receipt for a v3 loan
+   * const response = await nftfi.loans.mintObligationReceipt({
+   *   loan: { id: '1' }
+   * });
+   *
+   * @example
+   * // Mint an Obligation Receipt for a v2 loan
    * const response = await nftfi.loans.mintObligationReceipt({
    *   loan: {
-   *     id: '42',
+   *     id: '2',
    *     nftfi: {
    *       contract: {
    *         name: 'v2-3.loan.fixed'
@@ -515,30 +640,91 @@ class Loans {
       this.#assertion.hasSigner();
       let error;
       let response;
-      const contractName = options.loan.nftfi.contract.name;
-      switch (contractName) {
-        case 'v2-3.loan.fixed': {
-          let success = await this.#fixed.v2_3.mintObligationReceipt(options);
+      const contractName = options?.loan?.nftfi?.contract?.name;
+      if (!contractName || contractName.includes('v3')) {
+        const { offerType, loanContractAddress } = await this._getLoanData(options);
+        switch (offerType) {
+          case this.#config.protocol.v3.type.asset.value: {
+            let success = await this.#assetOffer.v1.mintObligationReceipt({ ...options, loanContractAddress });
+            response = { success };
+            break;
+          }
+          case this.#config.protocol.v3.type.collection.value: {
+            let success = await this.#collectionOffer.v1.mintObligationReceipt({ ...options, loanContractAddress });
+            response = { success };
+            break;
+          }
+          default: {
+            error = { 'type': [`${offerType} not supported`] };
+            throw error;
+          }
+        }
+      } else {
+        switch (contractName) {
+          case 'v2-3.loan.fixed': {
+            let success = await this.#fixed.v2_3.mintObligationReceipt(options);
+            response = { success };
+            break;
+          }
+          case 'v2-1.loan.fixed': {
+            let success = await this.#fixed.v2_1.mintObligationReceipt(options);
+            response = { success };
+            break;
+          }
+          case 'v2-3.loan.fixed.collection': {
+            let success = await this.#fixed.collection.v2_3.mintObligationReceipt(options);
+            response = { success };
+            break;
+          }
+          case 'v2.loan.fixed.collection': {
+            let success = await this.#fixed.collection.v2.mintObligationReceipt(options);
+            response = { success };
+            break;
+          }
+          default: {
+            error = { 'nftfi.contract.name': [`${contractName} not supported`] };
+            throw error;
+          }
+        }
+      }
+      return this.#result.handle(response);
+    } catch (e) {
+      return this.#error.handle(e);
+    }
+  }
+
+  /**
+   * Mints an promissory note for a given loan.
+   *
+   * @param {Object} options - The options object containing the loan details and contract information.
+   * @param {number} options.loan.nftfi.id - The ID of the loan.
+   * @returns {object} Response object
+   *
+   * @example
+   * // Mint an Promissory Note for a v3 loan
+   * const response = await nftfi.loans.mintObligationReceipt({
+   *   loan: { id: '1' }
+   * });
+   */
+  async mintPromissoryNote(options) {
+    try {
+      this.#assertion.hasSigner();
+      let error;
+      let response;
+      const { offerType, loanContractAddress } = await this._getLoanData(options);
+      switch (offerType) {
+        case this.#config.protocol.v3.type.asset.value: {
+          let success = await this.#assetOffer.v1.mintPromissoryNote({ ...options, loanContractAddress });
           response = { success };
           break;
         }
-        case 'v2-1.loan.fixed': {
-          let success = await this.#fixed.v2_1.mintObligationReceipt(options);
-          response = { success };
-          break;
-        }
-        case 'v2-3.loan.fixed.collection': {
-          let success = await this.#fixed.collection.v2_3.mintObligationReceipt(options);
-          response = { success };
-          break;
-        }
-        case 'v2.loan.fixed.collection': {
-          let success = await this.#fixed.collection.v2.mintObligationReceipt(options);
+        case this.#config.protocol.v3.type.collection.value: {
+          let success = await this.#collectionOffer.v1.mintPromissoryNote({ ...options, loanContractAddress });
           response = { success };
           break;
         }
         default: {
-          error = { 'nftfi.contract.name': [`${contractName} not supported`] };
+          error = { 'type': [`${offerType} not supported`] };
           throw error;
         }
       }

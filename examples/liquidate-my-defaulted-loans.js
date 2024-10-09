@@ -30,8 +30,7 @@ async function run() {
       const loan = loans[i];
       // Liquidate the loan
       const result = await nftfi.loans.liquidate({
-        loan: { id: loan.id },
-        nftfi: { contract: { name: loan.nftfi.contract.name } }
+        loan: { id: loan.id }
       });
       if (result.success === true) {
         console.log(

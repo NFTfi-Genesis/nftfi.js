@@ -154,6 +154,40 @@ class Utils {
   }
 
   /**
+   * Calculates the effective APR (annual percentage rate) of a loan given its parameters
+   *
+   * @param {string|bigint} principal - The loan's principal amount in base units (e.g., "1000000000000000000" wei)
+   * @param {string|bigint} repayment - The total repayment amount to be paid by the borrower, in base units (e.g., "1100000000000000000" wei)
+   * @param {string|number} duration - The duration of the loan in days
+   * @param {string|bigint} originationFee - The origination fee of the loan in base units (e.g., "10000000000000000" wei). Defaults to 0 if undefined or null.
+   * @returns {number|null} The APR in %, calculated including the origination fee
+   *
+   * @example
+   * // Calculate the effective APR
+   * const principal = "1000000000000000000";
+   * const repayment = "1100000000000000000";
+   * const duration = 30;
+   * const originationFee = "10000000000000000";
+   * const apr = calculateEffectiveApr(principal, repayment, duration, originationFee);
+   * console.log(apr); // Outputs the APR as a percentage
+   */
+  calcEffectiveApr = (principal, repayment, duration, originationFee) => {
+    const principalBig = BigInt(principal);
+    const repaymentBig = BigInt(repayment);
+    const originationFeeBig = originationFee ? BigInt(originationFee) : 0n;
+
+    const totalPaid = repaymentBig + originationFeeBig;
+    const interestPaid = totalPaid - principalBig;
+
+    const interestPaidNumber = Number(interestPaid);
+    const principalNumber = Number(principalBig);
+
+    const apr = Math.round(Number(interestPaidNumber / principalNumber / duration) * 365 * 100 * 100) / 100;
+
+    return Number.isFinite(apr) ? Math.max(apr, 0) : null;
+  };
+
+  /**
    * Checks if a token contract supports specific interfaces (ERC1155 and ERC721).
    *
    * @param {Object} options - The options for performing the contract interface checks.

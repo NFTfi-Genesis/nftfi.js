@@ -22,10 +22,9 @@ async function run() {
       // Revoke the offer
       const id = offers[0]['id'];
       const nonce = offers[0]['lender']['nonce'];
-      const contractName = offers[0]['nftfi']['contract']['name'];
+      const type = offers[0]['type'];
       const revoked = await nftfi.offers.revoke({
-        offer: { nonce },
-        nftfi: { contract: { name: contractName } }
+        offer: { nonce, type }
       });
       if (revoked?.success === false) {
         console.log(`[ERROR] could not revoke offer: ${JSON.stringify(offer)}.`);

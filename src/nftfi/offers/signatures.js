@@ -9,7 +9,7 @@ class OffersSignatures {
     this.#config = options?.config;
   }
 
-  async getV2_3OfferSignature(options) {
+  async getAssetOfferSignature(options) {
     const signature = this.#account.sign(
       this.#ethers.utils.arrayify(
         this.#ethers.utils.solidityKeccak256(
@@ -19,13 +19,13 @@ class OffersSignatures {
             'uint256',
             'address',
             'uint256',
-            'address',
             'uint32',
-            'uint16',
+            'bool',
+            'uint256',
             'address',
             'uint256',
             'uint256',
-            'address',
+            'bytes32',
             'uint256'
           ],
           [
@@ -34,13 +34,13 @@ class OffersSignatures {
             options.offer.terms.loan.repayment,
             options.offer.nft.address,
             options.offer.nft.id,
-            options.offer.referrer.address,
             options.offer.terms.loan.duration,
-            options.offer.nftfi.fee.bps,
+            options.offer.terms.loan.interest.prorated,
+            options.offer.terms.loan.origination,
             this.#account.getAddress(),
             options.offer.lender.nonce,
             options.offer.terms.loan.expiry,
-            this.#config.loan.fixed.v2_3.address,
+            this.#ethers.utils.formatBytes32String(options.offer.type),
             this.#config.chainId
           ]
         )
@@ -49,44 +49,8 @@ class OffersSignatures {
     return signature;
   }
 
-  async getV2_3FixedCollectionOfferSignature(options) {
-    const signature = this.#account.sign(
-      this.#ethers.utils.arrayify(
-        this.#ethers.utils.solidityKeccak256(
-          [
-            'address',
-            'uint256',
-            'uint256',
-            'address',
-            'uint256',
-            'address',
-            'uint32',
-            'uint16',
-            'address',
-            'uint256',
-            'uint256',
-            'address',
-            'uint256'
-          ],
-          [
-            options.offer.terms.loan.currency,
-            options.offer.terms.loan.principal,
-            options.offer.terms.loan.repayment,
-            options.offer.nft.address,
-            options.offer.nft.id,
-            options.offer.referrer.address,
-            options.offer.terms.loan.duration,
-            options.offer.nftfi.fee.bps,
-            this.#account.getAddress(),
-            options.offer.lender.nonce,
-            options.offer.terms.loan.expiry,
-            this.#config.loan.fixed.collection.v2_3.address,
-            this.#config.chainId
-          ]
-        )
-      )
-    );
-    return signature;
+  async getCollectionOfferSignature(options) {
+    return this.getAssetOfferSignature(options);
   }
 }
 

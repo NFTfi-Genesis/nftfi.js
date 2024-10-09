@@ -32,12 +32,12 @@ async function run() {
     // Approve repayment amount with NFTfi contracts
     await borrower.erc20.approveMax({
       token: { address: loan.terms.loan.currency },
-      nftfi: { contract: { name: loan.nftfi.contract.name } }
+      nftfi: { contract: { name: borrower.config.protocol.v3.erc20Manager.v1.name } },
+      amount: loan.terms.loan.repayment
     });
     // Repay the loan
     const result = await borrower.loans.repay({
-      loan: { id: loan.id },
-      nftfi: { contract: { name: loan.nftfi.contract.name } }
+      loan: { id: loan.id }
     });
     if (result.success === true) {
       console.log('[INFO] loan has been repaid');
