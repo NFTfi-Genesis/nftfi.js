@@ -58,6 +58,13 @@ class OffersValidator {
     };
   }
 
+  _getColSigningUtilsAddressAndAbi() {
+    return {
+      address: this.#config.protocol.v3.collectionSigningUtils.v1.address,
+      abi: this.#config.protocol.v3.collectionSigningUtils.v1.abi
+    };
+  }
+
   async _isValidAllowance(options) {
     try {
       const allowance = await this.#erc20.allowance(options);
@@ -89,12 +96,6 @@ class OffersValidator {
             type = this.#config.protocol.v3.type.collection.value;
             break;
         }
-        const { address: signingUtilsContract, abi: signingUtilsContractAbi } = this._getSigningUtilsAddressAndAbi();
-
-        const contract = this.#contractFactory.create({
-          address: signingUtilsContract,
-          abi: signingUtilsContractAbi
-        });
 
         const offerTerms = {
           loanPrincipalAmount: offer.terms.loan.principal.toLocaleString('fullwide', { useGrouping: false }),
@@ -107,6 +108,8 @@ class OffersValidator {
           originationFee: offer.terms.loan.origination.toLocaleString('fullwide', { useGrouping: false })
         };
 
+        const range = { minId: offer.nft?.ids?.from, maxId: offer.nft?.ids?.to };
+
         const signature = {
           nonce: offer.lender.nonce.toString(),
           expiry: offer.terms.loan.expiry.toString(),
@@ -114,10 +117,33 @@ class OffersValidator {
           signature: offer.signature
         };
 
-        return await contract.call({
-          function: 'isValidLenderSignature',
-          args: [offerTerms, signature, this.#ethers.utils.formatBytes32String(type)]
-        });
+        const isCollectionRangeOffer = 'ids' in offer.nft;
+        if (isCollectionRangeOffer) {
+          const { address: signingUtilsContract, abi: signingUtilsContractAbi } =
+            this._getColSigningUtilsAddressAndAbi();
+
+          const contract = this.#contractFactory.create({
+            address: signingUtilsContract,
+            abi: signingUtilsContractAbi
+          });
+
+          return await contract.call({
+            function: 'isValidLenderSignatureWithIdRange',
+            args: [offerTerms, range, signature, this.#ethers.utils.formatBytes32String(type)]
+          });
+        } else {
+          const { address: signingUtilsContract, abi: signingUtilsContractAbi } = this._getSigningUtilsAddressAndAbi();
+
+          const contract = this.#contractFactory.create({
+            address: signingUtilsContract,
+            abi: signingUtilsContractAbi
+          });
+
+          return await contract.call({
+            function: 'isValidLenderSignature',
+            args: [offerTerms, signature, this.#ethers.utils.formatBytes32String(type)]
+          });
+        }
       } else {
         const { address: loanContract } = this._getContractAddressAndAbi(offer.nftfi.contract.name);
         const { address: signingUtilsContract, abi: signingUtilsContractAbi } =

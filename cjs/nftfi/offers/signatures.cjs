@@ -76,6 +76,27 @@ var OffersSignatures = /*#__PURE__*/function () {
       }
       return getCollectionOfferSignature;
     }()
+  }, {
+    key: "getCollectionRangeOfferSignature",
+    value: function () {
+      var _getCollectionRangeOfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
+        var signature;
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['address', 'uint256', 'uint256', 'address', 'uint256', 'uint32', 'bool', 'uint256', 'uint256', 'uint256', 'address', 'uint256', 'uint256', 'bytes32', 'uint256'], [options.offer.terms.loan.currency, options.offer.terms.loan.principal, options.offer.terms.loan.repayment, options.offer.nft.address, options.offer.nft.id, options.offer.terms.loan.duration, options.offer.terms.loan.interest.prorated, options.offer.terms.loan.origination, options.offer.nft.ids.from, options.offer.nft.ids.to, (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(), options.offer.lender.nonce, options.offer.terms.loan.expiry, (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatBytes32String(options.offer.type), (0, _classPrivateFieldGet2["default"])(this, _config).chainId])));
+              return _context3.abrupt("return", signature);
+            case 2:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, this);
+      }));
+      function getCollectionRangeOfferSignature(_x3) {
+        return _getCollectionRangeOfferSignature.apply(this, arguments);
+      }
+      return getCollectionRangeOfferSignature;
+    }()
   }]);
   return OffersSignatures;
 }();

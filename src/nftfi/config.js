@@ -184,6 +184,7 @@ const baseConfig = {
       escrow: { v1: { name: '', address: '', abi: [] } },
       erc20Manager: { v1: { name: '', address: '', abi: [] } },
       signingUtils: { v1: { name: '', address: '', abi: [] } },
+      collectionSigningUtils: { v1: { name: '', address: '', abi: [] } },
       type: { asset: { name: '', value: '' }, collection: { name: '', value: '' } }
     }
   }
@@ -366,6 +367,7 @@ mainnetConfig.protocol.v3.assetOfferLoan.v1.abi = [
 mainnetConfig.protocol.v3.collectionOfferLoan.v1.name = 'v3.collectionOfferLoan.v1';
 mainnetConfig.protocol.v3.collectionOfferLoan.v1.abi = [
   'function acceptCollectionOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature)',
+  'function acceptCollectionOfferWithIdRange(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 minId, uint256 maxId) _idRange, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature)',
   'function payBackLoan(uint32 _loanId)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function mintObligationReceipt(uint32 _loanId)',
@@ -377,7 +379,8 @@ mainnetConfig.protocol.v3.refinance.v1.name = 'v3.refinance.v1';
 mainnetConfig.protocol.v3.refinance.v1.address = '0x6701B1D2E6d34727c0C37cDBd0cF421d3357DD0c';
 mainnetConfig.protocol.v3.refinance.v1.abi = [
   'function refinanceLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)',
-  'function refinanceCollectionOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)'
+  'function refinanceCollectionOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)',
+  'function refinanceCollectionRangeOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 minId, uint256 maxId) _idRange, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)'
 ];
 mainnetConfig.protocol.v3.erc20Manager.v1.name = 'v3.erc20Manager.v1';
 mainnetConfig.protocol.v3.erc20Manager.v1.address = '0x6730697f33d6D2490029b32899E7865c0d902Ca0';
@@ -387,6 +390,11 @@ mainnetConfig.protocol.v3.signingUtils.v1.name = 'v3.signingUtils.v1';
 mainnetConfig.protocol.v3.signingUtils.v1.address = '0x898D598B1E929dD77910D296c7524b2Bb8C21889';
 mainnetConfig.protocol.v3.signingUtils.v1.abi = [
   'function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, bytes32 _offerType) public view returns (bool)'
+];
+mainnetConfig.protocol.v3.collectionSigningUtils.v1.name = 'v3.collectionSigningUtils.v1';
+mainnetConfig.protocol.v3.collectionSigningUtils.v1.address = '0x4ACD7A10CaC29bb7e53627F4236978A808473caB';
+mainnetConfig.protocol.v3.collectionSigningUtils.v1.abi = [
+  'function isValidLenderSignatureWithIdRange(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 minId, uint256 maxId) _idRange, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, bytes32 _offerType) public view returns (bool)'
 ];
 mainnetConfig.protocol.v3.type.asset.name = 'v3.asset';
 mainnetConfig.protocol.v3.type.asset.value = 'ASSET_OFFER_LOAN';
@@ -554,6 +562,7 @@ sepoliaConfig.protocol.v3.assetOfferLoan.v1.abi = [
 sepoliaConfig.protocol.v3.collectionOfferLoan.v1.name = 'v3.collectionOfferLoan.v1';
 sepoliaConfig.protocol.v3.collectionOfferLoan.v1.abi = [
   'function acceptCollectionOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature)',
+  'function acceptCollectionOfferWithIdRange(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 minId, uint256 maxId) _idRange, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature)',
   'function payBackLoan(uint32 _loanId)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function mintObligationReceipt(uint32 _loanId)',
@@ -565,7 +574,8 @@ sepoliaConfig.protocol.v3.refinance.v1.name = 'v3.refinance.v1';
 sepoliaConfig.protocol.v3.refinance.v1.address = '0x098Ac7DF14e29734adE9e2695B02E060DdA1Db2e';
 sepoliaConfig.protocol.v3.refinance.v1.abi = [
   'function refinanceLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)',
-  'function refinanceCollectionOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)'
+  'function refinanceCollectionOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)',
+  'function refinanceCollectionRangeOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 minId, uint256 maxId) _idRange, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)'
 ];
 sepoliaConfig.protocol.v3.erc20Manager.v1.name = 'v3.erc20Manager.v1';
 sepoliaConfig.protocol.v3.erc20Manager.v1.address = '0x96991284dcC64139234aDe2ca348D73A344CcA86';
@@ -575,6 +585,11 @@ sepoliaConfig.protocol.v3.signingUtils.v1.name = 'v3.signingUtils.v1';
 sepoliaConfig.protocol.v3.signingUtils.v1.address = '0x7d6560a70DB8556C632a7c85d8246FF097E23137';
 sepoliaConfig.protocol.v3.signingUtils.v1.abi = [
   'function isValidLenderSignature(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, bytes32 _offerType) public view returns (bool)'
+];
+sepoliaConfig.protocol.v3.collectionSigningUtils.v1.name = 'v3.collectionSigningUtils.v1';
+sepoliaConfig.protocol.v3.collectionSigningUtils.v1.address = '0x389f8380dA80a48046e47A71F6518f0466898365';
+sepoliaConfig.protocol.v3.collectionSigningUtils.v1.abi = [
+  'function isValidLenderSignatureWithIdRange(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 minId, uint256 maxId) _idRange, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, bytes32 _offerType) public view returns (bool)'
 ];
 sepoliaConfig.protocol.v3.type.asset.name = 'v3.asset';
 sepoliaConfig.protocol.v3.type.asset.value = 'ASSET_OFFER_LOAN';

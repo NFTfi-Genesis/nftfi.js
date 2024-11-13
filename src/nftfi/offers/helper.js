@@ -185,11 +185,13 @@ class OffersHelper {
     const expiry = this.#utils.getExpiry(options?.terms?.expiry?.seconds);
     const nftId = 0;
     const type = this.#config.protocol.v3.type.collection.value;
+    const isCollectionRangeOffer = 'ids' in options.nft;
     let offer = {
       type,
       nft: {
         id: nftId,
-        address: options.nft.address
+        address: options.nft.address,
+        ...(options.nft?.ids && { ids: options.nft.ids })
       },
       lender: {
         address: this.#account.getAddress(),
@@ -208,10 +210,17 @@ class OffersHelper {
       },
       metadata: options.metadata
     };
-    offer['signature'] = await this.#signatures.getCollectionOfferSignature({
-      ...options,
-      offer
-    });
+    if (!isCollectionRangeOffer) {
+      offer['signature'] = await this.#signatures.getCollectionOfferSignature({
+        ...options,
+        offer
+      });
+    } else {
+      offer['signature'] = await this.#signatures.getCollectionRangeOfferSignature({
+        ...options,
+        offer
+      });
+    }
     return { ...offer, type: options.type };
   }
 }

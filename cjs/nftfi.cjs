@@ -245,7 +245,7 @@ var _default = {
             }
             throw 'Please supply values for either account.privateKey, account.web3.provider, account.ethereum.ethers.signer.cjsonRpc, or account.multisig.';
           case 15:
-            version = 'v0.6.0';
+            version = 'v0.6.1';
             ethers = (options === null || options === void 0 ? void 0 : (_options$dependencies = options.dependencies) === null || _options$dependencies === void 0 ? void 0 : _options$dependencies.ethers) || _ethers.ethers;
             provider = null;
             if (options !== null && options !== void 0 && (_options$ethereum6 = options.ethereum) !== null && _options$ethereum6 !== void 0 && (_options$ethereum6$pr = _options$ethereum6.provider) !== null && _options$ethereum6$pr !== void 0 && _options$ethereum6$pr.url) {

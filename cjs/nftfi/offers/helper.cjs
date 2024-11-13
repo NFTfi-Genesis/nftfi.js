@@ -314,8 +314,8 @@ var OffersHelper = /*#__PURE__*/function () {
     key: "constructCollectionOffer",
     value: function () {
       var _constructCollectionOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
-        var _options$terms2, _options$terms2$expir;
-        var repayment, principal, origination, lenderNonce, expiry, nftId, type, offer;
+        var _options$terms2, _options$terms2$expir, _options$nft;
+        var repayment, principal, origination, lenderNonce, expiry, nftId, type, isCollectionRangeOffer, offer;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -332,12 +332,15 @@ var OffersHelper = /*#__PURE__*/function () {
               expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms2 = options.terms) === null || _options$terms2 === void 0 ? void 0 : (_options$terms2$expir = _options$terms2.expiry) === null || _options$terms2$expir === void 0 ? void 0 : _options$terms2$expir.seconds);
               nftId = 0;
               type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.value;
+              isCollectionRangeOffer = 'ids' in options.nft;
               offer = {
                 type: type,
-                nft: {
+                nft: _objectSpread({
                   id: nftId,
                   address: options.nft.address
-                },
+                }, ((_options$nft = options.nft) === null || _options$nft === void 0 ? void 0 : _options$nft.ids) && {
+                  ids: options.nft.ids
+                }),
                 lender: {
                   address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
                   nonce: lenderNonce
@@ -357,16 +360,30 @@ var OffersHelper = /*#__PURE__*/function () {
                 },
                 metadata: options.metadata
               };
-              _context2.next = 10;
+              if (isCollectionRangeOffer) {
+                _context2.next = 15;
+                break;
+              }
+              _context2.next = 12;
               return (0, _classPrivateFieldGet2["default"])(this, _signatures).getCollectionOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
                 offer: offer
               }));
-            case 10:
+            case 12:
               offer['signature'] = _context2.sent;
+              _context2.next = 18;
+              break;
+            case 15:
+              _context2.next = 17;
+              return (0, _classPrivateFieldGet2["default"])(this, _signatures).getCollectionRangeOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
+                offer: offer
+              }));
+            case 17:
+              offer['signature'] = _context2.sent;
+            case 18:
               return _context2.abrupt("return", _objectSpread(_objectSpread({}, offer), {}, {
                 type: options.type
               }));
-            case 12:
+            case 19:
             case "end":
               return _context2.stop();
           }

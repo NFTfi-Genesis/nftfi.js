@@ -959,6 +959,8 @@ Begin a loan. Called by the borrower when accepting a lender's offer.
 | options.type | <code>object</code> | Type of the offer `v3.asset` or v3.collection` |
 | options.offer.nft.address | <code>string</code> | Address of the NFT being used as collateral |
 | [options.offer.nft.id] | <code>string</code> | ID of NFT being used as collateral |
+| [options.offer.nft.ids.from] | <code>number</code> | "from" ID of NFT id range of the offer (only when accepting a ranged offer) |
+| [options.offer.nft.ids.to] | <code>number</code> | "to" ID of NFT id range of the offer (only when accepting a ranged offer) |
 | options.offer.terms.loan.currency | <code>string</code> | Address of the ERC20 contract being used as principal/interest |
 | options.offer.terms.loan.principal | <code>number</code> | Sum of money transferred from lender to borrower at the beginning of the loan |
 | options.offer.terms.loan.repayment | <code>number</code> | Maximum amount of money that the borrower would be required to retrieve their collateral |
@@ -1398,6 +1400,8 @@ Creates a new offer on a NFT or collection.
 | options | <code>object</code> | Config options for this method |
 | options.type | <code>object</code> | Type of the offer |
 | options.nft | <code>object</code> | NFT to place an offer on |
+| [options.nft.ids.from] | <code>number</code> | "from" Starting ID of the NFT range (inclusive, optional). Requires options.type to be "v3.collection" |
+| [options.nft.ids.to] | <code>number</code> | "to" Ending ID of the NFT range (inclusive, optional). Requires options.type to be "v3.collection" |
 | options.borrower | <code>object</code> | Owner of the NFT |
 | options.terms | <code>object</code> | Terms of the offer |
 
@@ -1430,6 +1434,23 @@ const offer = await nftfi.offers.create({
     repayment: '1100000000000000000',
     origination: '0',
     interest: { prorated: false },
+    duration: 31536000,
+    currency: '0x00000000',
+    expiry: { seconds: 1722260287 }
+  }
+});
+```
+**Example**  
+```js
+// Create a flexible offer on a Collection range of NFTs
+const offer = await nftfi.offers.create({
+  type: 'v3.collection',
+  nft: { address: '0x22222222', ids: { from: 1, to: 10 } },
+  terms: {
+    principal: '1000000000000000000',
+    repayment: '1100000000000000000',
+    origination: '0',
+    interest: { prorated: true },
     duration: 31536000,
     currency: '0x00000000',
     expiry: { seconds: 1722260287 }

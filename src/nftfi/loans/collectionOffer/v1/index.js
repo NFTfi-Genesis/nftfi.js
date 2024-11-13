@@ -76,11 +76,25 @@ class LoansCollectionOfferV1 {
       };
 
       const loanContract = await this._getLatestLoanContract(this.#config.protocol.v3.type.collection.value);
-      const result = await loanContract.call({
-        function: 'acceptCollectionOffer',
-        args: [offer, signature]
-      });
-      success = result?.status === 1;
+
+      const isCollectionRangeOffer = 'ids' in options.offer.nft;
+      if (!isCollectionRangeOffer) {
+        const result = await loanContract.call({
+          function: 'acceptCollectionOffer',
+          args: [offer, signature]
+        });
+        success = result?.status === 1;
+      } else {
+        const nftIds = {
+          minId: options.offer.nft.ids.from,
+          maxId: options.offer.nft.ids.to
+        };
+        const result = await loanContract.call({
+          function: 'acceptCollectionOfferWithIdRange',
+          args: [offer, nftIds, signature]
+        });
+        success = result?.status === 1;
+      }
     } catch (e) {
       success = false;
     }
@@ -158,11 +172,25 @@ class LoansCollectionOfferV1 {
         signature: options.offer.signature
       };
 
-      const result = await this._refinanceContract.call({
-        function: 'refinanceCollectionOfferLoan',
-        args: [refinancingData, offer, signature]
-      });
-      success = result.status === 1;
+      const isCollectionRangeOffer = 'ids' in options.offer.nft;
+      if (!isCollectionRangeOffer) {
+        const result = await this._refinanceContract.call({
+          function: 'refinanceCollectionOfferLoan',
+          args: [refinancingData, offer, signature]
+        });
+        success = result.status === 1;
+      } else {
+        const nftIds = {
+          minId: options.offer.nft.ids.from,
+          maxId: options.offer.nft.ids.to
+        };
+
+        const result = await this._refinanceContract.call({
+          function: 'refinanceCollectionRangeOfferLoan',
+          args: [refinancingData, offer, nftIds, signature]
+        });
+        success = result.status === 1;
+      }
     } catch (e) {
       success = false;
     }

@@ -140,7 +140,7 @@ var LoansCollectionOfferV1 = /*#__PURE__*/function () {
     key: "acceptOffer",
     value: function () {
       var _acceptOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
-        var success, offer, signature, loanContract, result;
+        var success, offer, signature, loanContract, isCollectionRangeOffer, result, nftIds, _result;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
@@ -165,27 +165,48 @@ var LoansCollectionOfferV1 = /*#__PURE__*/function () {
               return this._getLatestLoanContract((0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.value);
             case 5:
               loanContract = _context3.sent;
-              _context3.next = 8;
+              isCollectionRangeOffer = 'ids' in options.offer.nft;
+              if (isCollectionRangeOffer) {
+                _context3.next = 14;
+                break;
+              }
+              _context3.next = 10;
               return loanContract.call({
                 "function": 'acceptCollectionOffer',
                 args: [offer, signature]
               });
-            case 8:
+            case 10:
               result = _context3.sent;
               success = (result === null || result === void 0 ? void 0 : result.status) === 1;
-              _context3.next = 15;
+              _context3.next = 19;
               break;
-            case 12:
-              _context3.prev = 12;
+            case 14:
+              nftIds = {
+                minId: options.offer.nft.ids.from,
+                maxId: options.offer.nft.ids.to
+              };
+              _context3.next = 17;
+              return loanContract.call({
+                "function": 'acceptCollectionOfferWithIdRange',
+                args: [offer, nftIds, signature]
+              });
+            case 17:
+              _result = _context3.sent;
+              success = (_result === null || _result === void 0 ? void 0 : _result.status) === 1;
+            case 19:
+              _context3.next = 24;
+              break;
+            case 21:
+              _context3.prev = 21;
               _context3.t0 = _context3["catch"](0);
               success = false;
-            case 15:
+            case 24:
               return _context3.abrupt("return", success);
-            case 16:
+            case 25:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[0, 12]]);
+        }, _callee3, this, [[0, 21]]);
       }));
       function acceptOffer(_x3) {
         return _acceptOffer.apply(this, arguments);
@@ -276,7 +297,7 @@ var LoansCollectionOfferV1 = /*#__PURE__*/function () {
     key: "refinanceCollectionOfferLoan",
     value: function () {
       var _refinanceCollectionOfferLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(options) {
-        var success, loanContractName, loanContractAddress, refinancingData, offer, signature, result;
+        var success, loanContractName, loanContractAddress, refinancingData, offer, signature, isCollectionRangeOffer, result, nftIds, _result2;
         return _regenerator["default"].wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
@@ -314,27 +335,48 @@ var LoansCollectionOfferV1 = /*#__PURE__*/function () {
                 expiry: options.offer.terms.loan.expiry,
                 signature: options.offer.signature
               };
-              _context6.next = 15;
+              isCollectionRangeOffer = 'ids' in options.offer.nft;
+              if (isCollectionRangeOffer) {
+                _context6.next = 21;
+                break;
+              }
+              _context6.next = 17;
               return this._refinanceContract.call({
                 "function": 'refinanceCollectionOfferLoan',
                 args: [refinancingData, offer, signature]
               });
-            case 15:
+            case 17:
               result = _context6.sent;
               success = result.status === 1;
-              _context6.next = 22;
+              _context6.next = 26;
               break;
-            case 19:
-              _context6.prev = 19;
+            case 21:
+              nftIds = {
+                minId: options.offer.nft.ids.from,
+                maxId: options.offer.nft.ids.to
+              };
+              _context6.next = 24;
+              return this._refinanceContract.call({
+                "function": 'refinanceCollectionRangeOfferLoan',
+                args: [refinancingData, offer, nftIds, signature]
+              });
+            case 24:
+              _result2 = _context6.sent;
+              success = _result2.status === 1;
+            case 26:
+              _context6.next = 31;
+              break;
+            case 28:
+              _context6.prev = 28;
               _context6.t1 = _context6["catch"](0);
               success = false;
-            case 22:
+            case 31:
               return _context6.abrupt("return", success);
-            case 23:
+            case 32:
             case "end":
               return _context6.stop();
           }
-        }, _callee6, this, [[0, 19]]);
+        }, _callee6, this, [[0, 28]]);
       }));
       function refinanceCollectionOfferLoan(_x6) {
         return _refinanceCollectionOfferLoan.apply(this, arguments);

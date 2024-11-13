@@ -200,7 +200,7 @@ var Offers = /*#__PURE__*/function () {
               params = (0, _classPrivateFieldGet2["default"])(this, _offersHelper).getParams(options);
               _context2.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'v0.2/offers',
+                uri: 'v0.3/offers',
                 auth: {
                   token: (options === null || options === void 0 ? void 0 : (_options$auth = options.auth) === null || _options$auth === void 0 ? void 0 : _options$auth.token) || 'optional'
                 },
@@ -351,6 +351,8 @@ var Offers = /*#__PURE__*/function () {
      * @param {object} options - Config options for this method
      * @param {object} options.type - Type of the offer
      * @param {object} options.nft - NFT to place an offer on
+     * @param {number} [options.nft.ids.from] - "from" Starting ID of the NFT range (inclusive, optional). Requires options.type to be "v3.collection"
+     * @param {number} [options.nft.ids.to] - "to" Ending ID of the NFT range (inclusive, optional). Requires options.type to be "v3.collection"
      * @param {object} options.borrower - Owner of the NFT
      * @param {object} options.terms - Terms of the offer
      * @returns {object} Response object
@@ -382,6 +384,22 @@ var Offers = /*#__PURE__*/function () {
      *     repayment: '1100000000000000000',
      *     origination: '0',
      *     interest: { prorated: false },
+     *     duration: 31536000,
+     *     currency: '0x00000000',
+     *     expiry: { seconds: 1722260287 }
+     *   }
+     * });
+     *
+     * @example
+     * // Create a flexible offer on a Collection range of NFTs
+     * const offer = await nftfi.offers.create({
+     *   type: 'v3.collection',
+     *   nft: { address: '0x22222222', ids: { from: 1, to: 10 } },
+     *   terms: {
+     *     principal: '1000000000000000000',
+     *     repayment: '1100000000000000000',
+     *     origination: '0',
+     *     interest: { prorated: true },
      *     duration: 31536000,
      *     currency: '0x00000000',
      *     expiry: { seconds: 1722260287 }

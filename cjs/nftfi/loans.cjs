@@ -254,6 +254,8 @@ var Loans = /*#__PURE__*/function () {
      * @param {object} options.type - Type of the offer `v3.asset` or v3.collection`
      * @param {string} options.offer.nft.address - Address of the NFT being used as collateral
      * @param {string} [options.offer.nft.id] - ID of NFT being used as collateral
+     * @param {number} [options.offer.nft.ids.from] - "from" ID of NFT id range of the offer (only when accepting a ranged offer)
+     * @param {number} [options.offer.nft.ids.to] - "to" ID of NFT id range of the offer (only when accepting a ranged offer)
      * @param {string} options.offer.terms.loan.currency - Address of the ERC20 contract being used as principal/interest
      * @param {number} options.offer.terms.loan.principal - Sum of money transferred from lender to borrower at the beginning of the loan
      * @param {number} options.offer.terms.loan.repayment - Maximum amount of money that the borrower would be required to retrieve their collateral

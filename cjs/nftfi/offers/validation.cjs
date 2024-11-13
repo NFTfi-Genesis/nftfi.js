@@ -103,6 +103,14 @@ var OffersValidator = /*#__PURE__*/function () {
       };
     }
   }, {
+    key: "_getColSigningUtilsAddressAndAbi",
+    value: function _getColSigningUtilsAddressAndAbi() {
+      return {
+        address: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.collectionSigningUtils.v1.address,
+        abi: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.collectionSigningUtils.v1.abi
+      };
+    }
+  }, {
     key: "_isValidAllowance",
     value: function () {
       var _isValidAllowance2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
@@ -164,14 +172,14 @@ var OffersValidator = /*#__PURE__*/function () {
     key: "_isValidSignature",
     value: function () {
       var _isValidSignature2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(offer) {
-        var offerType, type, _this$_getSigningUtil, signingUtilsContract, signingUtilsContractAbi, contract, offerTerms, signature, _this$_getContractAdd, loanContract, _this$_getSigningUtil2, _signingUtilsContract, _signingUtilsContractAbi, _contract, _offerTerms, _signature;
+        var offerType, _offer$nft, _offer$nft$ids, _offer$nft2, _offer$nft2$ids, type, offerTerms, range, signature, isCollectionRangeOffer, _this$_getColSigningU, signingUtilsContract, signingUtilsContractAbi, contract, _this$_getSigningUtil, _signingUtilsContract, _signingUtilsContractAbi, _contract, _this$_getContractAdd, loanContract, _this$_getSigningUtil2, _signingUtilsContract2, _signingUtilsContractAbi2, _contract2, _offerTerms, _signature;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
               offerType = offer === null || offer === void 0 ? void 0 : offer.type;
               if (!offerType) {
-                _context3.next = 19;
+                _context3.next = 29;
                 break;
               }
               _context3.t0 = offerType;
@@ -184,11 +192,6 @@ var OffersValidator = /*#__PURE__*/function () {
               type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.value;
               return _context3.abrupt("break", 10);
             case 10:
-              _this$_getSigningUtil = this._getSigningUtilsAddressAndAbi(), signingUtilsContract = _this$_getSigningUtil.address, signingUtilsContractAbi = _this$_getSigningUtil.abi;
-              contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
-                address: signingUtilsContract,
-                abi: signingUtilsContractAbi
-              });
               offerTerms = {
                 loanPrincipalAmount: offer.terms.loan.principal.toLocaleString('fullwide', {
                   useGrouping: false
@@ -205,25 +208,55 @@ var OffersValidator = /*#__PURE__*/function () {
                   useGrouping: false
                 })
               };
+              range = {
+                minId: (_offer$nft = offer.nft) === null || _offer$nft === void 0 ? void 0 : (_offer$nft$ids = _offer$nft.ids) === null || _offer$nft$ids === void 0 ? void 0 : _offer$nft$ids.from,
+                maxId: (_offer$nft2 = offer.nft) === null || _offer$nft2 === void 0 ? void 0 : (_offer$nft2$ids = _offer$nft2.ids) === null || _offer$nft2$ids === void 0 ? void 0 : _offer$nft2$ids.to
+              };
               signature = {
                 nonce: offer.lender.nonce.toString(),
                 expiry: offer.terms.loan.expiry.toString(),
                 signer: offer.lender.address,
                 signature: offer.signature
               };
-              _context3.next = 16;
-              return contract.call({
-                "function": 'isValidLenderSignature',
-                args: [offerTerms, signature, (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatBytes32String(type)]
+              isCollectionRangeOffer = 'ids' in offer.nft;
+              if (!isCollectionRangeOffer) {
+                _context3.next = 22;
+                break;
+              }
+              _this$_getColSigningU = this._getColSigningUtilsAddressAndAbi(), signingUtilsContract = _this$_getColSigningU.address, signingUtilsContractAbi = _this$_getColSigningU.abi;
+              contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+                address: signingUtilsContract,
+                abi: signingUtilsContractAbi
               });
-            case 16:
-              return _context3.abrupt("return", _context3.sent);
+              _context3.next = 19;
+              return contract.call({
+                "function": 'isValidLenderSignatureWithIdRange',
+                args: [offerTerms, range, signature, (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatBytes32String(type)]
+              });
             case 19:
-              _this$_getContractAdd = this._getContractAddressAndAbi(offer.nftfi.contract.name), loanContract = _this$_getContractAdd.address;
-              _this$_getSigningUtil2 = this._getSigningUtilsContractAddressAndAbi(offer.nftfi.contract.name), _signingUtilsContract = _this$_getSigningUtil2.address, _signingUtilsContractAbi = _this$_getSigningUtil2.abi;
+              return _context3.abrupt("return", _context3.sent);
+            case 22:
+              _this$_getSigningUtil = this._getSigningUtilsAddressAndAbi(), _signingUtilsContract = _this$_getSigningUtil.address, _signingUtilsContractAbi = _this$_getSigningUtil.abi;
               _contract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
                 address: _signingUtilsContract,
                 abi: _signingUtilsContractAbi
+              });
+              _context3.next = 26;
+              return _contract.call({
+                "function": 'isValidLenderSignature',
+                args: [offerTerms, signature, (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.formatBytes32String(type)]
+              });
+            case 26:
+              return _context3.abrupt("return", _context3.sent);
+            case 27:
+              _context3.next = 37;
+              break;
+            case 29:
+              _this$_getContractAdd = this._getContractAddressAndAbi(offer.nftfi.contract.name), loanContract = _this$_getContractAdd.address;
+              _this$_getSigningUtil2 = this._getSigningUtilsContractAddressAndAbi(offer.nftfi.contract.name), _signingUtilsContract2 = _this$_getSigningUtil2.address, _signingUtilsContractAbi2 = _this$_getSigningUtil2.abi;
+              _contract2 = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+                address: _signingUtilsContract2,
+                abi: _signingUtilsContractAbi2
               });
               _offerTerms = {
                 loanPrincipalAmount: offer.terms.loan.principal.toLocaleString('fullwide', {
@@ -245,25 +278,25 @@ var OffersValidator = /*#__PURE__*/function () {
                 signer: offer.lender.address,
                 signature: offer.signature
               };
-              _context3.next = 26;
-              return _contract.call({
+              _context3.next = 36;
+              return _contract2.call({
                 "function": 'isValidLenderSignature',
                 args: [_offerTerms, _signature, loanContract]
               });
-            case 26:
+            case 36:
               return _context3.abrupt("return", _context3.sent);
-            case 27:
-              _context3.next = 32;
+            case 37:
+              _context3.next = 42;
               break;
-            case 29:
-              _context3.prev = 29;
+            case 39:
+              _context3.prev = 39;
               _context3.t1 = _context3["catch"](0);
               return _context3.abrupt("return", _context3.t1);
-            case 32:
+            case 42:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[0, 29]]);
+        }, _callee3, this, [[0, 39]]);
       }));
       function _isValidSignature(_x3) {
         return _isValidSignature2.apply(this, arguments);
