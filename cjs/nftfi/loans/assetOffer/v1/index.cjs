@@ -140,11 +140,10 @@ var LoansAssetOfferV1 = /*#__PURE__*/function () {
     key: "acceptOffer",
     value: function () {
       var _acceptOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
-        var success, offer, signature, loanContract, result;
+        var offer, signature, loanContract, result;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.prev = 0;
               offer = {
                 loanPrincipalAmount: String(options.offer.terms.loan.principal),
                 maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
@@ -161,31 +160,23 @@ var LoansAssetOfferV1 = /*#__PURE__*/function () {
                 expiry: options.offer.terms.loan.expiry,
                 signature: options.offer.signature
               };
-              _context3.next = 5;
+              _context3.next = 4;
               return this._getLatestLoanContract((0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.value);
-            case 5:
+            case 4:
               loanContract = _context3.sent;
-              _context3.next = 8;
+              _context3.next = 7;
               return loanContract.call({
                 "function": 'acceptOffer',
                 args: [offer, signature]
               });
-            case 8:
+            case 7:
               result = _context3.sent;
-              success = (result === null || result === void 0 ? void 0 : result.status) === 1;
-              _context3.next = 15;
-              break;
-            case 12:
-              _context3.prev = 12;
-              _context3.t0 = _context3["catch"](0);
-              success = false;
-            case 15:
-              return _context3.abrupt("return", success);
-            case 16:
+              return _context3.abrupt("return", (result === null || result === void 0 ? void 0 : result.status) === 1);
+            case 9:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[0, 12]]);
+        }, _callee3, this);
       }));
       function acceptOffer(_x3) {
         return _acceptOffer.apply(this, arguments);
@@ -196,36 +187,27 @@ var LoansAssetOfferV1 = /*#__PURE__*/function () {
     key: "payBackLoan",
     value: function () {
       var _payBackLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
-        var success, loanContract, result;
+        var loanContract, result;
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              _context4.prev = 0;
               loanContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
                 address: options.loanContractAddress,
                 abi: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.assetOfferLoan.v1.abi
               });
-              _context4.next = 4;
+              _context4.next = 3;
               return loanContract.call({
                 "function": 'payBackLoan',
                 args: [options.loan.id]
               });
-            case 4:
+            case 3:
               result = _context4.sent;
-              success = (result === null || result === void 0 ? void 0 : result.status) === 1;
-              _context4.next = 11;
-              break;
-            case 8:
-              _context4.prev = 8;
-              _context4.t0 = _context4["catch"](0);
-              success = false;
-            case 11:
-              return _context4.abrupt("return", success);
-            case 12:
+              return _context4.abrupt("return", (result === null || result === void 0 ? void 0 : result.status) === 1);
+            case 5:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, this, [[0, 8]]);
+        }, _callee4, this);
       }));
       function payBackLoan(_x4) {
         return _payBackLoan.apply(this, arguments);
@@ -276,24 +258,23 @@ var LoansAssetOfferV1 = /*#__PURE__*/function () {
     key: "refinanceLoan",
     value: function () {
       var _refinanceLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(options) {
-        var success, loanContractName, loanContractAddress, refinancingData, offer, signature, result;
+        var loanContractName, loanContractAddress, refinancingData, offer, signature, result;
         return _regenerator["default"].wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
-              _context6.prev = 0;
               loanContractName = options.loan.nftfi.contract.name;
               _context6.t0 = loanContractName;
-              _context6.next = _context6.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.assetOfferLoan.v1.name ? 5 : _context6.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.collectionOfferLoan.v1.name ? 5 : 9;
+              _context6.next = _context6.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.assetOfferLoan.v1.name ? 4 : _context6.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.collectionOfferLoan.v1.name ? 4 : 8;
               break;
-            case 5:
-              _context6.next = 7;
+            case 4:
+              _context6.next = 6;
               return this._getLoanData(options);
-            case 7:
+            case 6:
               loanContractAddress = _context6.sent;
-              return _context6.abrupt("break", 10);
-            case 9:
+              return _context6.abrupt("break", 9);
+            case 8:
               loanContractAddress = (0, _classPrivateFieldGet2["default"])(this, _config).getContractAddress(options.loan.nftfi.contract.name);
-            case 10:
+            case 9:
               refinancingData = {
                 loanIdentifier: options.loan.id,
                 refinanceableContract: loanContractAddress
@@ -314,27 +295,19 @@ var LoansAssetOfferV1 = /*#__PURE__*/function () {
                 expiry: options.offer.terms.loan.expiry,
                 signature: options.offer.signature
               };
-              _context6.next = 15;
+              _context6.next = 14;
               return this._refinanceContract.call({
                 "function": 'refinanceLoan',
                 args: [refinancingData, offer, signature]
               });
-            case 15:
+            case 14:
               result = _context6.sent;
-              success = result.status === 1;
-              _context6.next = 22;
-              break;
-            case 19:
-              _context6.prev = 19;
-              _context6.t1 = _context6["catch"](0);
-              success = false;
-            case 22:
-              return _context6.abrupt("return", success);
-            case 23:
+              return _context6.abrupt("return", result.status === 1);
+            case 16:
             case "end":
               return _context6.stop();
           }
-        }, _callee6, this, [[0, 19]]);
+        }, _callee6, this);
       }));
       function refinanceLoan(_x6) {
         return _refinanceLoan.apply(this, arguments);

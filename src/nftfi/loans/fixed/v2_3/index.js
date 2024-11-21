@@ -30,37 +30,31 @@ class LoansFixedV2_3 {
   }
 
   async acceptOffer(options) {
-    let success;
-    try {
-      const offer = {
-        loanERC20Denomination: options.offer.terms.loan.currency,
-        loanPrincipalAmount: String(options.offer.terms.loan.principal),
-        maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
-        nftCollateralContract: options.offer.nft.address,
-        nftCollateralId: options.offer.nft.id,
-        referrer: '0x0000000000000000000000000000000000000000',
-        loanDuration: options.offer.terms.loan.duration,
-        loanAdminFeeInBasisPoints: options.offer.nftfi.fee.bps
-      };
-      const signature = {
-        signer: options.offer.lender.address,
-        nonce: options.offer.lender.nonce,
-        expiry: options.offer.terms.loan.expiry,
-        signature: options.offer.signature
-      };
-      const borrowerSettings = {
-        revenueSharePartner: '0x0000000000000000000000000000000000000000',
-        referralFeeInBasisPoints: 0
-      };
-      const result = await this._loanContract.call({
-        function: 'acceptOffer',
-        args: [offer, signature, borrowerSettings]
-      });
-      success = result?.status === 1;
-    } catch (e) {
-      success = false;
-    }
-    return success;
+    const offer = {
+      loanERC20Denomination: options.offer.terms.loan.currency,
+      loanPrincipalAmount: String(options.offer.terms.loan.principal),
+      maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
+      nftCollateralContract: options.offer.nft.address,
+      nftCollateralId: options.offer.nft.id,
+      referrer: '0x0000000000000000000000000000000000000000',
+      loanDuration: options.offer.terms.loan.duration,
+      loanAdminFeeInBasisPoints: options.offer.nftfi.fee.bps
+    };
+    const signature = {
+      signer: options.offer.lender.address,
+      nonce: options.offer.lender.nonce,
+      expiry: options.offer.terms.loan.expiry,
+      signature: options.offer.signature
+    };
+    const borrowerSettings = {
+      revenueSharePartner: '0x0000000000000000000000000000000000000000',
+      referralFeeInBasisPoints: 0
+    };
+    const result = await this._loanContract.call({
+      function: 'acceptOffer',
+      args: [offer, signature, borrowerSettings]
+    });
+    return result?.status === 1;
   }
 
   async liquidateOverdueLoan(options) {
@@ -78,17 +72,11 @@ class LoansFixedV2_3 {
   }
 
   async payBackLoan(options) {
-    let success;
-    try {
-      const result = await this._loanContract.call({
-        function: 'payBackLoan',
-        args: [options.loan.id]
-      });
-      success = result?.status === 1;
-    } catch (e) {
-      success = false;
-    }
-    return success;
+    const result = await this._loanContract.call({
+      function: 'payBackLoan',
+      args: [options.loan.id]
+    });
+    return result?.status === 1;
   }
 
   async cancelLoanCommitmentBeforeLoanHasBegun(options) {
@@ -120,42 +108,36 @@ class LoansFixedV2_3 {
   }
 
   async refinanceLoan(options) {
-    let success;
-    try {
-      const refinanceableContract = this.#config.getContractAddress(options.loan.nftfi.contract.name);
-      const refinancingData = {
-        loanIdentifier: options.loan.id,
-        refinanceableContract
-      };
-      const offer = {
-        loanERC20Denomination: options.offer.terms.loan.currency,
-        loanPrincipalAmount: String(options.offer.terms.loan.principal),
-        maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
-        nftCollateralContract: options.offer.nft.address,
-        nftCollateralId: options.offer.nft.id,
-        referrer: '0x0000000000000000000000000000000000000000',
-        loanDuration: options.offer.terms.loan.duration,
-        loanAdminFeeInBasisPoints: options.offer.nftfi.fee.bps
-      };
-      const signature = {
-        signer: options.offer.lender.address,
-        nonce: options.offer.lender.nonce,
-        expiry: options.offer.terms.loan.expiry,
-        signature: options.offer.signature
-      };
-      const borrowerSettings = {
-        revenueSharePartner: '0x0000000000000000000000000000000000000000',
-        referralFeeInBasisPoints: 0
-      };
-      const result = await this._refinanceContract.call({
-        function: 'refinanceLoan',
-        args: [refinancingData, offer, signature, borrowerSettings]
-      });
-      success = result.status === 1;
-    } catch (e) {
-      success = false;
-    }
-    return success;
+    const refinanceableContract = this.#config.getContractAddress(options.loan.nftfi.contract.name);
+    const refinancingData = {
+      loanIdentifier: options.loan.id,
+      refinanceableContract
+    };
+    const offer = {
+      loanERC20Denomination: options.offer.terms.loan.currency,
+      loanPrincipalAmount: String(options.offer.terms.loan.principal),
+      maximumRepaymentAmount: String(options.offer.terms.loan.repayment),
+      nftCollateralContract: options.offer.nft.address,
+      nftCollateralId: options.offer.nft.id,
+      referrer: '0x0000000000000000000000000000000000000000',
+      loanDuration: options.offer.terms.loan.duration,
+      loanAdminFeeInBasisPoints: options.offer.nftfi.fee.bps
+    };
+    const signature = {
+      signer: options.offer.lender.address,
+      nonce: options.offer.lender.nonce,
+      expiry: options.offer.terms.loan.expiry,
+      signature: options.offer.signature
+    };
+    const borrowerSettings = {
+      revenueSharePartner: '0x0000000000000000000000000000000000000000',
+      referralFeeInBasisPoints: 0
+    };
+    const result = await this._refinanceContract.call({
+      function: 'refinanceLoan',
+      args: [refinancingData, offer, signature, borrowerSettings]
+    });
+    return result.status === 1;
   }
 }
 

@@ -103,7 +103,7 @@ export default {
       throw 'Please supply values for either account.privateKey, account.web3.provider, account.ethereum.ethers.signer.jsonRpc, or account.multisig.';
     }
 
-    const version = 'v0.6.1';
+    const version = 'v0.6.2';
     const ethers = options?.dependencies?.ethers || ethersjs;
     let provider = null;
     if (options?.ethereum?.provider?.url) {

@@ -372,7 +372,7 @@ var Loans = /*#__PURE__*/function () {
             case 42:
               _context3.prev = 42;
               _context3.t2 = _context3["catch"](0);
-              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t2));
+              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t2, null, options));
             case 45:
             case "end":
               return _context3.stop();
@@ -677,7 +677,7 @@ var Loans = /*#__PURE__*/function () {
             case 53:
               _context5.prev = 53;
               _context5.t2 = _context5["catch"](0);
-              return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context5.t2));
+              return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context5.t2, null, options));
             case 56:
             case "end":
               return _context5.stop();
@@ -853,7 +853,7 @@ var Loans = /*#__PURE__*/function () {
             case 51:
               _context6.prev = 51;
               _context6.t2 = _context6["catch"](0);
-              return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context6.t2));
+              return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context6.t2, null, options));
             case 54:
             case "end":
               return _context6.stop();

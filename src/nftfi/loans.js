@@ -217,7 +217,7 @@ class Loans {
       }
       return response;
     } catch (e) {
-      return this.#error.handle(e);
+      return this.#error.handle(e, null, options);
     }
   }
 
@@ -384,7 +384,7 @@ class Loans {
         success
       };
     } catch (e) {
-      return this.#error.handle(e);
+      return this.#error.handle(e, null, options);
     }
   }
 
@@ -509,7 +509,7 @@ class Loans {
       }
       return this.#result.handle(response);
     } catch (e) {
-      return this.#error.handle(e);
+      return this.#error.handle(e, null, options);
     }
   }
 
