@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -107,6 +108,23 @@ var OffersHelper = /*#__PURE__*/function () {
         var _options$filters10, _options$filters10$le, _options$filters10$le2;
         return _objectSpread(_objectSpread({}, params), {}, {
           lenderAddressNe: options === null || options === void 0 ? void 0 : (_options$filters10 = options.filters) === null || _options$filters10 === void 0 ? void 0 : (_options$filters10$le = _options$filters10.lender) === null || _options$filters10$le === void 0 ? void 0 : (_options$filters10$le2 = _options$filters10$le.address) === null || _options$filters10$le2 === void 0 ? void 0 : _options$filters10$le2.ne
+        });
+      }
+      return params;
+    }
+  }, {
+    key: "_addLenderBalances",
+    value: function _addLenderBalances(options, params) {
+      var _options$lender;
+      if (options !== null && options !== void 0 && (_options$lender = options.lender) !== null && _options$lender !== void 0 && _options$lender.balances) {
+        var lenderBalances = Object.entries(options.lender.balances).map(function (_ref) {
+          var _ref2 = (0, _slicedToArray2["default"])(_ref, 2),
+            key = _ref2[0],
+            value = _ref2[1];
+          return "".concat(key, ":").concat(value);
+        }).join(',');
+        return _objectSpread(_objectSpread({}, params), {}, {
+          lenderBalances: lenderBalances
         });
       }
       return params;
@@ -239,6 +257,7 @@ var OffersHelper = /*#__PURE__*/function () {
       params = this._addFilters(options, params);
       params = this._addPagination(options, params);
       params = this._addCountGroup(options, params);
+      params = this._addLenderBalances(options, params);
       return params;
     }
   }, {

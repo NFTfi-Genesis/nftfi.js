@@ -1282,6 +1282,7 @@ When provided with filters, gets all offers by specified filters.
 | [options.pagination.sort] | <code>string</code> |  | Field to sort by (optional) |
 | [options.pagination.direction] | <code>&#x27;asc&#x27;</code> \| <code>&#x27;desc&#x27;</code> |  | Direction to sort by (optional) |
 | [options.validation.check] | <code>boolean</code> | <code>true</code> | Validate offers and append error info (optional) |
+| [options.validation.refinance] | <code>boolean</code> | <code>false</code> | Validate offers checking if they're valid in the context of refinancing, works when offers are filtered by lender address (optional) |
 | [options.auth.token] | <code>&#x27;required&#x27;</code> \| <code>&#x27;optional&#x27;</code> \| <code>&#x27;none&#x27;</code> |  | Specify if call to fetch offers should be authed, un-authed calls will always redact offers signature. By default, auth is optional. (optional) |
 
 **Example**  

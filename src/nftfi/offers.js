@@ -7,6 +7,7 @@ class Offers {
   #api;
   #offersHelper;
   #loans;
+  #erc20;
   #config;
   #validator;
   #requests;
@@ -20,6 +21,7 @@ class Offers {
     this.#api = options?.api;
     this.#offersHelper = options?.offersHelper;
     this.#loans = options?.loans;
+    this.#erc20 = options?.erc20;
     this.#config = options?.config;
     this.#validator = options?.offersValidator;
     this.#requests = options?.offersRequests;
@@ -54,6 +56,7 @@ class Offers {
    * @param {string} [options.pagination.sort] - Field to sort by (optional)
    * @param {'asc' | 'desc'} [options.pagination.direction] - Direction to sort by (optional)
    * @param {boolean} [options.validation.check=true] - Validate offers and append error info (optional)
+   * @param {boolean} [options.validation.refinance=false] - Validate offers checking if they're valid in the context of refinancing, works when offers are filtered by lender address (optional)
    * @param {'required' | 'optional' | 'none'} [options.auth.token] - Specify if call to fetch offers should be authed, un-authed calls will always redact offers signature. By default, auth is optional. (optional)
    * @returns {Array<object>} Array of offers
    *
@@ -116,7 +119,18 @@ class Offers {
    */
   async get(options = {}) {
     try {
-      const params = this.#offersHelper.getParams(options);
+      let lenderBalances;
+      if (options?.validation?.refinance) {
+        const tokens = [this.#config.erc20.weth, this.#config.erc20.usdc, this.#config.erc20.dai];
+        const balancePromises = tokens.map(async token => this.#erc20.balanceOf({ token }));
+        const balances = await Promise.all(balancePromises);
+        lenderBalances = tokens.reduce((acc, token, index) => {
+          acc[token.address] = balances[index].toString();
+          return acc;
+        }, {});
+      }
+
+      const params = this.#offersHelper.getParams({ ...options, lender: { balances: lenderBalances } });
       const response = await this.#api.get({
         uri: 'v0.3/offers',
         auth: { token: options?.auth?.token || 'optional' },
@@ -124,6 +138,7 @@ class Offers {
       });
       let results = response?.results.map(this.#helper.addCurrencyUnit) || [];
       const shouldNotValidate = options?.validation?.check === false;
+
       if (!shouldNotValidate && results?.length > 0) {
         results = await Promise.all(
           results.map(async offer => {

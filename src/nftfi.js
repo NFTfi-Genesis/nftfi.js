@@ -103,7 +103,7 @@ export default {
       throw 'Please supply values for either account.privateKey, account.web3.provider, account.ethereum.ethers.signer.jsonRpc, or account.multisig.';
     }
 
-    const version = 'v0.6.2';
+    const version = 'v0.6.3';
     const ethers = options?.dependencies?.ethers || ethersjs;
     let provider = null;
     if (options?.ethereum?.provider?.url) {
@@ -299,7 +299,8 @@ export default {
       result,
       error,
       helper,
-      assertion
+      assertion,
+      erc20
     });
     const erc721 = new Erc721({ config, contractFactory, account, error, assertion });
     const erc1155 = new Erc1155({ config, contractFactory, account });

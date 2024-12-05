@@ -53,6 +53,16 @@ class OffersHelper {
     return params;
   }
 
+  _addLenderBalances(options, params) {
+    if (options?.lender?.balances) {
+      const lenderBalances = Object.entries(options.lender.balances)
+        .map(([key, value]) => `${key}:${value}`)
+        .join(',');
+      return { ...params, lenderBalances };
+    }
+    return params;
+  }
+
   _addBorrower(options, params) {
     if (options?.filters?.borrower?.address?.eq) {
       return { ...params, borrowerAddress: options.filters.borrower.address.eq };
@@ -129,6 +139,7 @@ class OffersHelper {
     params = this._addFilters(options, params);
     params = this._addPagination(options, params);
     params = this._addCountGroup(options, params);
+    params = this._addLenderBalances(options, params);
 
     return params;
   }

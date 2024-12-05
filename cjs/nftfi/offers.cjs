@@ -20,6 +20,7 @@ var _account = /*#__PURE__*/new WeakMap();
 var _api = /*#__PURE__*/new WeakMap();
 var _offersHelper = /*#__PURE__*/new WeakMap();
 var _loans = /*#__PURE__*/new WeakMap();
+var _erc = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
 var _validator = /*#__PURE__*/new WeakMap();
 var _requests = /*#__PURE__*/new WeakMap();
@@ -48,6 +49,10 @@ var Offers = /*#__PURE__*/function () {
       value: void 0
     });
     _classPrivateFieldInitSpec(this, _loans, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _erc, {
       writable: true,
       value: void 0
     });
@@ -83,6 +88,7 @@ var Offers = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
     (0, _classPrivateFieldSet2["default"])(this, _offersHelper, options === null || options === void 0 ? void 0 : options.offersHelper);
     (0, _classPrivateFieldSet2["default"])(this, _loans, options === null || options === void 0 ? void 0 : options.loans);
+    (0, _classPrivateFieldSet2["default"])(this, _erc, options === null || options === void 0 ? void 0 : options.erc20);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _validator, options === null || options === void 0 ? void 0 : options.offersValidator);
     (0, _classPrivateFieldSet2["default"])(this, _requests, options === null || options === void 0 ? void 0 : options.offersRequests);
@@ -117,6 +123,7 @@ var Offers = /*#__PURE__*/function () {
    * @param {string} [options.pagination.sort] - Field to sort by (optional)
    * @param {'asc' | 'desc'} [options.pagination.direction] - Direction to sort by (optional)
    * @param {boolean} [options.validation.check=true] - Validate offers and append error info (optional)
+   * @param {boolean} [options.validation.refinance=false] - Validate offers checking if they're valid in the context of refinancing, works when offers are filtered by lender address (optional)
    * @param {'required' | 'optional' | 'none'} [options.auth.token] - Specify if call to fetch offers should be authed, un-authed calls will always redact offers signature. By default, auth is optional. (optional)
    * @returns {Array<object>} Array of offers
    *
@@ -180,57 +187,42 @@ var Offers = /*#__PURE__*/function () {
   (0, _createClass2["default"])(Offers, [{
     key: "get",
     value: function () {
-      var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
+      var _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
         var _this = this;
         var options,
-          _options$auth,
           _options$validation,
+          _options$auth,
+          _options$validation2,
           _results,
+          lenderBalances,
+          tokens,
+          balancePromises,
+          balances,
           params,
           response,
           results,
           shouldNotValidate,
           _response$pagination,
-          _args2 = arguments;
-        return _regenerator["default"].wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+          _args3 = arguments;
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              options = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : {};
-              _context2.prev = 1;
-              params = (0, _classPrivateFieldGet2["default"])(this, _offersHelper).getParams(options);
-              _context2.next = 5;
-              return (0, _classPrivateFieldGet2["default"])(this, _api).get({
-                uri: 'v0.3/offers',
-                auth: {
-                  token: (options === null || options === void 0 ? void 0 : (_options$auth = options.auth) === null || _options$auth === void 0 ? void 0 : _options$auth.token) || 'optional'
-                },
-                params: params
-              });
-            case 5:
-              response = _context2.sent;
-              results = (response === null || response === void 0 ? void 0 : response.results.map((0, _classPrivateFieldGet2["default"])(this, _helper).addCurrencyUnit)) || [];
-              shouldNotValidate = (options === null || options === void 0 ? void 0 : (_options$validation = options.validation) === null || _options$validation === void 0 ? void 0 : _options$validation.check) === false;
-              if (!(!shouldNotValidate && ((_results = results) === null || _results === void 0 ? void 0 : _results.length) > 0)) {
-                _context2.next = 12;
+              options = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : {};
+              _context3.prev = 1;
+              if (!(options !== null && options !== void 0 && (_options$validation = options.validation) !== null && _options$validation !== void 0 && _options$validation.refinance)) {
+                _context3.next = 9;
                 break;
               }
-              _context2.next = 11;
-              return Promise.all(results.map( /*#__PURE__*/function () {
-                var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(offer) {
-                  var errors;
+              tokens = [(0, _classPrivateFieldGet2["default"])(this, _config).erc20.weth, (0, _classPrivateFieldGet2["default"])(this, _config).erc20.usdc, (0, _classPrivateFieldGet2["default"])(this, _config).erc20.dai];
+              balancePromises = tokens.map( /*#__PURE__*/function () {
+                var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(token) {
                   return _regenerator["default"].wrap(function _callee$(_context) {
                     while (1) switch (_context.prev = _context.next) {
                       case 0:
-                        _context.next = 2;
-                        return (0, _classPrivateFieldGet2["default"])(_this, _validator).validate({
-                          offer: offer
-                        });
-                      case 2:
-                        errors = _context.sent;
-                        return _context.abrupt("return", _objectSpread(_objectSpread({}, offer), {}, {
-                          errors: errors
+                        return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(_this, _erc).balanceOf({
+                          token: token
                         }));
-                      case 4:
+                      case 1:
                       case "end":
                         return _context.stop();
                     }
@@ -239,31 +231,87 @@ var Offers = /*#__PURE__*/function () {
                 return function (_x) {
                   return _ref.apply(this, arguments);
                 };
-              }()));
-            case 11:
-              results = _context2.sent;
+              }());
+              _context3.next = 7;
+              return Promise.all(balancePromises);
+            case 7:
+              balances = _context3.sent;
+              lenderBalances = tokens.reduce(function (acc, token, index) {
+                acc[token.address] = balances[index].toString();
+                return acc;
+              }, {});
+            case 9:
+              params = (0, _classPrivateFieldGet2["default"])(this, _offersHelper).getParams(_objectSpread(_objectSpread({}, options), {}, {
+                lender: {
+                  balances: lenderBalances
+                }
+              }));
+              _context3.next = 12;
+              return (0, _classPrivateFieldGet2["default"])(this, _api).get({
+                uri: 'v0.3/offers',
+                auth: {
+                  token: (options === null || options === void 0 ? void 0 : (_options$auth = options.auth) === null || _options$auth === void 0 ? void 0 : _options$auth.token) || 'optional'
+                },
+                params: params
+              });
             case 12:
-              if (!(options !== null && options !== void 0 && options.pagination)) {
-                _context2.next = 14;
+              response = _context3.sent;
+              results = (response === null || response === void 0 ? void 0 : response.results.map((0, _classPrivateFieldGet2["default"])(this, _helper).addCurrencyUnit)) || [];
+              shouldNotValidate = (options === null || options === void 0 ? void 0 : (_options$validation2 = options.validation) === null || _options$validation2 === void 0 ? void 0 : _options$validation2.check) === false;
+              if (!(!shouldNotValidate && ((_results = results) === null || _results === void 0 ? void 0 : _results.length) > 0)) {
+                _context3.next = 19;
                 break;
               }
-              return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
+              _context3.next = 18;
+              return Promise.all(results.map( /*#__PURE__*/function () {
+                var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(offer) {
+                  var errors;
+                  return _regenerator["default"].wrap(function _callee2$(_context2) {
+                    while (1) switch (_context2.prev = _context2.next) {
+                      case 0:
+                        _context2.next = 2;
+                        return (0, _classPrivateFieldGet2["default"])(_this, _validator).validate({
+                          offer: offer
+                        });
+                      case 2:
+                        errors = _context2.sent;
+                        return _context2.abrupt("return", _objectSpread(_objectSpread({}, offer), {}, {
+                          errors: errors
+                        }));
+                      case 4:
+                      case "end":
+                        return _context2.stop();
+                    }
+                  }, _callee2);
+                }));
+                return function (_x2) {
+                  return _ref2.apply(this, arguments);
+                };
+              }()));
+            case 18:
+              results = _context3.sent;
+            case 19:
+              if (!(options !== null && options !== void 0 && options.pagination)) {
+                _context3.next = 21;
+                break;
+              }
+              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle({
                 pagination: {
                   total: response === null || response === void 0 ? void 0 : (_response$pagination = response.pagination) === null || _response$pagination === void 0 ? void 0 : _response$pagination.total
                 },
                 results: results
               }));
-            case 14:
-              return _context2.abrupt("return", results);
-            case 17:
-              _context2.prev = 17;
-              _context2.t0 = _context2["catch"](1);
-              return _context2.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context2.t0));
-            case 20:
+            case 21:
+              return _context3.abrupt("return", results);
+            case 24:
+              _context3.prev = 24;
+              _context3.t0 = _context3["catch"](1);
+              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t0));
+            case 27:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2, this, [[1, 17]]);
+        }, _callee3, this, [[1, 24]]);
       }));
       function get() {
         return _get.apply(this, arguments);
@@ -301,44 +349,44 @@ var Offers = /*#__PURE__*/function () {
   }, {
     key: "count",
     value: function () {
-      var _count = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+      var _count = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
         var options,
           params,
           _yield$_classPrivateF,
           result,
           errors,
-          _args3 = arguments;
-        return _regenerator["default"].wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+          _args4 = arguments;
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              options = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : {};
-              _context3.prev = 1;
+              options = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : {};
+              _context4.prev = 1;
               params = (0, _classPrivateFieldGet2["default"])(this, _offersHelper).getParams(options);
-              _context3.next = 5;
+              _context4.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
                 uri: 'v0.1/offers-count',
                 params: params
               });
             case 5:
-              _yield$_classPrivateF = _context3.sent;
+              _yield$_classPrivateF = _context4.sent;
               result = _yield$_classPrivateF.result;
               errors = _yield$_classPrivateF.errors;
               if (!errors) {
-                _context3.next = 10;
+                _context4.next = 10;
                 break;
               }
-              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(errors));
+              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(errors));
             case 10:
-              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(result));
+              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(result));
             case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](1);
-              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context3.t0));
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](1);
+              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context4.t0));
             case 16:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
-        }, _callee3, this, [[1, 13]]);
+        }, _callee4, this, [[1, 13]]);
       }));
       function count() {
         return _count.apply(this, arguments);
@@ -409,45 +457,45 @@ var Offers = /*#__PURE__*/function () {
   }, {
     key: "create",
     value: function () {
-      var _create = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
+      var _create = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
         var _options, _options$nftfi, _options$nftfi$contra, _options2, errors, response, contractName, type, payload, _payload;
-        return _regenerator["default"].wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              _context4.prev = 0;
+              _context5.prev = 0;
               (0, _classPrivateFieldGet2["default"])(this, _assertion).hasSigner();
               options = _objectSpread(_objectSpread({}, options.listing), options); // copying options.listing fields onto the root, for backwards compatibility.
               contractName = (_options = options) === null || _options === void 0 ? void 0 : (_options$nftfi = _options.nftfi) === null || _options$nftfi === void 0 ? void 0 : (_options$nftfi$contra = _options$nftfi.contract) === null || _options$nftfi$contra === void 0 ? void 0 : _options$nftfi$contra.name;
               type = (_options2 = options) === null || _options2 === void 0 ? void 0 : _options2.type;
-              _context4.t0 = type;
-              _context4.next = _context4.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.name ? 8 : _context4.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.name ? 15 : 22;
+              _context5.t0 = type;
+              _context5.next = _context5.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.name ? 8 : _context5.t0 === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.name ? 15 : 22;
               break;
             case 8:
-              _context4.next = 10;
+              _context5.next = 10;
               return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructAssetOffer(options);
             case 10:
-              payload = _context4.sent;
-              _context4.next = 13;
+              payload = _context5.sent;
+              _context5.next = 13;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
                 uri: 'v0.3/offers',
                 payload: payload
               });
             case 13:
-              response = _context4.sent;
-              return _context4.abrupt("break", 25);
+              response = _context5.sent;
+              return _context5.abrupt("break", 25);
             case 15:
-              _context4.next = 17;
+              _context5.next = 17;
               return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructCollectionOffer(options);
             case 17:
-              _payload = _context4.sent;
-              _context4.next = 20;
+              _payload = _context5.sent;
+              _context5.next = 20;
               return (0, _classPrivateFieldGet2["default"])(this, _api).post({
                 uri: 'v0.3/offers',
                 payload: _payload
               });
             case 20:
-              response = _context4.sent;
-              return _context4.abrupt("break", 25);
+              response = _context5.sent;
+              return _context5.abrupt("break", 25);
             case 22:
               if (type) {
                 errors = {
@@ -461,20 +509,20 @@ var Offers = /*#__PURE__*/function () {
               response = {
                 errors: errors
               };
-              return _context4.abrupt("break", 25);
+              return _context5.abrupt("break", 25);
             case 25:
-              return _context4.abrupt("return", response);
+              return _context5.abrupt("return", response);
             case 28:
-              _context4.prev = 28;
-              _context4.t1 = _context4["catch"](0);
-              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context4.t1));
+              _context5.prev = 28;
+              _context5.t1 = _context5["catch"](0);
+              return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context5.t1));
             case 31:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
-        }, _callee4, this, [[0, 28]]);
+        }, _callee5, this, [[0, 28]]);
       }));
-      function create(_x2) {
+      function create(_x3) {
         return _create.apply(this, arguments);
       }
       return create;
@@ -500,14 +548,14 @@ var Offers = /*#__PURE__*/function () {
   }, {
     key: "delete",
     value: function () {
-      var _delete2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
+      var _delete2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(options) {
         var uri;
-        return _regenerator["default"].wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
+        return _regenerator["default"].wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.prev = 0;
+              _context6.prev = 0;
               uri = "v0.1/offers/".concat(options.offer.id);
-              _context5.next = 4;
+              _context6.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _api)["delete"]({
                 uri: uri,
                 auth: {
@@ -515,18 +563,18 @@ var Offers = /*#__PURE__*/function () {
                 }
               });
             case 4:
-              return _context5.abrupt("return", _context5.sent);
+              return _context6.abrupt("return", _context6.sent);
             case 7:
-              _context5.prev = 7;
-              _context5.t0 = _context5["catch"](0);
-              return _context5.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context5.t0));
+              _context6.prev = 7;
+              _context6.t0 = _context6["catch"](0);
+              return _context6.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context6.t0));
             case 10:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5, this, [[0, 7]]);
+        }, _callee6, this, [[0, 7]]);
       }));
-      function _delete(_x3) {
+      function _delete(_x4) {
         return _delete2.apply(this, arguments);
       }
       return _delete;
@@ -560,21 +608,21 @@ var Offers = /*#__PURE__*/function () {
   }, {
     key: "revoke",
     value: function () {
-      var _revoke = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(options) {
-        return _regenerator["default"].wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
+      var _revoke = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(options) {
+        return _regenerator["default"].wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
             case 0:
-              _context6.next = 2;
+              _context7.next = 2;
               return (0, _classPrivateFieldGet2["default"])(this, _loans).revokeOffer(options);
             case 2:
-              return _context6.abrupt("return", _context6.sent);
+              return _context7.abrupt("return", _context7.sent);
             case 3:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
-        }, _callee6, this);
+        }, _callee7, this);
       }));
-      function revoke(_x4) {
+      function revoke(_x5) {
         return _revoke.apply(this, arguments);
       }
       return revoke;
@@ -601,34 +649,34 @@ var Offers = /*#__PURE__*/function () {
   }, {
     key: "validate",
     value: function () {
-      var _validate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(options) {
+      var _validate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(options) {
         var warnings, result;
-        return _regenerator["default"].wrap(function _callee7$(_context7) {
-          while (1) switch (_context7.prev = _context7.next) {
+        return _regenerator["default"].wrap(function _callee8$(_context8) {
+          while (1) switch (_context8.prev = _context8.next) {
             case 0:
-              _context7.prev = 0;
+              _context8.prev = 0;
               (0, _classPrivateFieldGet2["default"])(this, _assertion).hasProvider();
-              _context7.next = 4;
+              _context8.next = 4;
               return (0, _classPrivateFieldGet2["default"])(this, _validator).validate(options);
             case 4:
-              warnings = _context7.sent;
+              warnings = _context8.sent;
               result = {};
               result.valid = warnings === null;
               if (warnings) {
                 result.warnings = warnings;
               }
-              return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(_objectSpread({}, result)));
+              return _context8.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _result).handle(_objectSpread({}, result)));
             case 11:
-              _context7.prev = 11;
-              _context7.t0 = _context7["catch"](0);
-              return _context7.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context7.t0));
+              _context8.prev = 11;
+              _context8.t0 = _context8["catch"](0);
+              return _context8.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _error).handle(_context8.t0));
             case 14:
             case "end":
-              return _context7.stop();
+              return _context8.stop();
           }
-        }, _callee7, this, [[0, 11]]);
+        }, _callee8, this, [[0, 11]]);
       }));
-      function validate(_x5) {
+      function validate(_x6) {
         return _validate.apply(this, arguments);
       }
       return validate;
