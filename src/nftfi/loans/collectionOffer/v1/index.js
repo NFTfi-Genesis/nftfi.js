@@ -214,6 +214,31 @@ class LoansCollectionOfferV1 {
     }
     return success;
   }
+
+  async renegotiateLoan(options) {
+    const loanContractAddress = await this._getLoanData(options);
+
+    const loanContract = this.#contractFactory.create({
+      address: loanContractAddress,
+      abi: this.#config.protocol.v3.collectionOfferLoan.v1.abi
+    });
+
+    const args = [
+      options.loan.id,
+      options.offer.terms.loan.duration,
+      options.offer.terms.loan.repayment,
+      options.offer.terms.loan.renegotiation.fee,
+      options.offer.lender.nonce,
+      options.offer.terms.loan.expiry.seconds,
+      options.offer.terms.loan.interest.prorated,
+      options.offer.signature
+    ];
+    const result = await loanContract.call({
+      function: 'renegotiateLoan',
+      args
+    });
+    return result.status === 1;
+  }
 }
 
 export default LoansCollectionOfferV1;

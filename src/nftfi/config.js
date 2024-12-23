@@ -253,6 +253,7 @@ mainnetConfig.loan.fixed.collection.v2_3.abi = [
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer), tuple(uint256 nonce, uint256 expiry, address signer, bytes signature), tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints)) returns (uint32)',
   'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
   'function mintObligationReceipt(uint32 _loanId)',
+  'function renegotiateLoan(uint32 loanId, uint32 newLoanDuration, uint256 newMaximumRepaymentAmount, uint256 renegotiationFee, uint256 lenderNonce, uint256 expiry, bytes lenderSignature)',
   'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
 ];
 mainnetConfig.loan.fixed.collection.v2_3.obligationReceipt.address = '0xaabd3ebcc6ae1e87150c6184c038b94dc01a7708';
@@ -265,6 +266,7 @@ mainnetConfig.loan.fixed.v2.abi = [
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
   'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
   'function mintObligationReceipt(uint32 _loanId)',
+  'function renegotiateLoan(uint32 loanId, uint32 newLoanDuration, uint256 newMaximumRepaymentAmount, uint256 renegotiationFee, uint256 lenderNonce, uint256 expiry, bytes lenderSignature)',
   'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
 ];
 mainnetConfig.loan.fixed.v2_1.name = 'v2-1.loan.fixed';
@@ -362,7 +364,8 @@ mainnetConfig.protocol.v3.assetOfferLoan.v1.abi = [
   'function payBackLoan(uint32 _loanId)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function mintObligationReceipt(uint32 _loanId)',
-  'function mintPromissoryNote(uint32 _loanId)'
+  'function mintPromissoryNote(uint32 _loanId)',
+  'function renegotiateLoan(uint32 loanId, uint32 newLoanDuration, uint256 newMaximumRepaymentAmount, uint256 renegotiationFee, uint256 lenderNonce, uint256 expiry, bool isProRata, bytes lenderSignature)'
 ];
 mainnetConfig.protocol.v3.collectionOfferLoan.v1.name = 'v3.collectionOfferLoan.v1';
 mainnetConfig.protocol.v3.collectionOfferLoan.v1.abi = [
@@ -371,7 +374,8 @@ mainnetConfig.protocol.v3.collectionOfferLoan.v1.abi = [
   'function payBackLoan(uint32 _loanId)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function mintObligationReceipt(uint32 _loanId)',
-  'function mintPromissoryNote(uint32 _loanId)'
+  'function mintPromissoryNote(uint32 _loanId)',
+  'function renegotiateLoan(uint32 loanId, uint32 newLoanDuration, uint256 newMaximumRepaymentAmount, uint256 renegotiationFee, uint256 lenderNonce, uint256 expiry, bool isProRata, bytes lenderSignature)'
 ];
 mainnetConfig.protocol.v3.obligationReceipt.v1.address = '0x48ed998e778Ab2663b6C49Bd09DfFF8Efd16B934';
 mainnetConfig.protocol.v3.promissoryNote.v1.address = '0x77B53beb7f13Bd38de9F76Eed2F2c4F9efff7f4C';
@@ -456,6 +460,7 @@ sepoliaConfig.loan.fixed.v2.abi = [
   'function acceptOffer(tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, uint16 loanAdminFeeInBasisPoints, address loanERC20Denomination, address referrer) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _signature, tuple(address revenueSharePartner, uint16 referralFeeInBasisPoints) _borrowerSettings)',
   'function getWhetherNonceHasBeenUsedForUser(address _user, uint256 _nonce) view returns (bool)',
   'function mintObligationReceipt(uint32 _loanId)',
+  'function renegotiateLoan(uint32 loanId, uint32 newLoanDuration, uint256 newMaximumRepaymentAmount, uint256 renegotiationFee, uint256 lenderNonce, uint256 expiry, bytes lenderSignature)',
   'event LoanStarted(uint32 indexed loanId, address indexed borrower, address indexed lender, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address loanERC20Denomination, uint32 loanDuration, uint16 loanInterestRateForDurationInBasisPoints, uint16 loanAdminFeeInBasisPoints, address nftCollateralWrapper, uint64 loanStartTime, address nftCollateralContract, address borrower) loanTerms, tuple(address revenueSharePartner, uint16 revenueShareInBasisPoints, uint16 referralFeeInBasisPoints) loanExtras)'
 ];
 sepoliaConfig.loan.fixed.v2_1.name = 'v2-1.loan.fixed';
@@ -557,7 +562,8 @@ sepoliaConfig.protocol.v3.assetOfferLoan.v1.abi = [
   'function payBackLoan(uint32 _loanId)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function mintObligationReceipt(uint32 _loanId)',
-  'function mintPromissoryNote(uint32 _loanId)'
+  'function mintPromissoryNote(uint32 _loanId)',
+  'function renegotiateLoan(uint32 _loanId, uint32 _newLoanDuration, uint256 _newMaximumRepaymentAmount, uint256 _renegotiationFee, uint256 _lenderNonce, uint256 _expiry, bool _isProRata, bytes memory _lenderSignature)'
 ];
 sepoliaConfig.protocol.v3.collectionOfferLoan.v1.name = 'v3.collectionOfferLoan.v1';
 sepoliaConfig.protocol.v3.collectionOfferLoan.v1.abi = [
@@ -566,7 +572,8 @@ sepoliaConfig.protocol.v3.collectionOfferLoan.v1.abi = [
   'function payBackLoan(uint32 _loanId)',
   'function liquidateOverdueLoan(uint32 _loanId) nonpayable returns()',
   'function mintObligationReceipt(uint32 _loanId)',
-  'function mintPromissoryNote(uint32 _loanId)'
+  'function mintPromissoryNote(uint32 _loanId)',
+  'function renegotiateLoan(uint32 _loanId, uint32 _newLoanDuration, uint256 _newMaximumRepaymentAmount, uint256 _renegotiationFee, uint256 _lenderNonce, uint256 _expiry, bool _isProRata, bytes memory _lenderSignature)'
 ];
 sepoliaConfig.protocol.v3.obligationReceipt.v1.address = '0x05eC80A13De4992dC985ca9B69519d9f88B6f504';
 sepoliaConfig.protocol.v3.promissoryNote.v1.address = '0xe13a9BDB46F14561ACBe808Bd70A87f0AD7e3303';

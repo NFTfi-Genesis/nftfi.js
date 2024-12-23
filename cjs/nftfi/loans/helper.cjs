@@ -5,13 +5,53 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _classPrivateFieldGet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldGet"));
+var _classPrivateFieldSet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldSet"));
+function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+var _contractFactory = /*#__PURE__*/new WeakMap();
+var _loanCoordinator = /*#__PURE__*/new WeakMap();
+var _config = /*#__PURE__*/new WeakMap();
+var _ethers = /*#__PURE__*/new WeakMap();
 var LoansHelper = /*#__PURE__*/function () {
-  function LoansHelper() {
+  function LoansHelper(options) {
     (0, _classCallCheck2["default"])(this, LoansHelper);
+    _classPrivateFieldInitSpec(this, _contractFactory, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _loanCoordinator, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _config, {
+      writable: true,
+      value: void 0
+    });
+    _classPrivateFieldInitSpec(this, _ethers, {
+      writable: true,
+      value: void 0
+    });
+    (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
+    (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
+    (0, _classPrivateFieldSet2["default"])(this, _ethers, options === null || options === void 0 ? void 0 : options.ethers);
   }
   (0, _createClass2["default"])(LoansHelper, [{
+    key: "_getLoanCoordinator",
+    value: function _getLoanCoordinator() {
+      if (!(0, _classPrivateFieldGet2["default"])(this, _loanCoordinator)) {
+        (0, _classPrivateFieldSet2["default"])(this, _loanCoordinator, (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+          address: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.coordinator.address,
+          abi: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.coordinator.abi
+        }));
+      }
+      return (0, _classPrivateFieldGet2["default"])(this, _loanCoordinator);
+    }
+  }, {
     key: "_addFilters",
     value: function _addFilters(options, params) {
       var _options$filters, _options$filters$borr, _options$filters2, _options$filters2$len, _options$filters3, _options$filters3$nft, _options$filters4;
@@ -62,6 +102,38 @@ var LoansHelper = /*#__PURE__*/function () {
       params = this._addPagination(options, params);
       return params;
     }
+  }, {
+    key: "getLoanData",
+    value: function () {
+      var _getLoanData = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
+        var loanData, offerType, loanContractAddress;
+        return _regenerator["default"].wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return this._getLoanCoordinator().call({
+                "function": 'getLoanDataAndOfferType',
+                args: [options.loan.id]
+              });
+            case 2:
+              loanData = _context.sent;
+              offerType = (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.parseBytes32String(loanData[1]);
+              loanContractAddress = loanData[0][0];
+              return _context.abrupt("return", {
+                offerType: offerType,
+                loanContractAddress: loanContractAddress
+              });
+            case 6:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, this);
+      }));
+      function getLoanData(_x) {
+        return _getLoanData.apply(this, arguments);
+      }
+      return getLoanData;
+    }()
   }]);
   return LoansHelper;
 }();

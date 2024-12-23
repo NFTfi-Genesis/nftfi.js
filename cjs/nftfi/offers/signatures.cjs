@@ -97,6 +97,86 @@ var OffersSignatures = /*#__PURE__*/function () {
       }
       return getCollectionRangeOfferSignature;
     }()
+  }, {
+    key: "getV3RenegotiationOfferSignature",
+    value: function () {
+      var _getV3RenegotiationOfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
+        var hash, signature;
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              hash = (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['uint256',
+              // loanId
+              'uint32',
+              // newLoanDuration
+              'bool',
+              // isProRata
+              'uint256',
+              // newMaximumRepaymentAmount
+              'uint256',
+              // renegotiationFee
+              'address',
+              // lender
+              'uint256',
+              // lenderNonce
+              'uint256',
+              // expiry
+              'address',
+              // contractAddress
+              'uint256' // chainId
+              ], [options.loanId, options.newLoanDuration, options.isProRata, options.newMaximumRepaymentAmount, options.renegotiationFee, options.lender, options.lenderNonce, options.expiry, options.contractAddress, options.chainId]);
+              signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify(hash));
+              return _context4.abrupt("return", signature);
+            case 3:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4, this);
+      }));
+      function getV3RenegotiationOfferSignature(_x4) {
+        return _getV3RenegotiationOfferSignature.apply(this, arguments);
+      }
+      return getV3RenegotiationOfferSignature;
+    }()
+  }, {
+    key: "getV23RenegotiationOfferSignature",
+    value: function () {
+      var _getV23RenegotiationOfferSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(options) {
+        var hash, signature;
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
+            case 0:
+              hash = (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.solidityKeccak256(['uint256',
+              // loanId
+              'uint32',
+              // newLoanDuration
+              'uint256',
+              // newMaximumRepaymentAmount
+              'uint256',
+              // renegotiationFee
+              'address',
+              // lender
+              'uint256',
+              // lenderNonce
+              'uint256',
+              // expiry
+              'address',
+              // contractAddress
+              'uint256' // chainId
+              ], [options.loanId, options.newLoanDuration, options.newMaximumRepaymentAmount, options.renegotiationFee, options.lender, options.lenderNonce, options.expiry, options.contractAddress, options.chainId]);
+              signature = (0, _classPrivateFieldGet2["default"])(this, _account).sign((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.arrayify(hash));
+              return _context5.abrupt("return", signature);
+            case 3:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, this);
+      }));
+      function getV23RenegotiationOfferSignature(_x5) {
+        return _getV23RenegotiationOfferSignature.apply(this, arguments);
+      }
+      return getV23RenegotiationOfferSignature;
+    }()
   }]);
   return OffersSignatures;
 }();

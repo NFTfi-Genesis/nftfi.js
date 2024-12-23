@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 var _classPrivateFieldGet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldGet"));
 var _classPrivateFieldSet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldSet"));
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -18,7 +18,6 @@ function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedec
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 var _account = /*#__PURE__*/new WeakMap();
 var _api = /*#__PURE__*/new WeakMap();
-var _offersHelper = /*#__PURE__*/new WeakMap();
 var _loans = /*#__PURE__*/new WeakMap();
 var _erc = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
@@ -44,10 +43,7 @@ var Offers = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
-    _classPrivateFieldInitSpec(this, _offersHelper, {
-      writable: true,
-      value: void 0
-    });
+    (0, _defineProperty2["default"])(this, "offersHelper", void 0);
     _classPrivateFieldInitSpec(this, _loans, {
       writable: true,
       value: void 0
@@ -86,7 +82,7 @@ var Offers = /*#__PURE__*/function () {
     });
     (0, _classPrivateFieldSet2["default"])(this, _account, options === null || options === void 0 ? void 0 : options.account);
     (0, _classPrivateFieldSet2["default"])(this, _api, options === null || options === void 0 ? void 0 : options.api);
-    (0, _classPrivateFieldSet2["default"])(this, _offersHelper, options === null || options === void 0 ? void 0 : options.offersHelper);
+    this.offersHelper = options === null || options === void 0 ? void 0 : options.offersHelper;
     (0, _classPrivateFieldSet2["default"])(this, _loans, options === null || options === void 0 ? void 0 : options.loans);
     (0, _classPrivateFieldSet2["default"])(this, _erc, options === null || options === void 0 ? void 0 : options.erc20);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
@@ -241,7 +237,7 @@ var Offers = /*#__PURE__*/function () {
                 return acc;
               }, {});
             case 9:
-              params = (0, _classPrivateFieldGet2["default"])(this, _offersHelper).getParams(_objectSpread(_objectSpread({}, options), {}, {
+              params = this.offersHelper.getParams(_objectSpread(_objectSpread({}, options), {}, {
                 lender: {
                   balances: lenderBalances
                 }
@@ -361,7 +357,7 @@ var Offers = /*#__PURE__*/function () {
             case 0:
               options = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : {};
               _context4.prev = 1;
-              params = (0, _classPrivateFieldGet2["default"])(this, _offersHelper).getParams(options);
+              params = this.offersHelper.getParams(options);
               _context4.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _api).get({
                 uri: 'v0.1/offers-count',
@@ -418,7 +414,7 @@ var Offers = /*#__PURE__*/function () {
      *     interest: { prorated: true },
      *     duration: 31536000,
      *     currency: '0x00000000',
-     *     expiry: { seconds: 1722260287 }
+     *     expiry: { seconds: 3600 } // 1 hour
      *   }
      * });
      *
@@ -434,7 +430,7 @@ var Offers = /*#__PURE__*/function () {
      *     interest: { prorated: false },
      *     duration: 31536000,
      *     currency: '0x00000000',
-     *     expiry: { seconds: 1722260287 }
+     *     expiry: { seconds: 3600 } // 1 hour
      *   }
      * });
      *
@@ -450,7 +446,7 @@ var Offers = /*#__PURE__*/function () {
      *     interest: { prorated: true },
      *     duration: 31536000,
      *     currency: '0x00000000',
-     *     expiry: { seconds: 1722260287 }
+     *     expiry: { seconds: 3600 } // 1 hour
      *   }
      * });
      */
@@ -472,7 +468,7 @@ var Offers = /*#__PURE__*/function () {
               break;
             case 8:
               _context5.next = 10;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructAssetOffer(options);
+              return this.offersHelper.constructAssetOffer(options);
             case 10:
               payload = _context5.sent;
               _context5.next = 13;
@@ -485,7 +481,7 @@ var Offers = /*#__PURE__*/function () {
               return _context5.abrupt("break", 25);
             case 15:
               _context5.next = 17;
-              return (0, _classPrivateFieldGet2["default"])(this, _offersHelper).constructCollectionOffer(options);
+              return this.offersHelper.constructCollectionOffer(options);
             case 17:
               _payload = _context5.sent;
               _context5.next = 20;

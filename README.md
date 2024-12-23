@@ -862,6 +862,7 @@ Class for working with loans.
 * [Loans](#Loans)
     * [`.get(options)`](#Loans+get) ⇒ <code>Array.&lt;object&gt;</code>
     * [`.begin(options)`](#Loans+begin) ⇒ <code>object</code>
+    * [`.renegotiate(options)`](#Loans+renegotiate) ⇒ <code>object</code>
     * [`.liquidate(options)`](#Loans+liquidate) ⇒ <code>object</code>
     * [`.repay(options)`](#Loans+repay) ⇒ <code>object</code>
     * [`.refinance(options)`](#Loans+refinance) ⇒ <code>object</code>
@@ -992,6 +993,52 @@ const result = await nftfi.loans.begin({
     expiry: { seconds: 1722260287 }
   },
   signature: "0x000000000"
+});
+```
+
+* * *
+
+<a name="Loans+renegotiate"></a>
+
+#### `loans.renegotiate(options)` ⇒ <code>object</code>
+Renegotiate a loan. Called by the borrower when accepting a lender's renegotiation offer.
+
+**Kind**: instance method of [<code>Loans</code>](#Loans)  
+**Returns**: <code>object</code> - Response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Hashmap of config options for this method |
+| options.loan.id | <code>object</code> | ID of the loan being renegotiated |
+| options.offer.terms.loan.duration | <code>string</code> | New loan duration in seconds relative to the original loan start time |
+| options.offer.terms.loan.repayment | <code>string</code> | Maximum amount of money that the borrower would be required to retrieve their collateral |
+| options.offer.terms.loan.interest.prorated | <code>string</code> | If the offer is pro-rata or not |
+| options.offer.terms.loan.renegotiation.fee | <code>string</code> | Fee for renegotiating the loan |
+| options.offer.lender.nonce | <code>string</code> | Nonce used by the lender when they signed the offer |
+| options.offer.terms.loan.expiry.seconds | <code>string</code> | Timestamp (in seconds) of when the signature expires |
+| options.offer.signature | <code>string</code> | ECDSA signature of the lender |
+| options.offer.type | <code>string</code> | Type of the offer `v3.asset` or v3.collection` |
+| options.offer.nftfi.contract.name | <code>string</code> | Name of contract used to facilitate the loan: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection` |
+
+**Example**  
+```js
+// Renegotiate a v3 loan
+const result = await nftfi.loans.renegotiate({
+  loan: { id: '12' },
+  offer: {
+    type: 'v3.asset',
+    lender: { nonce: '123456789' },
+    terms: {
+      loan: {
+        duration: 1209600,
+        repayment: '10004000000000000',
+        renegotiation: { fee: '0' },
+        expiry: { seconds: 3600 },
+        interest: { prorated: false }
+      }
+    },
+    signature: '0x000000000000000'
+  }
 });
 ```
 
@@ -1420,7 +1467,7 @@ const offer = await nftfi.offers.create({
     interest: { prorated: true },
     duration: 31536000,
     currency: '0x00000000',
-    expiry: { seconds: 1722260287 }
+    expiry: { seconds: 3600 } // 1 hour
   }
 });
 ```
@@ -1437,7 +1484,7 @@ const offer = await nftfi.offers.create({
     interest: { prorated: false },
     duration: 31536000,
     currency: '0x00000000',
-    expiry: { seconds: 1722260287 }
+    expiry: { seconds: 3600 } // 1 hour
   }
 });
 ```
@@ -1454,7 +1501,7 @@ const offer = await nftfi.offers.create({
     interest: { prorated: true },
     duration: 31536000,
     currency: '0x00000000',
-    expiry: { seconds: 1722260287 }
+    expiry: { seconds: 3600 } // 1 hour
   }
 });
 ```

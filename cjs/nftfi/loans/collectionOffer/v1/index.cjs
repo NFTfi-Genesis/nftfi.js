@@ -430,6 +430,42 @@ var LoansCollectionOfferV1 = /*#__PURE__*/function () {
       }
       return mintPromissoryNote;
     }()
+  }, {
+    key: "renegotiateLoan",
+    value: function () {
+      var _renegotiateLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(options) {
+        var loanContractAddress, loanContract, args, result;
+        return _regenerator["default"].wrap(function _callee9$(_context9) {
+          while (1) switch (_context9.prev = _context9.next) {
+            case 0:
+              _context9.next = 2;
+              return this._getLoanData(options);
+            case 2:
+              loanContractAddress = _context9.sent;
+              loanContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
+                address: loanContractAddress,
+                abi: (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.collectionOfferLoan.v1.abi
+              });
+              args = [options.loan.id, options.offer.terms.loan.duration, options.offer.terms.loan.repayment, options.offer.terms.loan.renegotiation.fee, options.offer.lender.nonce, options.offer.terms.loan.expiry.seconds, options.offer.terms.loan.interest.prorated, options.offer.signature];
+              _context9.next = 7;
+              return loanContract.call({
+                "function": 'renegotiateLoan',
+                args: args
+              });
+            case 7:
+              result = _context9.sent;
+              return _context9.abrupt("return", result.status === 1);
+            case 9:
+            case "end":
+              return _context9.stop();
+          }
+        }, _callee9, this);
+      }));
+      function renegotiateLoan(_x9) {
+        return _renegotiateLoan.apply(this, arguments);
+      }
+      return renegotiateLoan;
+    }()
   }]);
   return LoansCollectionOfferV1;
 }();

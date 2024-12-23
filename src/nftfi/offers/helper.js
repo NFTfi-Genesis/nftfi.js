@@ -234,6 +234,14 @@ class OffersHelper {
     }
     return { ...offer, type: options.type };
   }
+
+  async signV3RenegotiationOffer(options) {
+    return await this.#signatures.getV3RenegotiationOfferSignature(options);
+  }
+
+  async signV23RenegotiationOffer(options) {
+    return await this.#signatures.getV23RenegotiationOfferSignature(options);
+  }
 }
 
 export default OffersHelper;

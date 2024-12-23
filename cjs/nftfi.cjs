@@ -80,6 +80,7 @@ var _lodash2 = _interopRequireDefault(require("lodash.set"));
 var _socket = _interopRequireDefault(require("socket.io-client"));
 var yup = _interopRequireWildcard(require("yup"));
 var _asyncMutex = require("async-mutex");
+var _package = _interopRequireDefault(require("../package.json"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -225,7 +226,7 @@ var _default = {
             hasGnosisSafeAddress = options === null || options === void 0 ? void 0 : (_options$ethereum2 = options.ethereum) === null || _options$ethereum2 === void 0 ? void 0 : (_options$ethereum2$ac = _options$ethereum2.account) === null || _options$ethereum2$ac === void 0 ? void 0 : (_options$ethereum2$ac2 = _options$ethereum2$ac.multisig) === null || _options$ethereum2$ac2 === void 0 ? void 0 : (_options$ethereum2$ac3 = _options$ethereum2$ac2.gnosis) === null || _options$ethereum2$ac3 === void 0 ? void 0 : (_options$ethereum2$ac4 = _options$ethereum2$ac3.safe) === null || _options$ethereum2$ac4 === void 0 ? void 0 : _options$ethereum2$ac4.address;
             hasAccountPk = options === null || options === void 0 ? void 0 : (_options$ethereum3 = options.ethereum) === null || _options$ethereum3 === void 0 ? void 0 : (_options$ethereum3$ac = _options$ethereum3.account) === null || _options$ethereum3$ac === void 0 ? void 0 : _options$ethereum3$ac.privateKey;
             hasWeb3Provider = options === null || options === void 0 ? void 0 : (_options$ethereum4 = options.ethereum) === null || _options$ethereum4 === void 0 ? void 0 : (_options$ethereum4$we = _options$ethereum4.web3) === null || _options$ethereum4$we === void 0 ? void 0 : _options$ethereum4$we.provider;
-            hasEthersJsonRpcSigner = options === null || options === void 0 ? void 0 : (_options$ethereum5 = options.ethereum) === null || _options$ethereum5 === void 0 ? void 0 : (_options$ethereum5$et = _options$ethereum5.ethers) === null || _options$ethereum5$et === void 0 ? void 0 : (_options$ethereum5$et2 = _options$ethereum5$et.signer) === null || _options$ethereum5$et2 === void 0 ? void 0 : _options$ethereum5$et2.cjsonRpc;
+            hasEthersJsonRpcSigner = options === null || options === void 0 ? void 0 : (_options$ethereum5 = options.ethereum) === null || _options$ethereum5 === void 0 ? void 0 : (_options$ethereum5$et = _options$ethereum5.ethers) === null || _options$ethereum5$et === void 0 ? void 0 : (_options$ethereum5$et2 = _options$ethereum5$et.signer) === null || _options$ethereum5$et2 === void 0 ? void 0 : _options$ethereum5$et2.jsonRpc;
             localStorage = typeof window !== 'undefined' && typeof ((_window = window) === null || _window === void 0 ? void 0 : _window.localStorage) !== 'undefined' ? window.localStorage : null;
             if (hasApiKey) {
               _context.next = 11;
@@ -243,19 +244,19 @@ var _default = {
               _context.next = 15;
               break;
             }
-            throw 'Please supply values for either account.privateKey, account.web3.provider, account.ethereum.ethers.signer.cjsonRpc, or account.multisig.';
+            throw 'Please supply values for either account.privateKey, account.web3.provider, account.ethereum.ethers.signer.jsonRpc, or account.multisig.';
           case 15:
-            version = 'v0.6.3';
+            version = _package["default"].version;
             ethers = (options === null || options === void 0 ? void 0 : (_options$dependencies = options.dependencies) === null || _options$dependencies === void 0 ? void 0 : _options$dependencies.ethers) || _ethers.ethers;
             provider = null;
             if (options !== null && options !== void 0 && (_options$ethereum6 = options.ethereum) !== null && _options$ethereum6 !== void 0 && (_options$ethereum6$pr = _options$ethereum6.provider) !== null && _options$ethereum6$pr !== void 0 && _options$ethereum6$pr.url) {
-              provider = new _ethers.ethers.providers.getDefaultProvider(options === null || options === void 0 ? void 0 : (_options$ethereum7 = options.ethereum) === null || _options$ethereum7 === void 0 ? void 0 : (_options$ethereum7$pr = _options$ethereum7.provider) === null || _options$ethereum7$pr === void 0 ? void 0 : _options$ethereum7$pr.url);
+              provider = new ethers.providers.getDefaultProvider(options === null || options === void 0 ? void 0 : (_options$ethereum7 = options.ethereum) === null || _options$ethereum7 === void 0 ? void 0 : (_options$ethereum7$pr = _options$ethereum7.provider) === null || _options$ethereum7$pr === void 0 ? void 0 : _options$ethereum7$pr.url);
             }
             if (options !== null && options !== void 0 && (_options$ethereum8 = options.ethereum) !== null && _options$ethereum8 !== void 0 && (_options$ethereum8$we = _options$ethereum8.web3) !== null && _options$ethereum8$we !== void 0 && _options$ethereum8$we.provider) {
-              provider = new _ethers.ethers.providers.Web3Provider(options === null || options === void 0 ? void 0 : (_options$ethereum9 = options.ethereum) === null || _options$ethereum9 === void 0 ? void 0 : (_options$ethereum9$we = _options$ethereum9.web3) === null || _options$ethereum9$we === void 0 ? void 0 : _options$ethereum9$we.provider);
+              provider = new ethers.providers.Web3Provider(options === null || options === void 0 ? void 0 : (_options$ethereum9 = options.ethereum) === null || _options$ethereum9 === void 0 ? void 0 : (_options$ethereum9$we = _options$ethereum9.web3) === null || _options$ethereum9$we === void 0 ? void 0 : _options$ethereum9$we.provider);
             }
-            if (options !== null && options !== void 0 && (_options$ethereum10 = options.ethereum) !== null && _options$ethereum10 !== void 0 && (_options$ethereum10$e = _options$ethereum10.ethers) !== null && _options$ethereum10$e !== void 0 && (_options$ethereum10$e2 = _options$ethereum10$e.signer) !== null && _options$ethereum10$e2 !== void 0 && _options$ethereum10$e2.cjsonRpc) {
-              provider = options === null || options === void 0 ? void 0 : (_options$ethereum11 = options.ethereum) === null || _options$ethereum11 === void 0 ? void 0 : (_options$ethereum11$e = _options$ethereum11.ethers) === null || _options$ethereum11$e === void 0 ? void 0 : (_options$ethereum11$e2 = _options$ethereum11$e.signer) === null || _options$ethereum11$e2 === void 0 ? void 0 : _options$ethereum11$e2.cjsonRpc.provider;
+            if (options !== null && options !== void 0 && (_options$ethereum10 = options.ethereum) !== null && _options$ethereum10 !== void 0 && (_options$ethereum10$e = _options$ethereum10.ethers) !== null && _options$ethereum10$e !== void 0 && (_options$ethereum10$e2 = _options$ethereum10$e.signer) !== null && _options$ethereum10$e2 !== void 0 && _options$ethereum10$e2.jsonRpc) {
+              provider = options === null || options === void 0 ? void 0 : (_options$ethereum11 = options.ethereum) === null || _options$ethereum11 === void 0 ? void 0 : (_options$ethereum11$e = _options$ethereum11.ethers) === null || _options$ethereum11$e === void 0 ? void 0 : (_options$ethereum11$e2 = _options$ethereum11$e.signer) === null || _options$ethereum11$e2 === void 0 ? void 0 : _options$ethereum11$e2.jsonRpc.provider;
             }
             if (!(!provider && !(options !== null && options !== void 0 && (_options$ethereum12 = options.ethereum) !== null && _options$ethereum12 !== void 0 && (_options$ethereum12$c = _options$ethereum12.chain) !== null && _options$ethereum12$c !== void 0 && _options$ethereum12$c.id))) {
               _context.next = 23;
@@ -295,9 +296,9 @@ var _default = {
             gnosisOptions = (_options$ethereum15 = options.ethereum) === null || _options$ethereum15 === void 0 ? void 0 : (_options$ethereum15$a = _options$ethereum15.account) === null || _options$ethereum15$a === void 0 ? void 0 : (_options$ethereum15$a2 = _options$ethereum15$a.multisig) === null || _options$ethereum15$a2 === void 0 ? void 0 : _options$ethereum15$a2.gnosis;
             privateKeys = gnosisOptions === null || gnosisOptions === void 0 ? void 0 : (_gnosisOptions$safe = gnosisOptions.safe) === null || _gnosisOptions$safe === void 0 ? void 0 : _gnosisOptions$safe.owners.privateKeys;
             service = new _safeEthersAdapters.SafeService(config.ethereum.account.multisig.gnosis.service.url);
-            signer = new _ethers.ethers.Wallet(privateKeys[0], provider);
+            signer = new ethers.Wallet(privateKeys[0], provider);
             ethAdapter = new _safeEthersLib["default"]["default"]({
-              ethers: _ethers.ethers,
+              ethers: ethers,
               signerOrProvider: signer
             });
             safeAddress = gnosisOptions === null || gnosisOptions === void 0 ? void 0 : (_gnosisOptions$safe2 = gnosisOptions.safe) === null || _gnosisOptions$safe2 === void 0 ? void 0 : _gnosisOptions$safe2.address;
@@ -341,7 +342,7 @@ var _default = {
             break;
           case 48:
             pk = options === null || options === void 0 ? void 0 : (_options$ethereum16 = options.ethereum) === null || _options$ethereum16 === void 0 ? void 0 : (_options$ethereum16$a = _options$ethereum16.account) === null || _options$ethereum16$a === void 0 ? void 0 : _options$ethereum16$a.privateKey;
-            if (!(pk && !_ethers.ethers.utils.isHexString(pk, 32))) {
+            if (!(pk && !ethers.utils.isHexString(pk, 32))) {
               _context.next = 51;
               break;
             }
@@ -359,8 +360,8 @@ var _default = {
             address = providerAddresses[0];
           case 57:
             // Let's get the signer, provider, and address from the EthersJsonRpcSigner
-            if (options !== null && options !== void 0 && (_options$ethereum18 = options.ethereum) !== null && _options$ethereum18 !== void 0 && (_options$ethereum18$e = _options$ethereum18.ethers) !== null && _options$ethereum18$e !== void 0 && (_options$ethereum18$e2 = _options$ethereum18$e.signer) !== null && _options$ethereum18$e2 !== void 0 && _options$ethereum18$e2.cjsonRpc) {
-              address = options === null || options === void 0 ? void 0 : (_options$ethereum19 = options.ethereum) === null || _options$ethereum19 === void 0 ? void 0 : (_options$ethereum19$e = _options$ethereum19.ethers) === null || _options$ethereum19$e === void 0 ? void 0 : (_options$ethereum19$e2 = _options$ethereum19$e.signer) === null || _options$ethereum19$e2 === void 0 ? void 0 : _options$ethereum19$e2.cjsonRpc.address;
+            if (options !== null && options !== void 0 && (_options$ethereum18 = options.ethereum) !== null && _options$ethereum18 !== void 0 && (_options$ethereum18$e = _options$ethereum18.ethers) !== null && _options$ethereum18$e !== void 0 && (_options$ethereum18$e2 = _options$ethereum18$e.signer) !== null && _options$ethereum18$e2 !== void 0 && _options$ethereum18$e2.jsonRpc) {
+              address = options === null || options === void 0 ? void 0 : (_options$ethereum19 = options.ethereum) === null || _options$ethereum19 === void 0 ? void 0 : (_options$ethereum19$e = _options$ethereum19.ethers) === null || _options$ethereum19$e === void 0 ? void 0 : (_options$ethereum19$e2 = _options$ethereum19$e.signer) === null || _options$ethereum19$e2 === void 0 ? void 0 : _options$ethereum19$e2.jsonRpc.address;
             }
             // Address is options.ethereum.account.address if it belongs to addresses managed by provider or provider doesn't manage any addresses
             if (options !== null && options !== void 0 && (_options$ethereum20 = options.ethereum) !== null && _options$ethereum20 !== void 0 && (_options$ethereum20$a = _options$ethereum20.account) !== null && _options$ethereum20$a !== void 0 && _options$ethereum20$a.address && (providerAddresses.length > 0 && providerAddresses.includes(options === null || options === void 0 ? void 0 : (_options$ethereum21 = options.ethereum) === null || _options$ethereum21 === void 0 ? void 0 : (_options$ethereum21$a = _options$ethereum21.account) === null || _options$ethereum21$a === void 0 ? void 0 : _options$ethereum21$a.address) || providerAddresses.length === 0)) {
@@ -368,7 +369,7 @@ var _default = {
             }
 
             // Address is derived from private key if private key is provided
-            if (pk) address = _ethers.ethers.utils.computeAddress(pk);
+            if (pk) address = ethers.utils.computeAddress(pk);
             if (!(!pk && options !== null && options !== void 0 && (_options$ethereum23 = options.ethereum) !== null && _options$ethereum23 !== void 0 && (_options$ethereum23$w = _options$ethereum23.web3) !== null && _options$ethereum23$w !== void 0 && _options$ethereum23$w.provider && address)) {
               _context.next = 64;
               break;
@@ -378,13 +379,13 @@ var _default = {
           case 63:
             signer = _context.sent;
           case 64:
-            if (!pk && options !== null && options !== void 0 && (_options$ethereum24 = options.ethereum) !== null && _options$ethereum24 !== void 0 && (_options$ethereum24$e = _options$ethereum24.ethers) !== null && _options$ethereum24$e !== void 0 && (_options$ethereum24$e2 = _options$ethereum24$e.signer) !== null && _options$ethereum24$e2 !== void 0 && _options$ethereum24$e2.cjsonRpc && address) {
-              signer = options === null || options === void 0 ? void 0 : (_options$ethereum25 = options.ethereum) === null || _options$ethereum25 === void 0 ? void 0 : (_options$ethereum25$e = _options$ethereum25.ethers) === null || _options$ethereum25$e === void 0 ? void 0 : (_options$ethereum25$e2 = _options$ethereum25$e.signer) === null || _options$ethereum25$e2 === void 0 ? void 0 : _options$ethereum25$e2.cjsonRpc;
+            if (!pk && options !== null && options !== void 0 && (_options$ethereum24 = options.ethereum) !== null && _options$ethereum24 !== void 0 && (_options$ethereum24$e = _options$ethereum24.ethers) !== null && _options$ethereum24$e !== void 0 && (_options$ethereum24$e2 = _options$ethereum24$e.signer) !== null && _options$ethereum24$e2 !== void 0 && _options$ethereum24$e2.jsonRpc && address) {
+              signer = options === null || options === void 0 ? void 0 : (_options$ethereum25 = options.ethereum) === null || _options$ethereum25 === void 0 ? void 0 : (_options$ethereum25$e = _options$ethereum25.ethers) === null || _options$ethereum25$e === void 0 ? void 0 : (_options$ethereum25$e2 = _options$ethereum25$e.signer) === null || _options$ethereum25$e2 === void 0 ? void 0 : _options$ethereum25$e2.jsonRpc;
               signer['_isSigner'] = true; // To make an Ethers-v6 signer compatible with downstream code
             }
 
             if (pk) {
-              signer = new _ethers.ethers.Wallet(pk, provider);
+              signer = new ethers.Wallet(pk, provider);
             }
             eoa = new _eoa["default"]({
               address: address,
@@ -491,7 +492,11 @@ var _default = {
               v2_3: loanFixedV2_3,
               collection: loanFixedCollection
             });
-            loansHelper = new _helper5["default"]();
+            loansHelper = new _helper5["default"]({
+              contractFactory: contractFactory,
+              config: config,
+              ethers: ethers
+            });
             loansValidationRefinance = new _refinance["default"]({
               yup: yup
             });
@@ -516,7 +521,6 @@ var _default = {
             });
             loans = new _loans["default"]({
               api: api,
-              account: account,
               fixed: loanFixed,
               assetOffer: loansAssetOffer,
               collectionOffer: loansCollectionOffer,
@@ -669,7 +673,7 @@ var _default = {
                 cryptoPunks: cryptoPunks,
                 erc721: erc721
               },
-              ethers: _ethers.ethers,
+              ethers: ethers,
               account: account,
               contractFactory: contractFactory,
               utils: utils,

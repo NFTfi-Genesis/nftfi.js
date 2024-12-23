@@ -71,6 +71,7 @@ import set from 'lodash.set';
 import io from 'socket.io-client';
 import * as yup from 'yup';
 import { Mutex } from 'async-mutex';
+import packageJson from '../package.json' assert { type: 'json' };
 
 export default {
   init: async function (options = {}) {
@@ -103,14 +104,14 @@ export default {
       throw 'Please supply values for either account.privateKey, account.web3.provider, account.ethereum.ethers.signer.jsonRpc, or account.multisig.';
     }
 
-    const version = 'v0.6.3';
+    const version = packageJson.version;
     const ethers = options?.dependencies?.ethers || ethersjs;
     let provider = null;
     if (options?.ethereum?.provider?.url) {
-      provider = new ethersjs.providers.getDefaultProvider(options?.ethereum?.provider?.url);
+      provider = new ethers.providers.getDefaultProvider(options?.ethereum?.provider?.url);
     }
     if (options?.ethereum?.web3?.provider) {
-      provider = new ethersjs.providers.Web3Provider(options?.ethereum?.web3?.provider);
+      provider = new ethers.providers.Web3Provider(options?.ethereum?.web3?.provider);
     }
     if (options?.ethereum?.ethers?.signer?.jsonRpc) {
       provider = options?.ethereum?.ethers?.signer?.jsonRpc.provider;
@@ -144,8 +145,8 @@ export default {
       const gnosisOptions = options.ethereum?.account?.multisig?.gnosis;
       const privateKeys = gnosisOptions?.safe?.owners.privateKeys;
       const service = new SafeService(config.ethereum.account.multisig.gnosis.service.url);
-      signer = new ethersjs.Wallet(privateKeys[0], provider);
-      const ethAdapter = new EthersAdapter.default({ ethers: ethersjs, signerOrProvider: signer });
+      signer = new ethers.Wallet(privateKeys[0], provider);
+      const ethAdapter = new EthersAdapter.default({ ethers: ethers, signerOrProvider: signer });
       const safeAddress = gnosisOptions?.safe?.address;
       const safe = await Safe.default.create({
         ethAdapter,
@@ -178,7 +179,7 @@ export default {
       });
     } else {
       const pk = options?.ethereum?.account?.privateKey;
-      if (pk && !ethersjs.utils.isHexString(pk, 32)) {
+      if (pk && !ethers.utils.isHexString(pk, 32)) {
         throw "Please provide a valid private key. It should start with '0x'.";
       }
       let providerAddresses = [];
@@ -201,7 +202,7 @@ export default {
       }
 
       // Address is derived from private key if private key is provided
-      if (pk) address = ethersjs.utils.computeAddress(pk);
+      if (pk) address = ethers.utils.computeAddress(pk);
       if (!pk && options?.ethereum?.web3?.provider && address) {
         signer = await provider.getSigner(address);
       }
@@ -210,7 +211,7 @@ export default {
         signer['_isSigner'] = true; // To make an Ethers-v6 signer compatible with downstream code
       }
       if (pk) {
-        signer = new ethersjs.Wallet(pk, provider);
+        signer = new ethers.Wallet(pk, provider);
       }
       const eoa = new EOA({ address, signer, provider });
       account = new Account({ account: options?.dependencies?.account || eoa });
@@ -257,7 +258,11 @@ export default {
       v2_3: loanFixedV2_3,
       collection: loanFixedCollection
     });
-    const loansHelper = new LoansHelper();
+    const loansHelper = new LoansHelper({
+      contractFactory,
+      config,
+      ethers
+    });
     const loansValidationRefinance = new LoansValidationRefinance({ yup });
     const loansValidation = new LoansValidation({ refinance: loansValidationRefinance });
 
@@ -270,7 +275,6 @@ export default {
     const loansAssetOffer = new LoansAssetOffer({ v1: loansAssetOfferV1 });
     const loans = new Loans({
       api,
-      account,
       fixed: loanFixed,
       assetOffer: loansAssetOffer,
       collectionOffer: loansCollectionOffer,
@@ -328,7 +332,7 @@ export default {
       config,
       result,
       nft: { erc1155, cryptoPunks, erc721 },
-      ethers: ethersjs,
+      ethers: ethers,
       account,
       contractFactory,
       utils,

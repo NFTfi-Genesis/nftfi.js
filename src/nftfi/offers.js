@@ -5,7 +5,7 @@
 class Offers {
   #account;
   #api;
-  #offersHelper;
+  offersHelper;
   #loans;
   #erc20;
   #config;
@@ -19,7 +19,7 @@ class Offers {
   constructor(options = {}) {
     this.#account = options?.account;
     this.#api = options?.api;
-    this.#offersHelper = options?.offersHelper;
+    this.offersHelper = options?.offersHelper;
     this.#loans = options?.loans;
     this.#erc20 = options?.erc20;
     this.#config = options?.config;
@@ -130,7 +130,7 @@ class Offers {
         }, {});
       }
 
-      const params = this.#offersHelper.getParams({ ...options, lender: { balances: lenderBalances } });
+      const params = this.offersHelper.getParams({ ...options, lender: { balances: lenderBalances } });
       const response = await this.#api.get({
         uri: 'v0.3/offers',
         auth: { token: options?.auth?.token || 'optional' },
@@ -186,7 +186,7 @@ class Offers {
    */
   async count(options = {}) {
     try {
-      const params = this.#offersHelper.getParams(options);
+      const params = this.offersHelper.getParams(options);
       const { result, errors } = await this.#api.get({
         uri: 'v0.1/offers-count',
         params
@@ -223,7 +223,7 @@ class Offers {
    *     interest: { prorated: true },
    *     duration: 31536000,
    *     currency: '0x00000000',
-   *     expiry: { seconds: 1722260287 }
+   *     expiry: { seconds: 3600 } // 1 hour
    *   }
    * });
    *
@@ -239,7 +239,7 @@ class Offers {
    *     interest: { prorated: false },
    *     duration: 31536000,
    *     currency: '0x00000000',
-   *     expiry: { seconds: 1722260287 }
+   *     expiry: { seconds: 3600 } // 1 hour
    *   }
    * });
    *
@@ -255,7 +255,7 @@ class Offers {
    *     interest: { prorated: true },
    *     duration: 31536000,
    *     currency: '0x00000000',
-   *     expiry: { seconds: 1722260287 }
+   *     expiry: { seconds: 3600 } // 1 hour
    *   }
    * });
    */
@@ -269,7 +269,7 @@ class Offers {
       const type = options?.type;
       switch (type) {
         case this.#config.protocol.v3.type.asset.name: {
-          let payload = await this.#offersHelper.constructAssetOffer(options);
+          let payload = await this.offersHelper.constructAssetOffer(options);
           response = await this.#api.post({
             uri: 'v0.3/offers',
             payload
@@ -277,7 +277,7 @@ class Offers {
           break;
         }
         case this.#config.protocol.v3.type.collection.name: {
-          let payload = await this.#offersHelper.constructCollectionOffer(options);
+          let payload = await this.offersHelper.constructCollectionOffer(options);
           response = await this.#api.post({
             uri: 'v0.3/offers',
             payload

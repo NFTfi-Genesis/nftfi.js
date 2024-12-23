@@ -295,6 +295,34 @@ var LoansFixedV2_3 = /*#__PURE__*/function () {
       }
       return refinanceLoan;
     }()
+  }, {
+    key: "renegotiateLoan",
+    value: function () {
+      var _renegotiateLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(options) {
+        var args, result;
+        return _regenerator["default"].wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
+            case 0:
+              args = [options.loan.id, options.offer.terms.loan.duration, options.offer.terms.loan.repayment, options.offer.terms.loan.renegotiation.fee, options.offer.lender.nonce, options.offer.terms.loan.expiry.seconds, options.offer.signature];
+              _context7.next = 3;
+              return this._loanContract.call({
+                "function": 'renegotiateLoan',
+                args: args
+              });
+            case 3:
+              result = _context7.sent;
+              return _context7.abrupt("return", result.status === 1);
+            case 5:
+            case "end":
+              return _context7.stop();
+          }
+        }, _callee7, this);
+      }));
+      function renegotiateLoan(_x7) {
+        return _renegotiateLoan.apply(this, arguments);
+      }
+      return renegotiateLoan;
+    }()
   }]);
   return LoansFixedV2_3;
 }();

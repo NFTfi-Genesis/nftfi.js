@@ -6,12 +6,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 var _classPrivateFieldGet5 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldGet"));
 var _classPrivateFieldSet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldSet"));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 var _account = /*#__PURE__*/new WeakMap();
@@ -58,7 +61,7 @@ var Contract = /*#__PURE__*/function () {
     key: "call",
     value: function () {
       var _call = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var result, isViewFn, _classPrivateFieldGet2, _classPrivateFieldGet3, _result, tx;
+        var result, isViewFn, _classPrivateFieldGet2, _classPrivateFieldGet3, tx, receipt, logs;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -68,7 +71,7 @@ var Contract = /*#__PURE__*/function () {
                 break;
               }
               result = (_classPrivateFieldGet2 = (0, _classPrivateFieldGet5["default"])(this, _contract))[options["function"]].apply(_classPrivateFieldGet2, (0, _toConsumableArray2["default"])(options.args));
-              _context.next = 12;
+              _context.next = 13;
               break;
             case 5:
               _context.next = 7;
@@ -78,11 +81,14 @@ var Contract = /*#__PURE__*/function () {
               _context.next = 10;
               return (0, _classPrivateFieldGet5["default"])(this, _account).execTransaction(tx);
             case 10:
-              result = _context.sent;
-              result.logs = this._parseLogs((_result = result) === null || _result === void 0 ? void 0 : _result.logs);
-            case 12:
-              return _context.abrupt("return", result);
+              receipt = _context.sent;
+              logs = this._parseLogs(receipt === null || receipt === void 0 ? void 0 : receipt.logs);
+              result = _objectSpread(_objectSpread({}, receipt), {}, {
+                logs: logs
+              });
             case 13:
+              return _context.abrupt("return", result);
+            case 14:
             case "end":
               return _context.stop();
           }

@@ -39,8 +39,9 @@ class Contract {
       result = this.#contract[options.function](...options.args);
     } else {
       const tx = await this.#contract.populateTransaction[options.function](...options.args);
-      result = await this.#account.execTransaction(tx);
-      result.logs = this._parseLogs(result?.logs);
+      const receipt = await this.#account.execTransaction(tx);
+      const logs = this._parseLogs(receipt?.logs);
+      result = { ...receipt, logs };
     }
     return result;
   }

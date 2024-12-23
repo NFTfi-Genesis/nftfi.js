@@ -96,6 +96,66 @@ class OffersSignatures {
     );
     return signature;
   }
+
+  async getV3RenegotiationOfferSignature(options) {
+    const hash = this.#ethers.utils.solidityKeccak256(
+      [
+        'uint256', // loanId
+        'uint32', // newLoanDuration
+        'bool', // isProRata
+        'uint256', // newMaximumRepaymentAmount
+        'uint256', // renegotiationFee
+        'address', // lender
+        'uint256', // lenderNonce
+        'uint256', // expiry
+        'address', // contractAddress
+        'uint256' // chainId
+      ],
+      [
+        options.loanId,
+        options.newLoanDuration,
+        options.isProRata,
+        options.newMaximumRepaymentAmount,
+        options.renegotiationFee,
+        options.lender,
+        options.lenderNonce,
+        options.expiry,
+        options.contractAddress,
+        options.chainId
+      ]
+    );
+    const signature = this.#account.sign(this.#ethers.utils.arrayify(hash));
+    return signature;
+  }
+
+  async getV23RenegotiationOfferSignature(options) {
+    const hash = this.#ethers.utils.solidityKeccak256(
+      [
+        'uint256', // loanId
+        'uint32', // newLoanDuration
+        'uint256', // newMaximumRepaymentAmount
+        'uint256', // renegotiationFee
+        'address', // lender
+        'uint256', // lenderNonce
+        'uint256', // expiry
+        'address', // contractAddress
+        'uint256' // chainId
+      ],
+      [
+        options.loanId,
+        options.newLoanDuration,
+        options.newMaximumRepaymentAmount,
+        options.renegotiationFee,
+        options.lender,
+        options.lenderNonce,
+        options.expiry,
+        options.contractAddress,
+        options.chainId
+      ]
+    );
+    const signature = this.#account.sign(this.#ethers.utils.arrayify(hash));
+    return signature;
+  }
 }
 
 export default OffersSignatures;

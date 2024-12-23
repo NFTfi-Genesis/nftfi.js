@@ -139,6 +139,23 @@ class LoansFixedCollectionV2_3 {
     });
     return result.status === 1;
   }
+
+  async renegotiateLoan(options) {
+    const args = [
+      options.loan.id,
+      options.offer.terms.loan.duration,
+      options.offer.terms.loan.repayment,
+      options.offer.terms.loan.renegotiation.fee,
+      options.offer.lender.nonce,
+      options.offer.terms.loan.expiry.seconds,
+      options.offer.signature
+    ];
+    const result = await this._loanContract.call({
+      function: 'renegotiateLoan',
+      args
+    });
+    return result.status === 1;
+  }
 }
 
 export default LoansFixedCollectionV2_3;

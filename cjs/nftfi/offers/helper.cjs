@@ -413,6 +413,50 @@ var OffersHelper = /*#__PURE__*/function () {
       }
       return constructCollectionOffer;
     }()
+  }, {
+    key: "signV3RenegotiationOffer",
+    value: function () {
+      var _signV3RenegotiationOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(options) {
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return (0, _classPrivateFieldGet2["default"])(this, _signatures).getV3RenegotiationOfferSignature(options);
+            case 2:
+              return _context3.abrupt("return", _context3.sent);
+            case 3:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, this);
+      }));
+      function signV3RenegotiationOffer(_x3) {
+        return _signV3RenegotiationOffer.apply(this, arguments);
+      }
+      return signV3RenegotiationOffer;
+    }()
+  }, {
+    key: "signV23RenegotiationOffer",
+    value: function () {
+      var _signV23RenegotiationOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(options) {
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return (0, _classPrivateFieldGet2["default"])(this, _signatures).getV23RenegotiationOfferSignature(options);
+            case 2:
+              return _context4.abrupt("return", _context4.sent);
+            case 3:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4, this);
+      }));
+      function signV23RenegotiationOffer(_x4) {
+        return _signV23RenegotiationOffer.apply(this, arguments);
+      }
+      return signV23RenegotiationOffer;
+    }()
   }]);
   return OffersHelper;
 }();

@@ -4,14 +4,13 @@
  */
 class Loans {
   #api;
-  #account;
   #loanCoordinator;
   #fixed;
   #assetOffer;
   #collectionOffer;
   #config;
-  #helper;
   #contractFactory;
+  #helper;
   #ethers;
   #assertion;
   #validation;
@@ -22,12 +21,11 @@ class Loans {
     this.#result = options?.result;
     this.#api = options?.api;
     this.#config = options?.config;
-    this.#account = options?.account;
     this.#fixed = options?.fixed;
     this.#assetOffer = options?.assetOffer;
     this.#collectionOffer = options?.collectionOffer;
-    this.#helper = options?.helper;
     this.#contractFactory = options?.contractFactory;
+    this.#helper = options?.helper;
     this.#ethers = options?.ethers;
     this.#validation = options?.validation;
     this.#assertion = options?.assertion;
@@ -42,16 +40,6 @@ class Loans {
       });
     }
     return this.#loanCoordinator;
-  }
-
-  async _getLoanData(options) {
-    const loanData = await this._loanCoordinator.call({
-      function: 'getLoanDataAndOfferType',
-      args: [options.loan.id]
-    });
-    const offerType = this.#ethers.utils.parseBytes32String(loanData[1]);
-    const loanContractAddress = loanData[0][0];
-    return { offerType, loanContractAddress };
   }
 
   /**
@@ -222,6 +210,90 @@ class Loans {
   }
 
   /**
+   * Renegotiate a loan. Called by the borrower when accepting a lender's renegotiation offer.
+   *
+   * @param {object} options - Hashmap of config options for this method
+   * @param {object} options.loan.id - ID of the loan being renegotiated
+   * @param {string} options.offer.terms.loan.duration - New loan duration in seconds relative to the original loan start time
+   * @param {string} options.offer.terms.loan.repayment - Maximum amount of money that the borrower would be required to retrieve their collateral
+   * @param {string} options.offer.terms.loan.interest.prorated - If the offer is pro-rata or not
+   * @param {string} options.offer.terms.loan.renegotiation.fee - Fee for renegotiating the loan
+   * @param {string} options.offer.lender.nonce - Nonce used by the lender when they signed the offer
+   * @param {string} options.offer.terms.loan.expiry.seconds - Timestamp (in seconds) of when the signature expires
+   * @param {string} options.offer.signature - ECDSA signature of the lender
+   * @param {string} options.offer.type - Type of the offer `v3.asset` or v3.collection`
+   * @param {string} options.offer.nftfi.contract.name - Name of contract used to facilitate the loan: `v2-3.loan.fixed`, `v2-3.loan.fixed.collection`
+   * @returns {object} Response object
+   *
+   * @example
+   * // Renegotiate a v3 loan
+   * const result = await nftfi.loans.renegotiate({
+   *   loan: { id: '12' },
+   *   offer: {
+   *     type: 'v3.asset',
+   *     lender: { nonce: '123456789' },
+   *     terms: {
+   *       loan: {
+   *         duration: 1209600,
+   *         repayment: '10004000000000000',
+   *         renegotiation: { fee: '0' },
+   *         expiry: { seconds: 3600 },
+   *         interest: { prorated: false }
+   *       }
+   *     },
+   *     signature: '0x000000000000000'
+   *   }
+   * });
+   */
+  async renegotiate(options) {
+    try {
+      this.#assertion.hasSigner();
+      let error;
+      let response;
+      const contractName = options?.offer?.nftfi?.contract?.name;
+      const offerType = options?.offer?.type;
+      if (offerType) {
+        switch (offerType) {
+          case this.#config.protocol.v3.type.asset.name: {
+            let success = await this.#assetOffer.v1.renegotiateLoan(options);
+            response = { success };
+            break;
+          }
+          case this.#config.protocol.v3.type.collection.name: {
+            let success = await this.#collectionOffer.v1.renegotiateLoan(options);
+            response = { success };
+            break;
+          }
+          default: {
+            error = { 'type': [`${offerType} not supported`] };
+            throw error;
+          }
+        }
+      } else {
+        switch (contractName) {
+          case 'v2-3.loan.fixed': {
+            let success = await this.#fixed.v2_3.renegotiateLoan(options);
+            response = { success };
+            break;
+          }
+          case 'v2-3.loan.fixed.collection': {
+            let success = await this.#fixed.collection.v2_3.renegotiateLoan(options);
+            response = { success };
+            break;
+          }
+          default: {
+            error = { 'nftfi.contract.name': [`${contractName} not supported`] };
+            throw error;
+          }
+        }
+      }
+      return this.#result.handle(response);
+    } catch (e) {
+      return this.#error.handle(e, null, options);
+    }
+  }
+
+  /**
    * Liquidate `defaulted` loans in which your account is a participant.
    * Can be called once a loan has finished its duration and the borrower still has not repaid.
    *
@@ -253,7 +325,7 @@ class Loans {
       let success = false;
       const contractName = options?.nftfi?.contract?.name;
       if (!contractName || contractName.includes('v3')) {
-        const { offerType, loanContractAddress } = await this._getLoanData(options);
+        const { offerType, loanContractAddress } = await this.#helper.getLoanData(options);
         switch (offerType) {
           case this.#config.protocol.v3.type.asset.value: {
             success = await this.#assetOffer.v1.liquidateOverdueLoan({ ...options, loanContractAddress });
@@ -337,7 +409,7 @@ class Loans {
       let success = false;
       const contractName = options?.nftfi?.contract?.name;
       if (!contractName || contractName.includes('v3')) {
-        const { offerType, loanContractAddress } = await this._getLoanData(options);
+        const { offerType, loanContractAddress } = await this.#helper.getLoanData(options);
         switch (offerType) {
           case this.#config.protocol.v3.type.asset.value:
             success = await this.#assetOffer.v1.payBackLoan({ ...options, loanContractAddress });
@@ -644,7 +716,7 @@ class Loans {
       let response;
       const contractName = options?.loan?.nftfi?.contract?.name;
       if (!contractName || contractName.includes('v3')) {
-        const { offerType, loanContractAddress } = await this._getLoanData(options);
+        const { offerType, loanContractAddress } = await this.#helper.getLoanData(options);
         switch (offerType) {
           case this.#config.protocol.v3.type.asset.value: {
             let success = await this.#assetOffer.v1.mintObligationReceipt({ ...options, loanContractAddress });
@@ -713,7 +785,7 @@ class Loans {
       this.#assertion.hasSigner();
       let error;
       let response;
-      const { offerType, loanContractAddress } = await this._getLoanData(options);
+      const { offerType, loanContractAddress } = await this.#helper.getLoanData(options);
       switch (offerType) {
         case this.#config.protocol.v3.type.asset.value: {
           let success = await this.#assetOffer.v1.mintPromissoryNote({ ...options, loanContractAddress });
@@ -734,6 +806,10 @@ class Loans {
     } catch (e) {
       return this.#error.handle(e);
     }
+  }
+
+  get helper() {
+    return this.#helper;
   }
 }
 
