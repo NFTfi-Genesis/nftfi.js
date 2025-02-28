@@ -2,11 +2,13 @@ class EOA {
   #address;
   #signer;
   #provider;
+  #config;
 
   constructor(options = {}) {
     this.#address = options?.address;
     this.#signer = options?.signer;
     this.#provider = options?.provider;
+    this.#config = options?.config;
   }
 
   isMultisig() {
@@ -36,7 +38,9 @@ class EOA {
 
   async execTransaction(tx) {
     const receipt = await this.#signer.sendTransaction(tx);
-    return this.#provider.waitForTransaction(receipt.hash);
+    const confirmations =
+      typeof this.#config.ethereum.block.confirmations === 'number' ? this.#config.ethereum.block.confirmations : null;
+    return this.#provider.waitForTransaction(receipt.hash, confirmations);
   }
 }
 

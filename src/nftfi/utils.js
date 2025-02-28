@@ -11,6 +11,7 @@ class Utils {
   #Number;
   #contractFactory;
   #config;
+  #arcade;
 
   constructor(options = {}) {
     this.#ethers = options?.ethers;
@@ -21,6 +22,7 @@ class Utils {
     this.#Number = options?.Number;
     this.#contractFactory = options?.contractFactory;
     this.#config = options?.config;
+    this.#arcade = options?.arcade;
   }
 
   /**
@@ -220,6 +222,10 @@ class Utils {
       isERC721,
       isERC1155
     };
+  }
+
+  get arcade() {
+    return this.#arcade;
   }
 }
 

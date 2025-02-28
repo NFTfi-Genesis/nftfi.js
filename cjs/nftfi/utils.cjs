@@ -23,6 +23,7 @@ var _Math = /*#__PURE__*/new WeakMap();
 var _Number = /*#__PURE__*/new WeakMap();
 var _contractFactory = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
+var _arcade = /*#__PURE__*/new WeakMap();
 /**
  * @class
  * Class with utility methods.
@@ -63,6 +64,10 @@ var Utils = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _arcade, {
+      writable: true,
+      value: void 0
+    });
     (0, _defineProperty2["default"])(this, "calcEffectiveApr", function (principal, repayment, duration, originationFee) {
       var principalBig = BigInt(principal);
       var repaymentBig = BigInt(repayment);
@@ -82,6 +87,7 @@ var Utils = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _Number, options === null || options === void 0 ? void 0 : options.Number);
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
+    (0, _classPrivateFieldSet2["default"])(this, _arcade, options === null || options === void 0 ? void 0 : options.arcade);
   }
 
   /**
@@ -329,6 +335,11 @@ var Utils = /*#__PURE__*/function () {
       }
       return getSupportedInterface;
     }()
+  }, {
+    key: "arcade",
+    get: function get() {
+      return (0, _classPrivateFieldGet2["default"])(this, _arcade);
+    }
   }]);
   return Utils;
 }();

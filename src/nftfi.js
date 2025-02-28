@@ -71,6 +71,7 @@ import set from 'lodash.set';
 import io from 'socket.io-client';
 import * as yup from 'yup';
 import { Mutex } from 'async-mutex';
+import UtilsArcade from './nftfi/utils/arcade.js';
 import packageJson from '../package.json' assert { type: 'json' };
 
 export default {
@@ -213,7 +214,7 @@ export default {
       if (pk) {
         signer = new ethers.Wallet(pk, provider);
       }
-      const eoa = new EOA({ address, signer, provider });
+      const eoa = new EOA({ address, signer, provider, config });
       account = new Account({ account: options?.dependencies?.account || eoa });
     }
 
@@ -231,13 +232,15 @@ export default {
         provider,
         assertion
       });
+    const error = new Error();
+    const result = new Result();
+    const utilsArcade = new UtilsArcade({ config, contractFactory, result, error });
     const utils =
-      options?.dependencies?.utils || new Utils({ ethers, BN, Date, Math, Number, web3, contractFactory, config });
+      options?.dependencies?.utils ||
+      new Utils({ ethers, BN, Date, Math, Number, web3, contractFactory, config, arcade: utilsArcade });
     const storage = options?.dependencies?.storage || new Storage({ storage: localStorage, config });
     const auth = new Auth({ http, account, config, utils, storage });
     const api = options?.dependencies?.api || new Api({ config, auth, http, assertion, mutex });
-    const error = new Error();
-    const result = new Result();
     const helper = new Helper({ config });
     const listings = new Listings({ api, config, helper, error });
 

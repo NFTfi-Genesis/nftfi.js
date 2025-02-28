@@ -21,6 +21,9 @@ var baseConfig = {
           }
         }
       }
+    },
+    block: {
+      confirmations: null
     }
   },
   registry: {
@@ -266,6 +269,17 @@ var baseConfig = {
           value: ''
         }
       }
+    },
+    arcade: {
+      loan: {
+        core: {
+          address: ''
+        }
+      },
+      obligationReceipt: {
+        address: '',
+        abi: []
+      }
     }
   }
 };
@@ -366,6 +380,10 @@ mainnetConfig.protocol.v3.type.asset.name = 'v3.asset';
 mainnetConfig.protocol.v3.type.asset.value = 'ASSET_OFFER_LOAN';
 mainnetConfig.protocol.v3.type.collection.name = 'v3.collection';
 mainnetConfig.protocol.v3.type.collection.value = 'COLLECTION_OFFER_LOAN';
+mainnetConfig.protocol.arcade.obligationReceipt.address = '0xe5B12BEfaf3a91065DA7FDD461dEd2d8F8ECb7BE';
+mainnetConfig.protocol.arcade.obligationReceipt.abi = ['function mint(address to, uint256 loanId)'];
+mainnetConfig.protocol.arcade.loan.core.address = '0x89bc08BA00f135d608bc335f6B33D7a9ABCC98aF';
+mainnetConfig.protocol.arcade.loan.core.abi = ['function getLoan(uint256 loanId) public view returns (tuple(uint8, uint160, tuple(uint256, uint256, address, uint96, uint256, address, uint96, bytes32), tuple(uint16, uint16, uint16)))'];
 var sepoliaConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 sepoliaConfig.chainId = 11155111;
 sepoliaConfig.website.baseURI = 'https://sepolia-integration.nftfi.com';
@@ -461,6 +479,9 @@ sepoliaConfig.protocol.v3.type.asset.name = 'v3.asset';
 sepoliaConfig.protocol.v3.type.asset.value = 'ASSET_OFFER_LOAN';
 sepoliaConfig.protocol.v3.type.collection.name = 'v3.collection';
 sepoliaConfig.protocol.v3.type.collection.value = 'COLLECTION_OFFER_LOAN';
+sepoliaConfig.protocol.arcade.obligationReceipt.address = '';
+sepoliaConfig.protocol.arcade.obligationReceipt.abi = ['function mint(address to, uint256 loanId)'];
+sepoliaConfig.protocol.arcade.loan.core.address = '';
 var baseConfigs = (_baseConfigs = {}, (0, _defineProperty2["default"])(_baseConfigs, mainnetConfig.chainId, mainnetConfig), (0, _defineProperty2["default"])(_baseConfigs, sepoliaConfig.chainId, sepoliaConfig), _baseConfigs);
 var Config = /*#__PURE__*/function () {
   function Config() {
@@ -489,6 +510,8 @@ var Config = /*#__PURE__*/function () {
           return this.loan.fixed.collection.v2.address;
         case 'v2-3.loan.fixed.collection':
           return this.loan.fixed.collection.v2_3.address;
+        case 'arcade.loan.core':
+          return this.protocol.arcade.loan.core.address;
       }
     }
   }]);

@@ -80,6 +80,7 @@ var _lodash2 = _interopRequireDefault(require("lodash.set"));
 var _socket = _interopRequireDefault(require("socket.io-client"));
 var yup = _interopRequireWildcard(require("yup"));
 var _asyncMutex = require("async-mutex");
+var _arcade = _interopRequireDefault(require("./nftfi/utils/arcade.cjs"));
 var _package = _interopRequireDefault(require("../package.json"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -164,12 +165,13 @@ var _default = {
         websocket,
         http,
         contractFactory,
+        error,
+        result,
+        utilsArcade,
         utils,
         storage,
         auth,
         api,
-        error,
-        result,
         helper,
         listings,
         loanFixedV1,
@@ -390,7 +392,8 @@ var _default = {
             eoa = new _eoa["default"]({
               address: address,
               signer: signer,
-              provider: provider
+              provider: provider,
+              config: config
             });
             account = new _account["default"]({
               account: (options === null || options === void 0 ? void 0 : (_options$dependencies3 = options.dependencies) === null || _options$dependencies3 === void 0 ? void 0 : _options$dependencies3.account) || eoa
@@ -418,6 +421,14 @@ var _default = {
               provider: provider,
               assertion: assertion
             });
+            error = new _error["default"]();
+            result = new _result["default"]();
+            utilsArcade = new _arcade["default"]({
+              config: config,
+              contractFactory: contractFactory,
+              result: result,
+              error: error
+            });
             utils = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.utils) || new _utils["default"]({
               ethers: ethers,
               BN: _bn["default"],
@@ -426,7 +437,8 @@ var _default = {
               Number: Number,
               web3: _web["default"],
               contractFactory: contractFactory,
-              config: config
+              config: config,
+              arcade: utilsArcade
             });
             storage = (options === null || options === void 0 ? void 0 : (_options$dependencies7 = options.dependencies) === null || _options$dependencies7 === void 0 ? void 0 : _options$dependencies7.storage) || new _storage["default"]({
               storage: localStorage,
@@ -446,8 +458,6 @@ var _default = {
               assertion: assertion,
               mutex: mutex
             });
-            error = new _error["default"]();
-            result = new _result["default"]();
             helper = new _helper3["default"]({
               config: config
             });
@@ -698,7 +708,7 @@ var _default = {
             logger = loggerFactory.create();
             logger.info("NFTfi SDK ".concat(version, " initialised."));
             return _context.abrupt("return", nftfi);
-          case 123:
+          case 124:
           case "end":
             return _context.stop();
         }

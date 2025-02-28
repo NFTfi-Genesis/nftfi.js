@@ -16,6 +16,7 @@ function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollect
 var _address = /*#__PURE__*/new WeakMap();
 var _signer = /*#__PURE__*/new WeakMap();
 var _provider = /*#__PURE__*/new WeakMap();
+var _config = /*#__PURE__*/new WeakMap();
 var EOA = /*#__PURE__*/function () {
   function EOA() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -32,9 +33,14 @@ var EOA = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _config, {
+      writable: true,
+      value: void 0
+    });
     (0, _classPrivateFieldSet2["default"])(this, _address, options === null || options === void 0 ? void 0 : options.address);
     (0, _classPrivateFieldSet2["default"])(this, _signer, options === null || options === void 0 ? void 0 : options.signer);
     (0, _classPrivateFieldSet2["default"])(this, _provider, options === null || options === void 0 ? void 0 : options.provider);
+    (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
   }
   (0, _createClass2["default"])(EOA, [{
     key: "isMultisig",
@@ -100,7 +106,7 @@ var EOA = /*#__PURE__*/function () {
     key: "execTransaction",
     value: function () {
       var _execTransaction = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(tx) {
-        var receipt;
+        var receipt, confirmations;
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
@@ -108,8 +114,9 @@ var EOA = /*#__PURE__*/function () {
               return (0, _classPrivateFieldGet2["default"])(this, _signer).sendTransaction(tx);
             case 2:
               receipt = _context3.sent;
-              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _provider).waitForTransaction(receipt.hash));
-            case 4:
+              confirmations = typeof (0, _classPrivateFieldGet2["default"])(this, _config).ethereum.block.confirmations === 'number' ? (0, _classPrivateFieldGet2["default"])(this, _config).ethereum.block.confirmations : null;
+              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _provider).waitForTransaction(receipt.hash, confirmations));
+            case 5:
             case "end":
               return _context3.stop();
           }
