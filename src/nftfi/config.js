@@ -188,7 +188,11 @@ const baseConfig = {
       collectionSigningUtils: { v1: { name: '', address: '', abi: [] } },
       type: { asset: { name: '', value: '' }, collection: { name: '', value: '' } }
     },
-    arcade: { loan: { core: { address: '' } }, obligationReceipt: { address: '', abi: [] } }
+    arcade: {
+      loan: { core: { address: '' } },
+      obligationReceipt: { address: '', abi: [] },
+      promissoryNote: { address: '' }
+    }
   }
 };
 
@@ -408,6 +412,7 @@ mainnetConfig.protocol.v3.type.collection.name = 'v3.collection';
 mainnetConfig.protocol.v3.type.collection.value = 'COLLECTION_OFFER_LOAN';
 mainnetConfig.protocol.arcade.obligationReceipt.address = '0xe5B12BEfaf3a91065DA7FDD461dEd2d8F8ECb7BE';
 mainnetConfig.protocol.arcade.obligationReceipt.abi = ['function mint(address to, uint256 loanId)'];
+mainnetConfig.protocol.arcade.promissoryNote.address = '0x92ED78b41537C902Ad287608d8535bb6780A7618';
 mainnetConfig.protocol.arcade.loan.core.address = '0x89bc08BA00f135d608bc335f6B33D7a9ABCC98aF';
 mainnetConfig.protocol.arcade.loan.core.abi = [
   'function getLoan(uint256 loanId) public view returns (tuple(uint8, uint160, tuple(uint256, uint256, address, uint96, uint256, address, uint96, bytes32), tuple(uint16, uint16, uint16)))'
@@ -612,7 +617,9 @@ sepoliaConfig.protocol.v3.type.collection.name = 'v3.collection';
 sepoliaConfig.protocol.v3.type.collection.value = 'COLLECTION_OFFER_LOAN';
 sepoliaConfig.protocol.arcade.obligationReceipt.address = '';
 sepoliaConfig.protocol.arcade.obligationReceipt.abi = ['function mint(address to, uint256 loanId)'];
+sepoliaConfig.protocol.arcade.promissoryNote.address = '';
 sepoliaConfig.protocol.arcade.loan.core.address = '';
+sepoliaConfig.protocol.arcade.loan.core.abi = [];
 
 const baseConfigs = {
   [mainnetConfig.chainId]: mainnetConfig,
