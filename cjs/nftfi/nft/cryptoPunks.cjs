@@ -57,6 +57,18 @@ var CryptoPunks = /*#__PURE__*/function () {
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2.address;
         case 'v2-3.loan.fixed.collection':
           return (0, _classPrivateFieldGet2["default"])(this, _config).loan.fixed.collection.v2_3.address;
+        case 'v1.bundler':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).bundler.v1.address;
+        case 'v1-1.bundler':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).bundler.v1_1.address;
+        case 'v1.bundler.migrate':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).bundler.migrate.v1.address;
+        case 'loan.refinance':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).loan.refinance.address;
+        case 'v3.refinance.v1':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.refinance.v1.address;
+        case 'v3.escrow.v1':
+          return (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.escrow.v1.address;
       }
     }
   }, {

@@ -28,6 +28,18 @@ class CryptoPunks {
         return this.#config.loan.fixed.collection.v2.address;
       case 'v2-3.loan.fixed.collection':
         return this.#config.loan.fixed.collection.v2_3.address;
+      case 'v1.bundler':
+        return this.#config.bundler.v1.address;
+      case 'v1-1.bundler':
+        return this.#config.bundler.v1_1.address;
+      case 'v1.bundler.migrate':
+        return this.#config.bundler.migrate.v1.address;
+      case 'loan.refinance':
+        return this.#config.loan.refinance.address;
+      case 'v3.refinance.v1':
+        return this.#config.protocol.v3.refinance.v1.address;
+      case 'v3.escrow.v1':
+        return this.#config.protocol.v3.escrow.v1.address;
     }
   }
 
