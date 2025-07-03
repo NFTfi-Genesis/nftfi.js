@@ -72,6 +72,7 @@ import io from 'socket.io-client';
 import * as yup from 'yup';
 import { Mutex } from 'async-mutex';
 import UtilsArcade from './nftfi/utils/arcade.js';
+import UtilsWallet from './nftfi/utils/wallet.js';
 import packageJson from '../package.json' assert { type: 'json' };
 
 export default {
@@ -235,9 +236,21 @@ export default {
     const error = new Error();
     const result = new Result();
     const utilsArcade = new UtilsArcade({ config, contractFactory, result, error });
+    const utilsWallet = new UtilsWallet({ config, contractFactory, result, error, provider });
     const utils =
       options?.dependencies?.utils ||
-      new Utils({ ethers, BN, Date, Math, Number, web3, contractFactory, config, arcade: utilsArcade });
+      new Utils({
+        ethers,
+        BN,
+        Date,
+        Math,
+        Number,
+        web3,
+        contractFactory,
+        config,
+        arcade: utilsArcade,
+        wallet: utilsWallet
+      });
     const storage = options?.dependencies?.storage || new Storage({ storage: localStorage, config });
     const auth = new Auth({ http, account, config, utils, storage });
     const api = options?.dependencies?.api || new Api({ config, auth, http, assertion, mutex });

@@ -81,6 +81,7 @@ var _socket = _interopRequireDefault(require("socket.io-client"));
 var yup = _interopRequireWildcard(require("yup"));
 var _asyncMutex = require("async-mutex");
 var _arcade = _interopRequireDefault(require("./nftfi/utils/arcade.cjs"));
+var _wallet = _interopRequireDefault(require("./nftfi/utils/wallet.cjs"));
 var _package = _interopRequireDefault(require("../package.json"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -168,6 +169,7 @@ var _default = {
         error,
         result,
         utilsArcade,
+        utilsWallet,
         utils,
         storage,
         auth,
@@ -429,6 +431,13 @@ var _default = {
               result: result,
               error: error
             });
+            utilsWallet = new _wallet["default"]({
+              config: config,
+              contractFactory: contractFactory,
+              result: result,
+              error: error,
+              provider: provider
+            });
             utils = (options === null || options === void 0 ? void 0 : (_options$dependencies6 = options.dependencies) === null || _options$dependencies6 === void 0 ? void 0 : _options$dependencies6.utils) || new _utils["default"]({
               ethers: ethers,
               BN: _bn["default"],
@@ -438,7 +447,8 @@ var _default = {
               web3: _web["default"],
               contractFactory: contractFactory,
               config: config,
-              arcade: utilsArcade
+              arcade: utilsArcade,
+              wallet: utilsWallet
             });
             storage = (options === null || options === void 0 ? void 0 : (_options$dependencies7 = options.dependencies) === null || _options$dependencies7 === void 0 ? void 0 : _options$dependencies7.storage) || new _storage["default"]({
               storage: localStorage,
@@ -708,7 +718,7 @@ var _default = {
             logger = loggerFactory.create();
             logger.info("NFTfi SDK ".concat(version, " initialised."));
             return _context.abrupt("return", nftfi);
-          case 124:
+          case 125:
           case "end":
             return _context.stop();
         }

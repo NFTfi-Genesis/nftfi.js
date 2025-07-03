@@ -12,6 +12,7 @@ class Utils {
   #contractFactory;
   #config;
   #arcade;
+  #wallet;
 
   constructor(options = {}) {
     this.#ethers = options?.ethers;
@@ -23,6 +24,7 @@ class Utils {
     this.#contractFactory = options?.contractFactory;
     this.#config = options?.config;
     this.#arcade = options?.arcade;
+    this.#wallet = options?.wallet;
   }
 
   /**
@@ -226,6 +228,10 @@ class Utils {
 
   get arcade() {
     return this.#arcade;
+  }
+
+  get wallet() {
+    return this.#wallet;
   }
 }
 
