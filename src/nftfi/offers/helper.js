@@ -144,7 +144,7 @@ class OffersHelper {
     return params;
   }
 
-  async constructAssetOffer(options) {
+  buildAssetOffer(options) {
     const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
     const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
     const origination = this.#Number(options.terms.origination).toLocaleString('fullwide', {
@@ -161,7 +161,7 @@ class OffersHelper {
       },
       lender: {
         address: this.#account.getAddress(),
-        nonce: lenderNonce
+        nonce: options.lenderNonce ?? lenderNonce
       },
       borrower: {
         address: options.borrower.address
@@ -179,6 +179,11 @@ class OffersHelper {
       },
       metadata: options.metadata
     };
+    return offer;
+  }
+
+  async constructAssetOffer(options) {
+    const offer = this.buildAssetOffer(options);
     offer['signature'] = await this.#signatures.getAssetOfferSignature({
       ...options,
       offer
@@ -186,7 +191,7 @@ class OffersHelper {
     return { ...offer, type: options.type };
   }
 
-  async constructCollectionOffer(options) {
+  buildCollectionOffer(options) {
     const repayment = this.#Number(options.terms.repayment).toLocaleString('fullwide', { useGrouping: false });
     const principal = this.#Number(options.terms.principal).toLocaleString('fullwide', { useGrouping: false });
     const origination = this.#Number(options.terms.origination).toLocaleString('fullwide', {
@@ -196,7 +201,6 @@ class OffersHelper {
     const expiry = this.#utils.getExpiry(options?.terms?.expiry?.seconds);
     const nftId = 0;
     const type = this.#config.protocol.v3.type.collection.value;
-    const isCollectionRangeOffer = 'ids' in options.nft;
     let offer = {
       type,
       nft: {
@@ -206,7 +210,7 @@ class OffersHelper {
       },
       lender: {
         address: this.#account.getAddress(),
-        nonce: lenderNonce
+        nonce: options.lenderNonce ?? lenderNonce
       },
       terms: {
         loan: {
@@ -221,6 +225,12 @@ class OffersHelper {
       },
       metadata: options.metadata
     };
+    return offer;
+  }
+
+  async constructCollectionOffer(options) {
+    const offer = this.buildCollectionOffer(options);
+    const isCollectionRangeOffer = 'ids' in options.nft;
     if (!isCollectionRangeOffer) {
       offer['signature'] = await this.#signatures.getCollectionOfferSignature({
         ...options,

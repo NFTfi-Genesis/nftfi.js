@@ -261,64 +261,70 @@ var OffersHelper = /*#__PURE__*/function () {
       return params;
     }
   }, {
+    key: "buildAssetOffer",
+    value: function buildAssetOffer(options) {
+      var _options$terms, _options$terms$expiry, _options$lenderNonce;
+      var repayment = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.repayment).toLocaleString('fullwide', {
+        useGrouping: false
+      });
+      var principal = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.principal).toLocaleString('fullwide', {
+        useGrouping: false
+      });
+      var origination = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.origination).toLocaleString('fullwide', {
+        useGrouping: false
+      });
+      var lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
+      var expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms = options.terms) === null || _options$terms === void 0 ? void 0 : (_options$terms$expiry = _options$terms.expiry) === null || _options$terms$expiry === void 0 ? void 0 : _options$terms$expiry.seconds);
+      var type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.value;
+      var offer = {
+        type: type,
+        nft: {
+          id: options.nft.id,
+          address: options.nft.address
+        },
+        lender: {
+          address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
+          nonce: (_options$lenderNonce = options.lenderNonce) !== null && _options$lenderNonce !== void 0 ? _options$lenderNonce : lenderNonce
+        },
+        borrower: {
+          address: options.borrower.address
+        },
+        terms: {
+          loan: {
+            duration: options.terms.duration,
+            repayment: repayment,
+            principal: principal,
+            origination: origination,
+            currency: options.terms.currency,
+            interest: {
+              prorated: options.terms.interest.prorated
+            },
+            expiry: expiry
+          }
+        },
+        metadata: options.metadata
+      };
+      return offer;
+    }
+  }, {
     key: "constructAssetOffer",
     value: function () {
       var _constructAssetOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var _options$terms, _options$terms$expiry;
-        var repayment, principal, origination, lenderNonce, expiry, type, offer;
+        var offer;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              repayment = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.repayment).toLocaleString('fullwide', {
-                useGrouping: false
-              });
-              principal = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.principal).toLocaleString('fullwide', {
-                useGrouping: false
-              });
-              origination = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.origination).toLocaleString('fullwide', {
-                useGrouping: false
-              });
-              lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
-              expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms = options.terms) === null || _options$terms === void 0 ? void 0 : (_options$terms$expiry = _options$terms.expiry) === null || _options$terms$expiry === void 0 ? void 0 : _options$terms$expiry.seconds);
-              type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.asset.value;
-              offer = {
-                type: type,
-                nft: {
-                  id: options.nft.id,
-                  address: options.nft.address
-                },
-                lender: {
-                  address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
-                  nonce: lenderNonce
-                },
-                borrower: {
-                  address: options.borrower.address
-                },
-                terms: {
-                  loan: {
-                    duration: options.terms.duration,
-                    repayment: repayment,
-                    principal: principal,
-                    origination: origination,
-                    currency: options.terms.currency,
-                    interest: {
-                      prorated: options.terms.interest.prorated
-                    },
-                    expiry: expiry
-                  }
-                },
-                metadata: options.metadata
-              };
-              _context.next = 9;
+              offer = this.buildAssetOffer(options);
+              _context.next = 3;
               return (0, _classPrivateFieldGet2["default"])(this, _signatures).getAssetOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
                 offer: offer
               }));
-            case 9:
+            case 3:
               offer['signature'] = _context.sent;
               return _context.abrupt("return", _objectSpread(_objectSpread({}, offer), {}, {
                 type: options.type
               }));
-            case 11:
+            case 5:
             case "end":
               return _context.stop();
           }
@@ -330,79 +336,85 @@ var OffersHelper = /*#__PURE__*/function () {
       return constructAssetOffer;
     }()
   }, {
+    key: "buildCollectionOffer",
+    value: function buildCollectionOffer(options) {
+      var _options$terms2, _options$terms2$expir, _options$nft, _options$lenderNonce2;
+      var repayment = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.repayment).toLocaleString('fullwide', {
+        useGrouping: false
+      });
+      var principal = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.principal).toLocaleString('fullwide', {
+        useGrouping: false
+      });
+      var origination = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.origination).toLocaleString('fullwide', {
+        useGrouping: false
+      });
+      var lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
+      var expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms2 = options.terms) === null || _options$terms2 === void 0 ? void 0 : (_options$terms2$expir = _options$terms2.expiry) === null || _options$terms2$expir === void 0 ? void 0 : _options$terms2$expir.seconds);
+      var nftId = 0;
+      var type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.value;
+      var offer = {
+        type: type,
+        nft: _objectSpread({
+          id: nftId,
+          address: options.nft.address
+        }, ((_options$nft = options.nft) === null || _options$nft === void 0 ? void 0 : _options$nft.ids) && {
+          ids: options.nft.ids
+        }),
+        lender: {
+          address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
+          nonce: (_options$lenderNonce2 = options.lenderNonce) !== null && _options$lenderNonce2 !== void 0 ? _options$lenderNonce2 : lenderNonce
+        },
+        terms: {
+          loan: {
+            duration: options.terms.duration,
+            repayment: repayment,
+            principal: principal,
+            origination: origination,
+            currency: options.terms.currency,
+            interest: {
+              prorated: options.terms.interest.prorated
+            },
+            expiry: expiry
+          }
+        },
+        metadata: options.metadata
+      };
+      return offer;
+    }
+  }, {
     key: "constructCollectionOffer",
     value: function () {
       var _constructCollectionOffer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(options) {
-        var _options$terms2, _options$terms2$expir, _options$nft;
-        var repayment, principal, origination, lenderNonce, expiry, nftId, type, isCollectionRangeOffer, offer;
+        var offer, isCollectionRangeOffer;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              repayment = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.repayment).toLocaleString('fullwide', {
-                useGrouping: false
-              });
-              principal = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.principal).toLocaleString('fullwide', {
-                useGrouping: false
-              });
-              origination = (0, _classPrivateFieldGet2["default"])(this, _Number).call(this, options.terms.origination).toLocaleString('fullwide', {
-                useGrouping: false
-              });
-              lenderNonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
-              expiry = (0, _classPrivateFieldGet2["default"])(this, _utils).getExpiry(options === null || options === void 0 ? void 0 : (_options$terms2 = options.terms) === null || _options$terms2 === void 0 ? void 0 : (_options$terms2$expir = _options$terms2.expiry) === null || _options$terms2$expir === void 0 ? void 0 : _options$terms2$expir.seconds);
-              nftId = 0;
-              type = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.v3.type.collection.value;
+              offer = this.buildCollectionOffer(options);
               isCollectionRangeOffer = 'ids' in options.nft;
-              offer = {
-                type: type,
-                nft: _objectSpread({
-                  id: nftId,
-                  address: options.nft.address
-                }, ((_options$nft = options.nft) === null || _options$nft === void 0 ? void 0 : _options$nft.ids) && {
-                  ids: options.nft.ids
-                }),
-                lender: {
-                  address: (0, _classPrivateFieldGet2["default"])(this, _account).getAddress(),
-                  nonce: lenderNonce
-                },
-                terms: {
-                  loan: {
-                    duration: options.terms.duration,
-                    repayment: repayment,
-                    principal: principal,
-                    origination: origination,
-                    currency: options.terms.currency,
-                    interest: {
-                      prorated: options.terms.interest.prorated
-                    },
-                    expiry: expiry
-                  }
-                },
-                metadata: options.metadata
-              };
               if (isCollectionRangeOffer) {
-                _context2.next = 15;
+                _context2.next = 8;
                 break;
               }
-              _context2.next = 12;
+              _context2.next = 5;
               return (0, _classPrivateFieldGet2["default"])(this, _signatures).getCollectionOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
                 offer: offer
               }));
-            case 12:
+            case 5:
               offer['signature'] = _context2.sent;
-              _context2.next = 18;
+              _context2.next = 11;
               break;
-            case 15:
-              _context2.next = 17;
+            case 8:
+              _context2.next = 10;
               return (0, _classPrivateFieldGet2["default"])(this, _signatures).getCollectionRangeOfferSignature(_objectSpread(_objectSpread({}, options), {}, {
                 offer: offer
               }));
-            case 17:
+            case 10:
               offer['signature'] = _context2.sent;
-            case 18:
+            case 11:
               return _context2.abrupt("return", _objectSpread(_objectSpread({}, offer), {}, {
                 type: options.type
               }));
-            case 19:
+            case 12:
             case "end":
               return _context2.stop();
           }
