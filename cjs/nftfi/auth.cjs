@@ -68,64 +68,102 @@ var Auth = /*#__PURE__*/function () {
     key: "getToken",
     value: function () {
       var _getToken = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-        var sdkToken, sdkRefreshToken, _result$data, _result$data$result, _result$data2, _result$data2$result, uri, headers, result, token, refreshToken, _result$data3, _result$data3$result, _result$data4, _result$data4$result, nonce, accountAddress, message, messageToSign, signedMessage, multisig, body, _uri, _headers, _result, _token2, _refreshToken, error;
+        var _ref,
+          _ref$noSigning,
+          noSigning,
+          sdkToken,
+          sdkRefreshToken,
+          _result$data,
+          _result$data$result,
+          _result$data2,
+          _result$data2$result,
+          uri,
+          headers,
+          result,
+          token,
+          refreshToken,
+          _result$data3,
+          _result$data3$result,
+          _result$data4,
+          _result$data4$result,
+          nonce,
+          accountAddress,
+          message,
+          messageToSign,
+          signedMessage,
+          multisig,
+          body,
+          _uri,
+          _headers,
+          _result,
+          _token2,
+          _refreshToken,
+          error,
+          _args = arguments;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
+              _ref = _args.length > 0 && _args[0] !== undefined ? _args[0] : {}, _ref$noSigning = _ref.noSigning, noSigning = _ref$noSigning === void 0 ? false : _ref$noSigning;
               if (!this._isTokenValid((0, _classPrivateFieldGet2["default"])(this, _token))) {
-                _context.next = 2;
+                _context.next = 3;
                 break;
               }
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
-            case 2:
+            case 3:
               sdkToken = (0, _classPrivateFieldGet2["default"])(this, _storage).get((0, _classPrivateFieldGet2["default"])(this, _config).auth.token.key);
               if (!this._isTokenValid(sdkToken)) {
-                _context.next = 6;
+                _context.next = 7;
                 break;
               }
               (0, _classPrivateFieldSet2["default"])(this, _token, sdkToken);
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
-            case 6:
+            case 7:
               sdkRefreshToken = (0, _classPrivateFieldGet2["default"])(this, _storage).get((0, _classPrivateFieldGet2["default"])(this, _config).auth.refreshToken.key);
               if (!sdkRefreshToken) {
-                _context.next = 20;
+                _context.next = 21;
                 break;
               }
               uri = "".concat((0, _classPrivateFieldGet2["default"])(this, _config).api.baseURI, "/v0.1/authorization/refresh-token");
               headers = {
                 'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
               };
-              _context.next = 12;
+              _context.next = 13;
               return (0, _classPrivateFieldGet2["default"])(this, _http).post(uri, {
                 refreshToken: sdkRefreshToken
               }, {
                 headers: headers
               });
-            case 12:
+            case 13:
               result = _context.sent;
               token = result === null || result === void 0 ? void 0 : (_result$data = result.data) === null || _result$data === void 0 ? void 0 : (_result$data$result = _result$data.result) === null || _result$data$result === void 0 ? void 0 : _result$data$result.token;
               refreshToken = result === null || result === void 0 ? void 0 : (_result$data2 = result.data) === null || _result$data2 === void 0 ? void 0 : (_result$data2$result = _result$data2.result) === null || _result$data2$result === void 0 ? void 0 : _result$data2$result.refreshToken;
               if (!this._isTokenValid(token)) {
-                _context.next = 20;
+                _context.next = 21;
                 break;
               }
               (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.token.key, token);
               (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.refreshToken.key, refreshToken);
-              (0, _classPrivateFieldSet2["default"])(this, _token, sdkToken);
+              (0, _classPrivateFieldSet2["default"])(this, _token, token);
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
-            case 20:
-              _context.prev = 20;
+            case 21:
+              if (!noSigning) {
+                _context.next = 23;
+                break;
+              }
+              return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
+            case 23:
+              _context.prev = 23;
               if (!(0, _classPrivateFieldGet2["default"])(this, _account).getSigner()) {
-                _context.next = 39;
+                _context.next = 42;
                 break;
               }
               nonce = (0, _classPrivateFieldGet2["default"])(this, _utils).getNonce();
               accountAddress = (0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress();
               message = "This message proves you own this wallet address : ".concat((0, _classPrivateFieldGet2["default"])(this, _account).getAuthAddress());
               messageToSign = "".concat(message, "\r\n\r\nChainId : ").concat((0, _classPrivateFieldGet2["default"])(this, _config).chainId, "\r\nNonce : ").concat(nonce, ")");
-              _context.next = 28;
+              _context.next = 31;
               return (0, _classPrivateFieldGet2["default"])(this, _account).authSign(messageToSign);
-            case 28:
+            case 31:
               signedMessage = _context.sent;
               multisig = (0, _classPrivateFieldGet2["default"])(this, _account).isMultisig();
               body = {
@@ -139,11 +177,11 @@ var Auth = /*#__PURE__*/function () {
               _headers = {
                 'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
               };
-              _context.next = 35;
+              _context.next = 38;
               return (0, _classPrivateFieldGet2["default"])(this, _http).post(_uri, body, {
                 headers: _headers
               });
-            case 35:
+            case 38:
               _result = _context.sent;
               _token2 = _result === null || _result === void 0 ? void 0 : (_result$data3 = _result.data) === null || _result$data3 === void 0 ? void 0 : (_result$data3$result = _result$data3.result) === null || _result$data3$result === void 0 ? void 0 : _result$data3$result.token;
               _refreshToken = _result === null || _result === void 0 ? void 0 : (_result$data4 = _result.data) === null || _result$data4 === void 0 ? void 0 : (_result$data4$result = _result$data4.result) === null || _result$data4$result === void 0 ? void 0 : _result$data4$result.refreshToken;
@@ -152,25 +190,25 @@ var Auth = /*#__PURE__*/function () {
                 (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.refreshToken.key, _refreshToken);
                 (0, _classPrivateFieldSet2["default"])(this, _token, _token2);
               }
-            case 39:
-              _context.next = 46;
+            case 42:
+              _context.next = 49;
               break;
-            case 41:
-              _context.prev = 41;
-              _context.t0 = _context["catch"](20);
+            case 44:
+              _context.prev = 44;
+              _context.t0 = _context["catch"](23);
               error = {
                 error: _context.t0,
                 date: new Date()
               };
               (0, _classPrivateFieldGet2["default"])(this, _storage).set((0, _classPrivateFieldGet2["default"])(this, _config).auth.tokenError.key, JSON.stringify(error));
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
-            case 46:
+            case 49:
               return _context.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _token));
-            case 47:
+            case 50:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[20, 41]]);
+        }, _callee, this, [[23, 44]]);
       }));
       function getToken() {
         return _getToken.apply(this, arguments);

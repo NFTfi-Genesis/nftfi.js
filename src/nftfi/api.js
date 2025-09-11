@@ -19,13 +19,13 @@ class API {
       'X-API-Key': this.#config.api.key
     };
 
-    if (options?.auth?.token === 'required' || options?.auth?.token === 'optional') {
+    if (options?.auth?.token === 'required' || options?.auth?.token === 'optional' || options?.auth?.token === 'ifpresent') {
       try {
         if (options.auth.token === 'required') {
           this.#assertion.hasSigner();
         }
         release = await this.#mutex.acquire();
-        const authToken = await this.#auth.getToken();
+        const authToken = await this.#auth.getToken({noSigning: options?.auth?.token === 'ifpresent'});
         if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
       } finally {
         release();

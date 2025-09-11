@@ -52,8 +52,8 @@ var API = /*#__PURE__*/function () {
     key: "getAuthHeader",
     value: function () {
       var _getAuthHeader = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(options) {
-        var _options$auth, _options$auth2;
-        var release, headers, authToken;
+        var _options$auth, _options$auth2, _options$auth3;
+        var release, headers, _options$auth4, authToken;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -61,7 +61,7 @@ var API = /*#__PURE__*/function () {
               headers = {
                 'X-API-Key': (0, _classPrivateFieldGet2["default"])(this, _config).api.key
               };
-              if (!((options === null || options === void 0 ? void 0 : (_options$auth = options.auth) === null || _options$auth === void 0 ? void 0 : _options$auth.token) === 'required' || (options === null || options === void 0 ? void 0 : (_options$auth2 = options.auth) === null || _options$auth2 === void 0 ? void 0 : _options$auth2.token) === 'optional')) {
+              if (!((options === null || options === void 0 ? void 0 : (_options$auth = options.auth) === null || _options$auth === void 0 ? void 0 : _options$auth.token) === 'required' || (options === null || options === void 0 ? void 0 : (_options$auth2 = options.auth) === null || _options$auth2 === void 0 ? void 0 : _options$auth2.token) === 'optional' || (options === null || options === void 0 ? void 0 : (_options$auth3 = options.auth) === null || _options$auth3 === void 0 ? void 0 : _options$auth3.token) === 'ifpresent')) {
                 _context.next = 15;
                 break;
               }
@@ -74,7 +74,9 @@ var API = /*#__PURE__*/function () {
             case 7:
               release = _context.sent;
               _context.next = 10;
-              return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken();
+              return (0, _classPrivateFieldGet2["default"])(this, _auth).getToken({
+                noSigning: (options === null || options === void 0 ? void 0 : (_options$auth4 = options.auth) === null || _options$auth4 === void 0 ? void 0 : _options$auth4.token) === 'ifpresent'
+              });
             case 10:
               authToken = _context.sent;
               if (authToken) headers['Authorization'] = "Bearer ".concat(authToken);
