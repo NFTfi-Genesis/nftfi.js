@@ -81,6 +81,7 @@ var _socket = _interopRequireDefault(require("socket.io-client"));
 var yup = _interopRequireWildcard(require("yup"));
 var _asyncMutex = require("async-mutex");
 var _arcade = _interopRequireDefault(require("./nftfi/utils/arcade.cjs"));
+var _gondi = _interopRequireDefault(require("./nftfi/utils/gondi.cjs"));
 var _wallet = _interopRequireDefault(require("./nftfi/utils/wallet.cjs"));
 var _package = _interopRequireDefault(require("../package.json"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
@@ -169,6 +170,7 @@ var _default = {
         error,
         result,
         utilsArcade,
+        utilsGondi,
         utilsWallet,
         utils,
         storage,
@@ -431,6 +433,15 @@ var _default = {
               result: result,
               error: error
             });
+            utilsGondi = new _gondi["default"]({
+              config: config,
+              contractFactory: contractFactory,
+              result: result,
+              error: error,
+              provider: provider,
+              account: account,
+              ethers: ethers
+            });
             utilsWallet = new _wallet["default"]({
               config: config,
               contractFactory: contractFactory,
@@ -448,6 +459,7 @@ var _default = {
               contractFactory: contractFactory,
               config: config,
               arcade: utilsArcade,
+              gondi: utilsGondi,
               wallet: utilsWallet
             });
             storage = (options === null || options === void 0 ? void 0 : (_options$dependencies7 = options.dependencies) === null || _options$dependencies7 === void 0 ? void 0 : _options$dependencies7.storage) || new _storage["default"]({
@@ -718,7 +730,7 @@ var _default = {
             logger = loggerFactory.create();
             logger.info("NFTfi SDK ".concat(version, " initialised."));
             return _context.abrupt("return", nftfi);
-          case 125:
+          case 126:
           case "end":
             return _context.stop();
         }

@@ -66,14 +66,14 @@ var Account = /*#__PURE__*/function () {
       return sign;
     }()
   }, {
-    key: "authSign",
+    key: "signTypedData",
     value: function () {
-      var _authSign = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(msg) {
+      var _signTypedData = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(domain, types, value) {
         var signedMsg;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              signedMsg = (0, _classPrivateFieldGet2["default"])(this, _account).authSign(msg);
+              signedMsg = (0, _classPrivateFieldGet2["default"])(this, _account).signTypedData(domain, types, value);
               return _context2.abrupt("return", signedMsg);
             case 2:
             case "end":
@@ -81,7 +81,28 @@ var Account = /*#__PURE__*/function () {
           }
         }, _callee2, this);
       }));
-      function authSign(_x2) {
+      function signTypedData(_x2, _x3, _x4) {
+        return _signTypedData.apply(this, arguments);
+      }
+      return signTypedData;
+    }()
+  }, {
+    key: "authSign",
+    value: function () {
+      var _authSign = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(msg) {
+        var signedMsg;
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              signedMsg = (0, _classPrivateFieldGet2["default"])(this, _account).authSign(msg);
+              return _context3.abrupt("return", signedMsg);
+            case 2:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, this);
+      }));
+      function authSign(_x5) {
         return _authSign.apply(this, arguments);
       }
       return authSign;
@@ -89,18 +110,18 @@ var Account = /*#__PURE__*/function () {
   }, {
     key: "execTransaction",
     value: function () {
-      var _execTransaction = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(tx) {
-        return _regenerator["default"].wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+      var _execTransaction = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(tx) {
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              return _context3.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _account).execTransaction(tx));
+              return _context4.abrupt("return", (0, _classPrivateFieldGet2["default"])(this, _account).execTransaction(tx));
             case 1:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
-        }, _callee3, this);
+        }, _callee4, this);
       }));
-      function execTransaction(_x3) {
+      function execTransaction(_x6) {
         return _execTransaction.apply(this, arguments);
       }
       return execTransaction;

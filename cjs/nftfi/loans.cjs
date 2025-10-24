@@ -851,7 +851,8 @@ var Loans = /*#__PURE__*/function () {
               _context6.next = 11;
               return (0, _classPrivateFieldGet2["default"])(this, _assetOffer).v1.refinanceLoan({
                 loan: options.loan,
-                offer: options.offer
+                offer: options.offer,
+                extraData: options.extraData
               });
             case 11:
               success = _context6.sent;
@@ -863,7 +864,8 @@ var Loans = /*#__PURE__*/function () {
               _context6.next = 16;
               return (0, _classPrivateFieldGet2["default"])(this, _collectionOffer).v1.refinanceCollectionOfferLoan({
                 loan: options.loan,
-                offer: options.offer
+                offer: options.offer,
+                extraData: options.extraData
               });
             case 16:
               _success7 = _context6.sent;

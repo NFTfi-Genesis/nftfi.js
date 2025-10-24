@@ -521,7 +521,8 @@ class Loans {
           case this.#config.protocol.v3.type.asset.name: {
             let success = await this.#assetOffer.v1.refinanceLoan({
               loan: options.loan,
-              offer: options.offer
+              offer: options.offer,
+              extraData: options.extraData
             });
             response = { success };
             break;
@@ -529,7 +530,8 @@ class Loans {
           case this.#config.protocol.v3.type.collection.name: {
             let success = await this.#collectionOffer.v1.refinanceCollectionOfferLoan({
               loan: options.loan,
-              offer: options.offer
+              offer: options.offer,
+              extraData: options.extraData
             });
             response = { success };
             break;

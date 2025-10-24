@@ -26,6 +26,11 @@ class Account {
     return signedMsg;
   }
 
+  async signTypedData(domain, types, value) {
+    const signedMsg = this.#account.signTypedData(domain, types, value);
+    return signedMsg;
+  }
+
   async authSign(msg) {
     const signedMsg = this.#account.authSign(msg);
     return signedMsg;

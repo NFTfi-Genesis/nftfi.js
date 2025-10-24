@@ -32,6 +32,18 @@ class EOA {
     return signedMsg;
   }
 
+  async signTypedData(domain, types, value) {
+    if (typeof this.#signer.signTypedData === 'function') {
+      const signature = await this.#signer.signTypedData(domain, types, value);
+      return signature;
+    } else if (typeof this.#signer._signTypedData === 'function') {
+      const signature = await this.#signer._signTypedData(domain, types, value);
+      return signature;
+    } else {
+      throw new Error('Neither signTypedData nor _signTypedData method is available on the signer');
+    }
+  }
+
   async authSign(msg) {
     return this.sign(msg);
   }

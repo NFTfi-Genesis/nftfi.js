@@ -144,9 +144,11 @@ class LoansAssetOfferV1 {
       signature: options.offer.signature
     };
 
+    const extraData = options?.extraData || '0x';
+
     const result = await this._refinanceContract.call({
       function: 'refinanceLoan',
-      args: [refinancingData, offer, signature]
+      args: [refinancingData, offer, signature, extraData]
     });
     return result.status === 1;
   }

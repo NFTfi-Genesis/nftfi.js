@@ -24,6 +24,7 @@ var _Number = /*#__PURE__*/new WeakMap();
 var _contractFactory = /*#__PURE__*/new WeakMap();
 var _config = /*#__PURE__*/new WeakMap();
 var _arcade = /*#__PURE__*/new WeakMap();
+var _gondi = /*#__PURE__*/new WeakMap();
 var _wallet = /*#__PURE__*/new WeakMap();
 /**
  * @class
@@ -69,6 +70,10 @@ var Utils = /*#__PURE__*/function () {
       writable: true,
       value: void 0
     });
+    _classPrivateFieldInitSpec(this, _gondi, {
+      writable: true,
+      value: void 0
+    });
     _classPrivateFieldInitSpec(this, _wallet, {
       writable: true,
       value: void 0
@@ -93,6 +98,7 @@ var Utils = /*#__PURE__*/function () {
     (0, _classPrivateFieldSet2["default"])(this, _contractFactory, options === null || options === void 0 ? void 0 : options.contractFactory);
     (0, _classPrivateFieldSet2["default"])(this, _config, options === null || options === void 0 ? void 0 : options.config);
     (0, _classPrivateFieldSet2["default"])(this, _arcade, options === null || options === void 0 ? void 0 : options.arcade);
+    (0, _classPrivateFieldSet2["default"])(this, _gondi, options === null || options === void 0 ? void 0 : options.gondi);
     (0, _classPrivateFieldSet2["default"])(this, _wallet, options === null || options === void 0 ? void 0 : options.wallet);
   }
 
@@ -345,6 +351,11 @@ var Utils = /*#__PURE__*/function () {
     key: "arcade",
     get: function get() {
       return (0, _classPrivateFieldGet2["default"])(this, _arcade);
+    }
+  }, {
+    key: "gondi",
+    get: function get() {
+      return (0, _classPrivateFieldGet2["default"])(this, _gondi);
     }
   }, {
     key: "wallet",

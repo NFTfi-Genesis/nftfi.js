@@ -258,7 +258,7 @@ var LoansAssetOfferV1 = /*#__PURE__*/function () {
     key: "refinanceLoan",
     value: function () {
       var _refinanceLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(options) {
-        var loanContractName, loanContractAddress, refinancingData, offer, signature, result;
+        var loanContractName, loanContractAddress, refinancingData, offer, signature, extraData, result;
         return _regenerator["default"].wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
@@ -295,15 +295,16 @@ var LoansAssetOfferV1 = /*#__PURE__*/function () {
                 expiry: options.offer.terms.loan.expiry,
                 signature: options.offer.signature
               };
-              _context6.next = 14;
+              extraData = (options === null || options === void 0 ? void 0 : options.extraData) || '0x';
+              _context6.next = 15;
               return this._refinanceContract.call({
                 "function": 'refinanceLoan',
-                args: [refinancingData, offer, signature]
+                args: [refinancingData, offer, signature, extraData]
               });
-            case 14:
+            case 15:
               result = _context6.sent;
               return _context6.abrupt("return", result.status === 1);
-            case 16:
+            case 17:
             case "end":
               return _context6.stop();
           }

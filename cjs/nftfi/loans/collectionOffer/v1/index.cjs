@@ -276,7 +276,7 @@ var LoansCollectionOfferV1 = /*#__PURE__*/function () {
     key: "refinanceCollectionOfferLoan",
     value: function () {
       var _refinanceCollectionOfferLoan = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(options) {
-        var loanContractName, loanContractAddress, refinancingData, offer, signature, isCollectionRangeOffer, result, nftIds, _result2;
+        var loanContractName, loanContractAddress, refinancingData, offer, signature, extraData, isCollectionRangeOffer, result, nftIds, _result2;
         return _regenerator["default"].wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
@@ -313,33 +313,34 @@ var LoansCollectionOfferV1 = /*#__PURE__*/function () {
                 expiry: options.offer.terms.loan.expiry,
                 signature: options.offer.signature
               };
+              extraData = (options === null || options === void 0 ? void 0 : options.extraData) || '0x';
               isCollectionRangeOffer = 'ids' in options.offer.nft;
               if (isCollectionRangeOffer) {
-                _context6.next = 20;
+                _context6.next = 21;
                 break;
               }
-              _context6.next = 16;
+              _context6.next = 17;
               return this._refinanceContract.call({
                 "function": 'refinanceCollectionOfferLoan',
-                args: [refinancingData, offer, signature]
+                args: [refinancingData, offer, signature, extraData]
               });
-            case 16:
+            case 17:
               result = _context6.sent;
               return _context6.abrupt("return", result.status === 1);
-            case 20:
+            case 21:
               nftIds = {
                 minId: options.offer.nft.ids.from,
                 maxId: options.offer.nft.ids.to
               };
-              _context6.next = 23;
+              _context6.next = 24;
               return this._refinanceContract.call({
                 "function": 'refinanceCollectionRangeOfferLoan',
-                args: [refinancingData, offer, nftIds, signature]
+                args: [refinancingData, offer, nftIds, signature, extraData]
               });
-            case 23:
+            case 24:
               _result2 = _context6.sent;
               return _context6.abrupt("return", _result2.status === 1);
-            case 25:
+            case 26:
             case "end":
               return _context6.stop();
           }

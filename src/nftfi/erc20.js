@@ -41,6 +41,8 @@ class Erc20 {
         return this.#config.protocol.v3.refinance.v1.address;
       case 'v3.erc20Manager.v1':
         return this.#config.protocol.v3.erc20Manager.v1.address;
+      default:
+        return this.#config.getContractAddress(contractName);
     }
   }
 

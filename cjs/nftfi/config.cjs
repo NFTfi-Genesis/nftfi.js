@@ -219,6 +219,12 @@ var baseConfig = {
           abi: []
         }
       },
+      adaptors: {
+        gondi: {
+          address: '',
+          abi: []
+        }
+      },
       obligationReceipt: {
         v1: {
           address: '',
@@ -282,6 +288,20 @@ var baseConfig = {
       },
       promissoryNote: {
         address: ''
+      }
+    },
+    gondi: {
+      loan: {
+        v3: {
+          address: '',
+          abi: [],
+          name: ''
+        },
+        v3_1: {
+          address: '',
+          abi: [],
+          name: ''
+        }
       }
     }
   }
@@ -367,8 +387,8 @@ mainnetConfig.protocol.v3.collectionOfferLoan.v1.abi = ['function acceptCollecti
 mainnetConfig.protocol.v3.obligationReceipt.v1.address = '0x48ed998e778Ab2663b6C49Bd09DfFF8Efd16B934';
 mainnetConfig.protocol.v3.promissoryNote.v1.address = '0x77B53beb7f13Bd38de9F76Eed2F2c4F9efff7f4C';
 mainnetConfig.protocol.v3.refinance.v1.name = 'v3.refinance.v1';
-mainnetConfig.protocol.v3.refinance.v1.address = '0x6701B1D2E6d34727c0C37cDBd0cF421d3357DD0c';
-mainnetConfig.protocol.v3.refinance.v1.abi = ['function refinanceLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)', 'function refinanceCollectionOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)', 'function refinanceCollectionRangeOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 minId, uint256 maxId) _idRange, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature)'];
+mainnetConfig.protocol.v3.refinance.v1.address = '0x4BC5Fa56f2931E7A37417FA55Dda71E4b7c2f2a3';
+mainnetConfig.protocol.v3.refinance.v1.abi = ['function refinanceLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature, bytes _extraData)', 'function refinanceCollectionOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature, bytes _extraData)', 'function refinanceCollectionRangeOfferLoan(tuple(uint256 loanIdentifier, address refinanceableContract) _refinancingData, tuple(uint256 loanPrincipalAmount, uint256 maximumRepaymentAmount, uint256 nftCollateralId, address nftCollateralContract, uint32 loanDuration, address loanERC20Denomination, bool isProRata, uint256 originationFee) _offer, tuple(uint256 minId, uint256 maxId) _idRange, tuple(uint256 nonce, uint256 expiry, address signer, bytes signature) _lenderSignature, bytes _extraData)'];
 mainnetConfig.protocol.v3.erc20Manager.v1.name = 'v3.erc20Manager.v1';
 mainnetConfig.protocol.v3.erc20Manager.v1.address = '0x6730697f33d6D2490029b32899E7865c0d902Ca0';
 mainnetConfig.protocol.v3.escrow.v1.name = 'v3.escrow.v1';
@@ -388,6 +408,14 @@ mainnetConfig.protocol.arcade.obligationReceipt.abi = ['function mint(address to
 mainnetConfig.protocol.arcade.promissoryNote.address = '0x92ED78b41537C902Ad287608d8535bb6780A7618';
 mainnetConfig.protocol.arcade.loan.core.address = '0x89bc08BA00f135d608bc335f6B33D7a9ABCC98aF';
 mainnetConfig.protocol.arcade.loan.core.abi = ['function getLoan(uint256 loanId) public view returns (tuple(uint8, uint160, tuple(uint256, uint256, address, uint96, uint256, address, uint96, bytes32), tuple(uint16, uint16, uint16)))'];
+mainnetConfig.protocol.gondi.loan.v3.name = 'gondi.loan.v3';
+mainnetConfig.protocol.gondi.loan.v3.address = '0xf65B99CE6DC5F6c556172BCC0Ff27D3665a7d9A8';
+mainnetConfig.protocol.gondi.loan.v3.abi = ['function name() view returns (string)', 'function VERSION() view returns (bytes)', 'event LoanEmitted(uint256 loanId, uint256[] offerId, tuple(address borrower, uint256 nftCollateralTokenId, address nftCollateralAddress, address principalAddress, uint256 principalAmount, uint256 startTime, uint256 duration, tuple(uint256 loanId, uint256 floor, uint256 principalAmount, address lender, uint256 accruedInterest, uint256 startTime, uint256 aprBps)[] tranche, uint256 protocolFee) loan, uint256 fee)', 'event LoanRefinanced(uint256 renegotiationId, uint256 oldLoanId, uint256 newLoanId, tuple(address borrower, uint256 nftCollateralTokenId, address nftCollateralAddress, address principalAddress, uint256 principalAmount, uint256 startTime, uint256 duration, tuple(uint256 loanId, uint256 floor, uint256 principalAmount, address lender, uint256 accruedInterest, uint256 startTime, uint256 aprBps)[] tranche, uint256 protocolFee) loan, uint256 fee)', 'event LoanRefinancedFromNewOffers(uint256 loanId, uint256 newLoanId, tuple(address borrower, uint256 nftCollateralTokenId, address nftCollateralAddress, address principalAddress, uint256 principalAmount, uint256 startTime, uint256 duration, tuple(uint256 loanId, uint256 floor, uint256 principalAmount, address lender, uint256 accruedInterest, uint256 startTime, uint256 aprBps)[] tranche, uint256 protocolFee) loan, uint256[] offerIds, uint256 totalFee)'];
+mainnetConfig.protocol.gondi.loan.v3_1.name = 'gondi.loan.v3_1';
+mainnetConfig.protocol.gondi.loan.v3_1.address = '0xf41B389E0C1950dc0B16C9498eaE77131CC08A56';
+mainnetConfig.protocol.gondi.loan.v3_1.abi = ['function name() view returns (string)', 'function VERSION() view returns (bytes)', 'event LoanEmitted(uint256 loanId, uint256[] offerId, tuple(address borrower, uint256 nftCollateralTokenId, address nftCollateralAddress, address principalAddress, uint256 principalAmount, uint256 startTime, uint256 duration, tuple(uint256 loanId, uint256 floor, uint256 principalAmount, address lender, uint256 accruedInterest, uint256 startTime, uint256 aprBps)[] tranche, uint256 protocolFee) loan, uint256 fee)', 'event LoanRefinanced(uint256 renegotiationId, uint256 oldLoanId, uint256 newLoanId, tuple(address borrower, uint256 nftCollateralTokenId, address nftCollateralAddress, address principalAddress, uint256 principalAmount, uint256 startTime, uint256 duration, tuple(uint256 loanId, uint256 floor, uint256 principalAmount, address lender, uint256 accruedInterest, uint256 startTime, uint256 aprBps)[] tranche, uint256 protocolFee) loan, uint256 fee)', 'event LoanRefinancedFromNewOffers(uint256 loanId, uint256 newLoanId, tuple(address borrower, uint256 nftCollateralTokenId, address nftCollateralAddress, address principalAddress, uint256 principalAmount, uint256 startTime, uint256 duration, tuple(uint256 loanId, uint256 floor, uint256 principalAmount, address lender, uint256 accruedInterest, uint256 startTime, uint256 aprBps)[] tranche, uint256 protocolFee) loan, uint256[] offerIds, uint256 totalFee)'];
+mainnetConfig.protocol.v3.adaptors.gondi.address = '0x4d72CFB5b8F642dD86cD48Dd8830f74095a52B4C';
+mainnetConfig.protocol.v3.adaptors.gondi.abi = ['function getPayoffDetails(address, uint256, bytes _extraData) view returns (address, uint256)'];
 var sepoliaConfig = JSON.parse(JSON.stringify(baseConfig)); // Perform deep copy
 sepoliaConfig.chainId = 11155111;
 sepoliaConfig.website.baseURI = 'https://sepolia-integration.nftfi.com';
@@ -488,6 +516,14 @@ sepoliaConfig.protocol.arcade.obligationReceipt.abi = ['function mint(address to
 sepoliaConfig.protocol.arcade.promissoryNote.address = '';
 sepoliaConfig.protocol.arcade.loan.core.address = '';
 sepoliaConfig.protocol.arcade.loan.core.abi = [];
+sepoliaConfig.protocol.gondi.loan.v3.name = mainnetConfig.protocol.gondi.loan.v3.name;
+sepoliaConfig.protocol.gondi.loan.v3.address = mainnetConfig.protocol.gondi.loan.v3.address;
+sepoliaConfig.protocol.gondi.loan.v3.abi = mainnetConfig.protocol.gondi.loan.v3.abi;
+sepoliaConfig.protocol.gondi.loan.v3_1.name = mainnetConfig.protocol.gondi.loan.v3_1.name;
+sepoliaConfig.protocol.gondi.loan.v3_1.address = mainnetConfig.protocol.gondi.loan.v3_1.address;
+sepoliaConfig.protocol.gondi.loan.v3_1.abi = mainnetConfig.protocol.gondi.loan.v3_1.abi;
+sepoliaConfig.protocol.v3.adaptors.gondi.address = '';
+sepoliaConfig.protocol.v3.adaptors.gondi.abi = ['function getPayoffDetails(address, uint256, bytes _extraData) view returns (address, uint256)'];
 var baseConfigs = (_baseConfigs = {}, (0, _defineProperty2["default"])(_baseConfigs, mainnetConfig.chainId, mainnetConfig), (0, _defineProperty2["default"])(_baseConfigs, sepoliaConfig.chainId, sepoliaConfig), _baseConfigs);
 var Config = /*#__PURE__*/function () {
   function Config() {
@@ -518,6 +554,10 @@ var Config = /*#__PURE__*/function () {
           return this.loan.fixed.collection.v2_3.address;
         case 'arcade.loan.core':
           return this.protocol.arcade.loan.core.address;
+        case 'gondi.loan.v3':
+          return this.protocol.gondi.loan.v3.address;
+        case 'gondi.loan.v3_1':
+          return this.protocol.gondi.loan.v3_1.address;
       }
     }
   }]);

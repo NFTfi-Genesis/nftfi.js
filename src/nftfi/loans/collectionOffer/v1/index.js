@@ -157,12 +157,13 @@ class LoansCollectionOfferV1 {
       expiry: options.offer.terms.loan.expiry,
       signature: options.offer.signature
     };
+    const extraData = options?.extraData || '0x';
 
     const isCollectionRangeOffer = 'ids' in options.offer.nft;
     if (!isCollectionRangeOffer) {
       const result = await this._refinanceContract.call({
         function: 'refinanceCollectionOfferLoan',
-        args: [refinancingData, offer, signature]
+        args: [refinancingData, offer, signature, extraData]
       });
       return result.status === 1;
     } else {
@@ -173,7 +174,7 @@ class LoansCollectionOfferV1 {
 
       const result = await this._refinanceContract.call({
         function: 'refinanceCollectionRangeOfferLoan',
-        args: [refinancingData, offer, nftIds, signature]
+        args: [refinancingData, offer, nftIds, signature, extraData]
       });
       return result.status === 1;
     }
