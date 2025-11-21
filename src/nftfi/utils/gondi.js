@@ -21,20 +21,29 @@ class UtilsGondi {
     let address, abi, name;
     const receipt = await this.#provider.getTransactionReceipt(hash);
     address = receipt.to;
+
     if (address.toLowerCase() === this.#config.protocol.gondi.loan.v3.address.toLowerCase()) {
       abi = this.#config.protocol.gondi.loan.v3.abi;
       name = this.#config.protocol.gondi.loan.v3.name;
     } else if (address.toLowerCase() === this.#config.protocol.gondi.loan.v3_1.address.toLowerCase()) {
       abi = this.#config.protocol.gondi.loan.v3_1.abi;
       name = this.#config.protocol.gondi.loan.v3_1.name;
+    } else {
+      const { contractAddress } = await this.findEventLog(hash);
+      if (contractAddress.toLowerCase() === this.#config.protocol.gondi.loan.v3.address.toLowerCase()) {
+        abi = this.#config.protocol.gondi.loan.v3.abi;
+        name = this.#config.protocol.gondi.loan.v3.name;
+      } else if (contractAddress.toLowerCase() === this.#config.protocol.gondi.loan.v3_1.address.toLowerCase()) {
+        abi = this.#config.protocol.gondi.loan.v3_1.abi;
+        name = this.#config.protocol.gondi.loan.v3_1.name;
+      }
     }
     return { address, abi, name };
   }
 
   async findEventLog(hash) {
     const receipt = await this.#provider.getTransactionReceipt(hash);
-    const { abi } = await this.getGondiLoanDetails(hash);
-
+    const abi = this.#config.protocol.gondi.loan.v3.abi;
     const iface = new this.#ethers.utils.Interface(abi);
 
     const eventNames = ['LoanRefinancedFromNewOffers', 'LoanRefinanced', 'LoanEmitted'];
@@ -53,12 +62,12 @@ class UtilsGondi {
     }
 
     const parsedEvent = iface.parseLog(eventLog);
-    return parsedEvent;
+    return { parsedEvent, contractAddress: eventLog.address };
   }
 
   async getLoanData(hash) {
     const { name: gondiContractName } = await this.getGondiLoanDetails(hash);
-    const parsedEvent = await this.findEventLog(hash);
+    const { parsedEvent } = await this.findEventLog(hash);
     return { loanData: parsedEvent.args.loan, gondiContractName: gondiContractName };
   }
 
@@ -67,7 +76,7 @@ class UtilsGondi {
     const { chainId } = await provider.getNetwork();
     const { address: gondiContractAddress, abi: gondiAbi } = await this.getGondiLoanDetails(hash);
 
-    const parsedEvent = await this.findEventLog(hash);
+    const { parsedEvent } = await this.findEventLog(hash);
     const gondiContract = this.#contractFactory.create({
       address: gondiContractAddress,
       abi: gondiAbi
@@ -97,6 +106,8 @@ class UtilsGondi {
     } else {
       loanId = parsedEvent.args.loanId.toString();
     }
+
+    console.log('Loan ID:', loanId);
 
     const repaymentValue = {
       loanId: loanId,
@@ -154,13 +165,11 @@ class UtilsGondi {
 
   isRefinanceable(address) {
     if (address.toLowerCase() === this.#config.protocol.gondi.loan.v3_1.address.toLowerCase()) {
-      return this.#result.handle({
-        isRefinanceable: true
-      });
+      return this.#result.handle({ isRefinanceable: true });
+    } else if (address.toLowerCase() === this.#config.protocol.gondi.loan.v3.address.toLowerCase()) {
+      return this.#result.handle({ isRefinanceable: true });
     }
-    return this.#result.handle({
-      isRefinanceable: false
-    });
+    return this.#result.handle({ isRefinanceable: false });
   }
 }
 

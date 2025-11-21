@@ -64,7 +64,7 @@ var UtilsGondi = /*#__PURE__*/function () {
     key: "getGondiLoanDetails",
     value: function () {
       var _getGondiLoanDetails = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(hash) {
-        var address, abi, name, receipt;
+        var address, abi, name, receipt, _yield$this$findEvent, contractAddress;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -73,19 +73,43 @@ var UtilsGondi = /*#__PURE__*/function () {
             case 2:
               receipt = _context.sent;
               address = receipt.to;
-              if (address.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.address.toLowerCase()) {
+              if (!(address.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.address.toLowerCase())) {
+                _context.next = 9;
+                break;
+              }
+              abi = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.abi;
+              name = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.name;
+              _context.next = 19;
+              break;
+            case 9:
+              if (!(address.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.address.toLowerCase())) {
+                _context.next = 14;
+                break;
+              }
+              abi = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.abi;
+              name = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.name;
+              _context.next = 19;
+              break;
+            case 14:
+              _context.next = 16;
+              return this.findEventLog(hash);
+            case 16:
+              _yield$this$findEvent = _context.sent;
+              contractAddress = _yield$this$findEvent.contractAddress;
+              if (contractAddress.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.address.toLowerCase()) {
                 abi = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.abi;
                 name = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.name;
-              } else if (address.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.address.toLowerCase()) {
+              } else if (contractAddress.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.address.toLowerCase()) {
                 abi = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.abi;
                 name = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.name;
               }
+            case 19:
               return _context.abrupt("return", {
                 address: address,
                 abi: abi,
                 name: name
               });
-            case 6:
+            case 20:
             case "end":
               return _context.stop();
           }
@@ -100,7 +124,7 @@ var UtilsGondi = /*#__PURE__*/function () {
     key: "findEventLog",
     value: function () {
       var _findEventLog = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(hash) {
-        var receipt, _yield$this$getGondiL, abi, iface, eventNames, eventLog, _loop, _i, _eventNames, _ret, parsedEvent;
+        var receipt, abi, iface, eventNames, eventLog, _loop, _i, _eventNames, _ret, parsedEvent;
         return _regenerator["default"].wrap(function _callee2$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
@@ -108,11 +132,7 @@ var UtilsGondi = /*#__PURE__*/function () {
               return (0, _classPrivateFieldGet2["default"])(this, _provider).getTransactionReceipt(hash);
             case 2:
               receipt = _context3.sent;
-              _context3.next = 5;
-              return this.getGondiLoanDetails(hash);
-            case 5:
-              _yield$this$getGondiL = _context3.sent;
-              abi = _yield$this$getGondiL.abi;
+              abi = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.abi;
               iface = new ((0, _classPrivateFieldGet2["default"])(this, _ethers).utils.Interface)(abi);
               eventNames = ['LoanRefinancedFromNewOffers', 'LoanRefinanced', 'LoanEmitted'];
               eventLog = null;
@@ -142,27 +162,30 @@ var UtilsGondi = /*#__PURE__*/function () {
                 }, _loop);
               });
               _i = 0, _eventNames = eventNames;
-            case 12:
+            case 9:
               if (!(_i < _eventNames.length)) {
-                _context3.next = 20;
-                break;
-              }
-              return _context3.delegateYield(_loop(), "t0", 14);
-            case 14:
-              _ret = _context3.t0;
-              if (!(_ret === "break")) {
                 _context3.next = 17;
                 break;
               }
-              return _context3.abrupt("break", 20);
-            case 17:
+              return _context3.delegateYield(_loop(), "t0", 11);
+            case 11:
+              _ret = _context3.t0;
+              if (!(_ret === "break")) {
+                _context3.next = 14;
+                break;
+              }
+              return _context3.abrupt("break", 17);
+            case 14:
               _i++;
-              _context3.next = 12;
+              _context3.next = 9;
               break;
-            case 20:
+            case 17:
               parsedEvent = iface.parseLog(eventLog);
-              return _context3.abrupt("return", parsedEvent);
-            case 22:
+              return _context3.abrupt("return", {
+                parsedEvent: parsedEvent,
+                contractAddress: eventLog.address
+              });
+            case 19:
             case "end":
               return _context3.stop();
           }
@@ -177,24 +200,25 @@ var UtilsGondi = /*#__PURE__*/function () {
     key: "getLoanData",
     value: function () {
       var _getLoanData = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(hash) {
-        var _yield$this$getGondiL2, gondiContractName, parsedEvent;
+        var _yield$this$getGondiL, gondiContractName, _yield$this$findEvent2, parsedEvent;
         return _regenerator["default"].wrap(function _callee3$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               _context4.next = 2;
               return this.getGondiLoanDetails(hash);
             case 2:
-              _yield$this$getGondiL2 = _context4.sent;
-              gondiContractName = _yield$this$getGondiL2.name;
+              _yield$this$getGondiL = _context4.sent;
+              gondiContractName = _yield$this$getGondiL.name;
               _context4.next = 6;
               return this.findEventLog(hash);
             case 6:
-              parsedEvent = _context4.sent;
+              _yield$this$findEvent2 = _context4.sent;
+              parsedEvent = _yield$this$findEvent2.parsedEvent;
               return _context4.abrupt("return", {
                 loanData: parsedEvent.args.loan,
                 gondiContractName: gondiContractName
               });
-            case 8:
+            case 9:
             case "end":
               return _context4.stop();
           }
@@ -209,7 +233,7 @@ var UtilsGondi = /*#__PURE__*/function () {
     key: "getBorrowerRepaymentSignature",
     value: function () {
       var _getBorrowerRepaymentSignature = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(hash) {
-        var provider, _yield$provider$getNe, chainId, _yield$this$getGondiL3, gondiContractAddress, gondiAbi, parsedEvent, gondiContract, name, versionBytes, version, domain, types, loanId, repaymentValue, signature;
+        var provider, _yield$provider$getNe, chainId, _yield$this$getGondiL2, gondiContractAddress, gondiAbi, _yield$this$findEvent3, parsedEvent, gondiContract, name, versionBytes, version, domain, types, loanId, repaymentValue, signature;
         return _regenerator["default"].wrap(function _callee4$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
@@ -222,30 +246,31 @@ var UtilsGondi = /*#__PURE__*/function () {
               _context5.next = 7;
               return this.getGondiLoanDetails(hash);
             case 7:
-              _yield$this$getGondiL3 = _context5.sent;
-              gondiContractAddress = _yield$this$getGondiL3.address;
-              gondiAbi = _yield$this$getGondiL3.abi;
+              _yield$this$getGondiL2 = _context5.sent;
+              gondiContractAddress = _yield$this$getGondiL2.address;
+              gondiAbi = _yield$this$getGondiL2.abi;
               _context5.next = 12;
               return this.findEventLog(hash);
             case 12:
-              parsedEvent = _context5.sent;
+              _yield$this$findEvent3 = _context5.sent;
+              parsedEvent = _yield$this$findEvent3.parsedEvent;
               gondiContract = (0, _classPrivateFieldGet2["default"])(this, _contractFactory).create({
                 address: gondiContractAddress,
                 abi: gondiAbi
               });
-              _context5.next = 16;
+              _context5.next = 17;
               return gondiContract.call({
                 "function": 'name',
                 args: []
               });
-            case 16:
+            case 17:
               name = _context5.sent;
-              _context5.next = 19;
+              _context5.next = 20;
               return gondiContract.call({
                 "function": 'VERSION',
                 args: []
               });
-            case 19:
+            case 20:
               versionBytes = _context5.sent;
               version = (0, _classPrivateFieldGet2["default"])(this, _ethers).utils.toUtf8String(versionBytes);
               domain = {
@@ -271,20 +296,21 @@ var UtilsGondi = /*#__PURE__*/function () {
               } else {
                 loanId = parsedEvent.args.loanId.toString();
               }
+              console.log('Loan ID:', loanId);
               repaymentValue = {
                 loanId: loanId,
                 callbackData: '0x',
                 shouldDelegate: false
               };
-              _context5.next = 27;
+              _context5.next = 29;
               return (0, _classPrivateFieldGet2["default"])(this, _account).signTypedData(domain, types, repaymentValue);
-            case 27:
+            case 29:
               signature = _context5.sent;
               return _context5.abrupt("return", {
                 signature: signature,
                 repaymentValue: repaymentValue
               });
-            case 29:
+            case 31:
             case "end":
               return _context5.stop();
           }
@@ -299,7 +325,7 @@ var UtilsGondi = /*#__PURE__*/function () {
     key: "getRefinancingData",
     value: function () {
       var _getRefinancingData = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(_ref) {
-        var hash, _yield$this$getLoanDa, loanData, gondiContractName, _yield$this$getBorrow, signature, repaymentValue, _yield$this$getGondiL4, gondiContractAddress, gondiLoanId, loanRepaymentData, abiCoder, encodedRefinancingData, gondiAdapterContract, payoffDetails;
+        var hash, _yield$this$getLoanDa, loanData, gondiContractName, _yield$this$getBorrow, signature, repaymentValue, _yield$this$getGondiL3, gondiContractAddress, gondiLoanId, loanRepaymentData, abiCoder, encodedRefinancingData, gondiAdapterContract, payoffDetails;
         return _regenerator["default"].wrap(function _callee5$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
@@ -320,8 +346,8 @@ var UtilsGondi = /*#__PURE__*/function () {
               _context6.next = 14;
               return this.getGondiLoanDetails(hash);
             case 14:
-              _yield$this$getGondiL4 = _context6.sent;
-              gondiContractAddress = _yield$this$getGondiL4.address;
+              _yield$this$getGondiL3 = _context6.sent;
+              gondiContractAddress = _yield$this$getGondiL3.address;
               gondiLoanId = repaymentValue.loanId;
               loanRepaymentData = {
                 data: repaymentValue,
@@ -365,6 +391,10 @@ var UtilsGondi = /*#__PURE__*/function () {
     key: "isRefinanceable",
     value: function isRefinanceable(address) {
       if (address.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.address.toLowerCase()) {
+        return (0, _classPrivateFieldGet2["default"])(this, _result).handle({
+          isRefinanceable: true
+        });
+      } else if (address.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.address.toLowerCase()) {
         return (0, _classPrivateFieldGet2["default"])(this, _result).handle({
           isRefinanceable: true
         });
