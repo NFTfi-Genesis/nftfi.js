@@ -31,9 +31,11 @@ class UtilsGondi {
     } else {
       const { contractAddress } = await this.findEventLog(hash);
       if (contractAddress.toLowerCase() === this.#config.protocol.gondi.loan.v3.address.toLowerCase()) {
+        address = this.#config.protocol.gondi.loan.v3.address;
         abi = this.#config.protocol.gondi.loan.v3.abi;
         name = this.#config.protocol.gondi.loan.v3.name;
       } else if (contractAddress.toLowerCase() === this.#config.protocol.gondi.loan.v3_1.address.toLowerCase()) {
+        address = this.#config.protocol.gondi.loan.v3_1.address;
         abi = this.#config.protocol.gondi.loan.v3_1.abi;
         name = this.#config.protocol.gondi.loan.v3_1.name;
       }

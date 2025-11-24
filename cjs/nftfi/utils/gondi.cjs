@@ -97,9 +97,11 @@ var UtilsGondi = /*#__PURE__*/function () {
               _yield$this$findEvent = _context.sent;
               contractAddress = _yield$this$findEvent.contractAddress;
               if (contractAddress.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.address.toLowerCase()) {
+                address = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.address;
                 abi = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.abi;
                 name = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3.name;
               } else if (contractAddress.toLowerCase() === (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.address.toLowerCase()) {
+                address = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.address;
                 abi = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.abi;
                 name = (0, _classPrivateFieldGet2["default"])(this, _config).protocol.gondi.loan.v3_1.name;
               }
